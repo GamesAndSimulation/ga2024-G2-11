@@ -45,17 +45,13 @@ public class PlayerCam : MonoBehaviour
         float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
 
         yRotation += mouseX;
-        zRotation = playerScript.currentRoll;
+        //zRotation = playerScript.currentRoll;
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, zRotation);
         orientation.rotation = Quaternion.Euler(0f, yRotation, 0f);
-
-        //if(Input.GetMouseButtonUp(0)){
-        //    Shake();
-        //}
 
         if(shakeTimer > 0){
             Quaternion shakeOffset = Quaternion.Euler(PerlinShake() * shakeMagnitude);

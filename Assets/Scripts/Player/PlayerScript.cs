@@ -9,32 +9,8 @@ using UnityEngine.AI;
 
 public class PlayerScript : MonoBehaviour
 {
-    public int bullets = 20;
-    public float health = 100;
-    public int enemyKillCount = 0;
-
     [Header("References")]
-    //public GameObject deathScreen;
-    //public TextMeshProUGUI healthText;
-    //public TextMeshProUGUI bulletsText;
-    //public Camera weaponCamera;
     public PlayerCam playerCam;
-    public float bloodIntensity = 0;
- 
-    //[Header("Gun")]
-    //public GameObject projectile;
-    //public float fireforce = 1000;
-    //private float automaticShootTimer;
-    //public float automaticShootTime;
- 
-    //[Header("Jetpack")]
-    //public ParticleSystem jetpackSmoke;
- 
-    //[Header("Audio")]
-    //public AudioClip jetpackSound;
-    //public AudioClip gunShotSound;
-    //public AudioClip emptuGunShotSound;
-    //public AudioClip reloadSound;
  
     [Header("Movement")]
     private float moveSpeed;
@@ -44,9 +20,6 @@ public class PlayerScript : MonoBehaviour
 
     public float maxYSpeed;
     
-    public float dashSpeed;
-    public float dashSpeedChangeFactor;
-
     public float groundDrag;
 
     public Transform orientation;
@@ -69,8 +42,6 @@ public class PlayerScript : MonoBehaviour
         dashing,
         air
     }
-
-    public bool dashing;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -100,10 +71,7 @@ public class PlayerScript : MonoBehaviour
         rb.freezeRotation = true;
         readyToJump = true;
         initialWalkSpeed = walkSpeed;
-        isReloading = false;
-        //automaticShootTimer = 0;
 
-        /* Comment to unlock the mouse cursor */
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -127,20 +95,16 @@ public class PlayerScript : MonoBehaviour
 
     private void CameraTilting()
 {
-    // Horizontal movement tilt
     float horizontalInput = Input.GetAxisRaw("Horizontal");
     int direction = otherside ? -1 : 1;
     float rollThisFrame = direction * horizontalInput * rollSpeed * Time.deltaTime;
     currentRoll = Mathf.Clamp(currentRoll + rollThisFrame, -maxRoll, maxRoll);
     
-    // Returning the camera to neutral position when there's no horizontal input
     if (horizontalInput == 0 && currentRoll != 0)
     {
-        // Adjusting the currentRoll towards 0 based on rollSpeed
         currentRoll = Mathf.MoveTowards(currentRoll, 0, Time.deltaTime * rollSpeed);
     }
 
-    // Vertical jumping tilt
     if (!grounded)
     {
         float normalizedVelocityY = Mathf.Clamp(rb.velocity.y / 3.0f, -1f, 1f);
@@ -148,12 +112,9 @@ public class PlayerScript : MonoBehaviour
     }
     else
     {
-        // Gradually return to neutral tilt when grounded
         currentTilt = Mathf.Lerp(currentTilt, 0, Time.deltaTime * rollSpeed * 5);
     }
 
-    // Applying the calculated tilt to the camera's X-axis
-    // Ensuring the tilt effect is applied correctly in addition to any existing roll
     Camera.main.transform.localEulerAngles = new Vector3(currentTilt, Camera.main.transform.localEulerAngles.y, Camera.main.transform.localEulerAngles.z);
     //weaponCamera.transform.localEulerAngles = new Vector3(currentTilt, weaponCamera.transform.localEulerAngles.y, weaponCamera.transform.localEulerAngles.z);
 }
@@ -175,7 +136,7 @@ public class PlayerScript : MonoBehaviour
         }
         if (!grounded)
         {
-            ApplyAdditionalGravityForce();
+            //ApplyAdditionalGravityForce();
         }
     }
 
@@ -184,26 +145,6 @@ public class PlayerScript : MonoBehaviour
         float additionalGravityFactor = 2f;
         rb.AddForce(Vector3.down * additionalGravityForce * additionalGravityFactor, ForceMode.Acceleration);
     }
-
-    //private void Shoot()
-    //{
-    //    automaticShootTimer = automaticShootTime;
-    //    if(bullets <= 0){
-    //        gunAnimator.SetTrigger("Empty");
-    //        AudioManager.Instance.PlaySound(emptuGunShotSound);
-    //    }
-    //    else{
-    //        playerCam.Shake();
-    //        AudioManager.Instance.PlaySound(gunShotSound, false, 1f);
-    //        GameObject instantiatedBullet =
-    //            Instantiate(projectile, Camera.main.transform.position + Camera.main.transform.forward, Camera.main.transform.rotation);
-    //        instantiatedBullet.tag = "PlayerProjectile";
-    //        instantiatedBullet.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * fireforce, ForceMode.Impulse);
-    //        Destroy(instantiatedBullet, 5);
-    //        bullets--;
-    //        bulletsText.text = String.Format("{0}", bullets);
-    //    }
-    //}
 
     void HandleInputs(){
 
@@ -224,69 +165,7 @@ public class PlayerScript : MonoBehaviour
             playerCam.DoFov(60);
         }
         
-
-        //if (Input.GetButtonDown("Fire1"))
-        //{
-        //    automaticShootTimer = automaticShootTime;
-        //    if(bullets > 0)
-        //        gunAnimator.SetTrigger("Shoot");
-        //}
-        //if (Input.GetButtonUp("Fire1"))
-        //{
-        //    gunAnimator.SetTrigger("Empty");
-        //}
-        //    
-        //if (Input.GetButton("Fire1")){
-        //    if(bullets <= 0){
-        //        gunAnimator.SetTrigger("Empty");
-        //    }
-        //    automaticShootTimer -= Time.deltaTime;
-        //    if (automaticShootTimer <= 0)
-        //    {
-        //        if(bullets <= 0){
-        //            AudioManager.Instance.PlaySound(emptuGunShotSound);
-        //            automaticShootTimer = automaticShootTime;
-        //        }
-        //        else
-        //        {
-        //            Shoot();
-        //            automaticShootTimer = automaticShootTime;
-        //        }
-        //    }
-        //        }
-
-
-        // Reload
-        //if(Input.GetKeyDown(KeyCode.R)){
-        //    if(bullets < 14 && !isReloading)
-        //    {
-        //        isReloading = true;
-        //        Reload();
-        //    }
-        //}
-
-        // Press 1
-        if(Input.GetKeyDown(KeyCode.Alpha1)){
-        }
     }
-
-    private bool isReloading;
-    
-    //private void Reload()
-    //{
-    //    isReloading = true;
-    //    gunAnimator.SetTrigger("Reload");
-    //    AnimationClip reloadAnimation = gunAnimator.runtimeAnimatorController.animationClips[2]; // 1 is the index of the reload animation
-    //    AudioManager.Instance.PlaySound(reloadSound);
-    //    Invoke(nameof(UpdateAmmo), reloadAnimation.length);
-    //}
-    
-    //private void UpdateAmmo(){
-    //    bullets = 14;
-    //    bulletsText.text = String.Format("{0}", bullets);
-    //    isReloading = false;
-    //}
-
 
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
@@ -294,16 +173,8 @@ public class PlayerScript : MonoBehaviour
     private bool keepMomentum;
     private void StateHandler()
     {
-        // Mode - Dashing
-        if (dashing)
-        {
-            state = MovementState.dashing;
-            desiredMoveSpeed = dashSpeed;
-            speedChangeFactor = dashSpeedChangeFactor;
-        }
-
         // Mode - Sprinting
-        else if (grounded && Input.GetKey(KeyCode.LeftShift))
+        if (grounded && Input.GetKey(KeyCode.LeftShift))
         {
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
@@ -385,9 +256,6 @@ public class PlayerScript : MonoBehaviour
         }
         else if (!grounded){
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-            //if(!jetpackManager.usingJetpack){
-            //    rb.AddForce(Vector3.down * 10f, ForceMode.Force);
-            //}
         }
     }
 
@@ -424,27 +292,5 @@ public class PlayerScript : MonoBehaviour
     {
         readyToJump = true;
     }
-
-    private bool isDamageEffectRunning = false;
-
-    public void ChangeHealth(int healthIncrement)
-    {
-        health -= healthIncrement;
-        health = Mathf.Clamp(health, 0, 100);
-        //healthText.text = health.ToString();
-        if (health <= 0)
-        {
-            Die();
-        }
-    }
-    
-
-
-    private void Die()
-    {
-        //deathScreen.SetActive(true);
-        //GameManager.Instance.ReloadFromCheckpoint(3);
-        gameObject.SetActive(false);
-    }   
 
 }
