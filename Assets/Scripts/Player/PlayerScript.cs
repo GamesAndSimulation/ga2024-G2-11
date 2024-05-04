@@ -50,7 +50,6 @@ public class PlayerScript : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
-    bool readyToJump;
 
     [Header("Quake camera rolling")]
     public float rollSpeed;
@@ -66,7 +65,6 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
         rb.freezeRotation = true;
-        readyToJump = true;
         initialWalkSpeed = walkSpeed;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -76,6 +74,7 @@ public class PlayerScript : MonoBehaviour
  
     void Update()
     {
+        
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         Debug.DrawRay(transform.position, Vector3.down * (playerHeight / 2 + 0.1f), Color.red);
 
@@ -119,22 +118,6 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-        if (_inputManager.PlayerJumpedNow())
-        {
-            walkSpeed = Mathf.Clamp(walkSpeed + 0.1f, initialWalkSpeed, sprintSpeed);
-            if(readyToJump && grounded){
-
-                readyToJump = false;
-
-                Jump();
-
-                Invoke(nameof(ResetJump), jumpCooldown);
-            }
-        }
-        if (!grounded)
-        {
-            //ApplyAdditionalGravityForce();
-        }
     }
 
     void ApplyAdditionalGravityForce(){
@@ -161,6 +144,14 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetMouseButtonUp(2))
         {
             playerCam.DoFov(60);
+        }
+        
+        if (_inputManager.PlayerJumpedNow())
+        {
+            walkSpeed = Mathf.Clamp(walkSpeed + 0.1f, initialWalkSpeed, sprintSpeed);
+            if(grounded){
+                Jump();
+            }
         }
         
     }
@@ -285,11 +276,6 @@ public class PlayerScript : MonoBehaviour
     public void UpwardsForce(float force){
 
         rb.AddForce(transform.up * force , ForceMode.Impulse);
-    }
-
-    private void ResetJump()
-    {
-        readyToJump = true;
     }
 
 }
