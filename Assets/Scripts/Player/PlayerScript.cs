@@ -1,16 +1,11 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PlayerScript : MonoBehaviour
 {
     [Header("References")]
     public PlayerCam playerCam;
+
  
     [Header("Movement")]
     private float moveSpeed;
@@ -23,6 +18,7 @@ public class PlayerScript : MonoBehaviour
     public float groundDrag;
 
     public Transform orientation;
+    private InputManager _inputManager;
 
     float horizontalInput;
     float verticalInput;
@@ -68,6 +64,7 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        _inputManager = InputManager.Instance;
         rb.freezeRotation = true;
         readyToJump = true;
         initialWalkSpeed = walkSpeed;
@@ -122,7 +119,7 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
-        if (Input.GetKey(KeyCode.Space))
+        if (_inputManager.PlayerJumpedNow())
         {
             walkSpeed = Mathf.Clamp(walkSpeed + 0.1f, initialWalkSpeed, sprintSpeed);
             if(readyToJump && grounded){
@@ -147,9 +144,10 @@ public class PlayerScript : MonoBehaviour
     }
 
     void HandleInputs(){
-
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        
+        Vector2 movement = _inputManager.GetPlayerMovement();
+        horizontalInput = movement.x;
+        verticalInput = movement.y;
 
         if(Input.GetKeyUp(KeyCode.Space)){
             walkSpeed = initialWalkSpeed;
@@ -249,6 +247,7 @@ public class PlayerScript : MonoBehaviour
         if (state == MovementState.dashing) return;
 
         // calculate movement direction
+        orientation.rotation = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f);
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (grounded){

@@ -8,23 +8,23 @@ public class PlayerCam : MonoBehaviour
 
     public Transform orientation;
 
-    float xRotation;
-    float yRotation;
-    float zRotation;
+    private float _xRotation;
+    private float _yRotation;
+    private float _zRotation;
 
     public PlayerScript playerScript;
 
     public float shakeDuration = 0.5f;
     public float shakeMagnitude = 0.5f;
-    private float shakeTimer;
+    private float _shakeTimer;
 
     private void Start(){
-        
-        transform.parent.forward = orientation.forward;
+        var parent = transform.parent;
+        //parent.forward = orientation.forward;
 
-        Vector3 currentRotation = transform.parent.rotation.eulerAngles;
-        xRotation = currentRotation.x;
-        yRotation = currentRotation.y;
+        Vector3 currentRotation = parent.rotation.eulerAngles;
+        _xRotation = currentRotation.x;
+        _yRotation = currentRotation.y;
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -41,32 +41,32 @@ public class PlayerCam : MonoBehaviour
             sens -= 50;
         }
 
-        float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
+        var mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
+        var mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
 
-        yRotation += mouseX;
+        _yRotation += mouseX;
         //zRotation = playerScript.currentRoll;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        _xRotation -= mouseY;
+        _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
 
 
-        transform.rotation = Quaternion.Euler(xRotation, yRotation, zRotation);
-        orientation.rotation = Quaternion.Euler(0f, yRotation, 0f);
+        transform.rotation = Quaternion.Euler(_xRotation, _yRotation, _zRotation);
+        orientation.rotation = Quaternion.Euler(0f, _yRotation, 0f);
 
-        if(shakeTimer > 0){
+        if(_shakeTimer > 0){
             Quaternion shakeOffset = Quaternion.Euler(PerlinShake() * shakeMagnitude);
-            transform.parent.rotation = Quaternion.Euler(xRotation, yRotation, zRotation) * shakeOffset;
-            shakeTimer -= Time.deltaTime;
+            transform.parent.rotation = Quaternion.Euler(_xRotation, _yRotation, _zRotation) * shakeOffset;
+            _shakeTimer -= Time.deltaTime;
         }
     }
 
     public void Shake(){
-        shakeTimer = shakeDuration;
+        _shakeTimer = shakeDuration;
     }
 
    private Vector3 PerlinShake(){
-    float x = (Mathf.PerlinNoise(Time.time, 0f) * 2 - 1) * shakeMagnitude;
-    float y = (Mathf.PerlinNoise(0f, Time.time) * 2 - 1) * shakeMagnitude;
+    var x = (Mathf.PerlinNoise(Time.time, 0f) * 2 - 1) * shakeMagnitude;
+    var y = (Mathf.PerlinNoise(0f, Time.time) * 2 - 1) * shakeMagnitude;
     return new Vector3(x, y, 0f);
 } 
 
