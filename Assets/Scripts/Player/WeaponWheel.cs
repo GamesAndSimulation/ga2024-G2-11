@@ -15,8 +15,15 @@ public class WeaponWheel : MonoBehaviour
     }
     
     private InputManager _inputManager;
+    private float _startTimeScale;
+    private float _startFixedDeltaTime;
+    public float SlowMotionTimeScale;
+    
     [SerializeField] private GameObject weaponWheel;
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
+    [SerializeField] private GameObject sword;
+    [SerializeField] private GameObject revolver;
+    //[SerializeField] private GameObject hammer;
     
     public Weapon HeldWeapon {get; private set;} = Weapon.Revolver;
 
@@ -27,6 +34,8 @@ public class WeaponWheel : MonoBehaviour
     {
         _inputManager = InputManager.Instance;
         UILayer = LayerMask.NameToLayer("UI");
+        _startTimeScale = Time.timeScale;
+        _startFixedDeltaTime = Time.fixedDeltaTime;
     }
 
     void Update()
@@ -35,6 +44,7 @@ public class WeaponWheel : MonoBehaviour
         if (_inputManager.IsWeaponWheelOut())
         {
             weaponWheel.SetActive(true);
+            StartSlowMotion();
             pov.m_HorizontalAxis.m_MaxSpeed = 0;
             pov.m_VerticalAxis.m_MaxSpeed = 0;
             Cursor.lockState = CursorLockMode.None;
@@ -44,7 +54,9 @@ public class WeaponWheel : MonoBehaviour
         else
         {
             if (!_afterOpeningWeaponWheel) return;
+            StopSlowMotion();
             HeldWeapon = GetSelectedWeapon();
+            ChangeWeapon(HeldWeapon);
             Debug.Log(HeldWeapon);
             weaponWheel.SetActive(false);
             pov.m_HorizontalAxis.m_MaxSpeed = 0.2f;
@@ -55,27 +67,46 @@ public class WeaponWheel : MonoBehaviour
         }
     }
     
-    //Returns 'true' if we touched or hovering on Unity UI element.
+    private void ChangeWeapon(Weapon newWeapon)
+    {
+        revolver.SetActive(false);
+        sword.SetActive(false);
+        //hammer.SetActive(false);
+        switch (newWeapon)
+        {
+            case Weapon.Revolver:
+                revolver.SetActive(true);
+                break;
+            case Weapon.Sword:
+                sword.SetActive(true);
+                break;
+            case Weapon.Hammer:
+                //hammer.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+    
     public Weapon GetSelectedWeapon()
     {
         return PointerOverUIElement(GetEventSystemRaycastResults());
     }
  
  
-    //Returns 'true' if we touched or hovering on Unity UI element.
     private Weapon PointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
     {
         for (int index = 0; index < eventSystemRaysastResults.Count; index++)
         {
             RaycastResult curRaysastResult = eventSystemRaysastResults[index];
             if (curRaysastResult.gameObject.layer == UILayer)
-                switch (curRaysastResult.gameObject.name)
+                switch (curRaysastResult.gameObject.tag)
                 {
-                    case "Revolver":
+                    case "RevolverUI":
                         return Weapon.Revolver;
-                    case "Sword":
+                    case "SwordUI":
                         return Weapon.Sword;
-                    case "Hammer":
+                    case "HammerUI":
                         return Weapon.Hammer;
                     default :
                         return Weapon.None;
@@ -94,4 +125,16 @@ public class WeaponWheel : MonoBehaviour
         EventSystem.current.RaycastAll(eventData, raysastResults);
         return raysastResults;
     } 
+    
+    private void StartSlowMotion()
+    {
+        Time.timeScale = SlowMotionTimeScale;
+        Time.fixedDeltaTime = _startFixedDeltaTime * SlowMotionTimeScale;
+    }
+    
+    private void StopSlowMotion()
+    {
+        Time.timeScale = _startTimeScale;
+        Time.fixedDeltaTime = _startFixedDeltaTime;
+    }
 }
