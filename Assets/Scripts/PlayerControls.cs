@@ -62,6 +62,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponWheel"",
+                    ""type"": ""Button"",
+                    ""id"": ""90ec8a5b-55ff-40f1-90c5-caefc0f9ac2c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -218,6 +227,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd79766a-3770-493c-9d49-6b597bf52347"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d76375e-b8d1-4d91-a8c8-18e89efb57b3"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponWheel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -230,6 +261,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerWalk_Jump = m_PlayerWalk.FindAction("Jump", throwIfNotFound: true);
         m_PlayerWalk_Crouch = m_PlayerWalk.FindAction("Crouch", throwIfNotFound: true);
         m_PlayerWalk_Look = m_PlayerWalk.FindAction("Look", throwIfNotFound: true);
+        m_PlayerWalk_WeaponWheel = m_PlayerWalk.FindAction("WeaponWheel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -295,6 +327,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerWalk_Jump;
     private readonly InputAction m_PlayerWalk_Crouch;
     private readonly InputAction m_PlayerWalk_Look;
+    private readonly InputAction m_PlayerWalk_WeaponWheel;
     public struct PlayerWalkActions
     {
         private @PlayerControls m_Wrapper;
@@ -303,6 +336,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerWalk_Jump;
         public InputAction @Crouch => m_Wrapper.m_PlayerWalk_Crouch;
         public InputAction @Look => m_Wrapper.m_PlayerWalk_Look;
+        public InputAction @WeaponWheel => m_Wrapper.m_PlayerWalk_WeaponWheel;
         public InputActionMap Get() { return m_Wrapper.m_PlayerWalk; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -324,6 +358,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @WeaponWheel.started += instance.OnWeaponWheel;
+            @WeaponWheel.performed += instance.OnWeaponWheel;
+            @WeaponWheel.canceled += instance.OnWeaponWheel;
         }
 
         private void UnregisterCallbacks(IPlayerWalkActions instance)
@@ -340,6 +377,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @WeaponWheel.started -= instance.OnWeaponWheel;
+            @WeaponWheel.performed -= instance.OnWeaponWheel;
+            @WeaponWheel.canceled -= instance.OnWeaponWheel;
         }
 
         public void RemoveCallbacks(IPlayerWalkActions instance)
@@ -363,5 +403,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnWeaponWheel(InputAction.CallbackContext context);
     }
 }

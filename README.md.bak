@@ -1,0 +1,9 @@
+# The Naturals' Descent
+
+This project is using the following pulgins:
+
+- **Cinemachine**: For the cameras;
+- **Unity's new input system**: For defining the game's controls;
+- ** Fast Script Load **: Avoid long compiling times;
+
+Keep in mind, the project has auto compiling disabled, so press ``` Ctrl + R ``` in the editor after changing code to compile it.

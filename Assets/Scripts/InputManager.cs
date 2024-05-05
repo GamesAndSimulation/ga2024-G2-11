@@ -54,4 +54,9 @@ public class InputManager : MonoBehaviour
         return playerControls.PlayerWalk.Jump.triggered;
     }
     
+    public bool IsWeaponWheelOut()
+    {
+        return playerControls.PlayerWalk.WeaponWheel.IsPressed();
+    }
+    
 }
