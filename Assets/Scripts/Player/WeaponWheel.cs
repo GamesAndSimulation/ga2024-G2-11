@@ -28,12 +28,14 @@ public class WeaponWheel : MonoBehaviour
     public Weapon HeldWeapon {get; private set;} = Weapon.Revolver;
 
     private int UILayer;
+    private float _initSensitivity;
     private bool _afterOpeningWeaponWheel = false;
     
     void Start()
     {
         _inputManager = InputManager.Instance;
         UILayer = LayerMask.NameToLayer("UI");
+        _initSensitivity = _virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
     }
@@ -59,8 +61,8 @@ public class WeaponWheel : MonoBehaviour
             ChangeWeapon(HeldWeapon);
             Debug.Log(HeldWeapon);
             weaponWheel.SetActive(false);
-            pov.m_HorizontalAxis.m_MaxSpeed = 0.2f;
-            pov.m_VerticalAxis.m_MaxSpeed = 0.2f;
+            pov.m_HorizontalAxis.m_MaxSpeed = _initSensitivity;
+            pov.m_VerticalAxis.m_MaxSpeed = _initSensitivity;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             _afterOpeningWeaponWheel = false;
