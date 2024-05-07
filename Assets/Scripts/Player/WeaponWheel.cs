@@ -4,6 +4,7 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class WeaponWheel : MonoBehaviour
@@ -25,10 +26,15 @@ public class WeaponWheel : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [SerializeField] private GameObject sword;
     [SerializeField] private GameObject revolver;
+    [SerializeField] private Volume postProcessingVolume;
+    public float hiddenWeaponY;
+    public float showingWeaponY;
+    private GameObject currentWeaponGameObject;
+    
     //[SerializeField] private GameObject hammer;
     
     public Weapon HeldWeapon {get; private set;} = Weapon.Revolver;
-    private GameObject _uiGameObjectBeingHovered;
+    private GameObject uiGameObjectBeingHovered;
 
     private int _uiLayer;
     private float _initSensitivity;
@@ -41,6 +47,7 @@ public class WeaponWheel : MonoBehaviour
         _initSensitivity = _virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
+        currentWeaponGameObject = revolver; // Starting weapon
     }
 
     void Update()
@@ -63,6 +70,7 @@ public class WeaponWheel : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             _afterOpeningWeaponWheel = true;
+            ToggleVignette();
         }
         else
         {
@@ -77,49 +85,51 @@ public class WeaponWheel : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             _afterOpeningWeaponWheel = false;
+            ToggleVignette();
         }
     }
     
-    private void ChangeWeapon(Weapon newWeapon)
+    private void ToggleVignette()
     {
-        if (revolver.activeSelf)
+        if (_afterOpeningWeaponWheel)
         {
-            float currentRevolverY = revolver.transform.position.y;
-            revolver.transform.DOMoveY(currentRevolverY - 1.207f, 1f);
-            float currentSwordY = sword.transform.position.y;
-            sword.transform.DOMoveY(currentSwordY + 1.207f, 1f);
+            DOTween.To(() => postProcessingVolume.weight, x => postProcessingVolume.weight = x, 1f, 0.2f);
+            //postProcessingVolume.weight = 1f;
+            //Debug.Log(postProcessingVolume.weight);
         }
         else
         {
-            float currentSwordY = sword.transform.position.y;
-            sword.transform.DOMoveY(currentSwordY - 1.207f, 1f);
-            float currentRevolverY = revolver.transform.position.y;
-            revolver.transform.DOMoveY(currentRevolverY + 1.207f, 1f);
+            DOTween.To(() => postProcessingVolume.weight, x => postProcessingVolume.weight = x, 0f, 0.2f);
+            //postProcessingVolume.weight = 0f;
+            //Debug.Log(postProcessingVolume.weight);
         }
-        //revolver.SetActive(false);
-        //sword.SetActive(false);
-        ////hammer.SetActive(false);
-        //switch (newWeapon)
-        //{
-        //    case Weapon.Revolver:
-        //        revolver.SetActive(true);
-        //        break;
-        //    case Weapon.Sword:
-        //        sword.SetActive(true);
-        //        break;
-        //    case Weapon.Hammer:
-        //        //hammer.SetActive(true);
-        //        break;
-        //    default:
-        //        break;
-        //}
+    }
+
+    private void ChangeWeapon(Weapon newWeapon)
+    {
+
+        currentWeaponGameObject.transform.DOLocalMoveY(hiddenWeaponY, 0.2f);
+        GameObject weaponToEnable = null;
+        switch (newWeapon)
+        {
+            case Weapon.Revolver:
+                weaponToEnable = revolver;
+                break;
+            case Weapon.Sword:
+                weaponToEnable = sword;
+                break;
+            default:
+                weaponToEnable = sword;
+                break;
+        }
+        weaponToEnable.transform.DOLocalMoveY(showingWeaponY, 0.2f);
+        currentWeaponGameObject = weaponToEnable;
     }
     
     public Weapon CheckSelectedWeapon()
     {
         return PointerOverUIElement(GetEventSystemRaycastResults());
     }
-    
  
     private Weapon PointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
     {
@@ -129,15 +139,15 @@ public class WeaponWheel : MonoBehaviour
             var curGameObject = curRaysastResult.gameObject;
             if (curGameObject.layer == _uiLayer)
             {
-                if(_uiGameObjectBeingHovered != null)
-                    _uiGameObjectBeingHovered.GetComponent<Outline>().enabled = false;
-                _uiGameObjectBeingHovered = curGameObject;
-                Outline outline = _uiGameObjectBeingHovered.GetComponent<Outline>();
+                if(uiGameObjectBeingHovered != null)
+                    uiGameObjectBeingHovered.GetComponent<Outline>().enabled = false;
+                uiGameObjectBeingHovered = curGameObject;
+                Outline outline = uiGameObjectBeingHovered.GetComponent<Outline>();
                 if (outline == null)
                 {
-                    var parent = _uiGameObjectBeingHovered.transform.parent;
+                    var parent = uiGameObjectBeingHovered.transform.parent;
                     outline = parent.GetComponent<Outline>();
-                    _uiGameObjectBeingHovered = parent.gameObject;
+                    uiGameObjectBeingHovered = parent.gameObject;
                 }
                 
                 outline.enabled = true;
