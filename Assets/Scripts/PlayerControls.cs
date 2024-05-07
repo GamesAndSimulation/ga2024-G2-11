@@ -251,6 +251,54 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Revolver"",
+            ""id"": ""be5ac809-284b-4f55-a35d-b5b7b37b7ba2"",
+            ""actions"": [
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9d4b969-89ed-405b-830e-8ae30444a087"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""b39cbde8-2bd2-44b4-b82d-f2a5aeb78ac2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""79a98c47-8df9-4a86-8a90-c1e2a266022d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e999ff7c-e83d-4a3c-91f0-d2c132c935de"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -262,6 +310,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerWalk_Crouch = m_PlayerWalk.FindAction("Crouch", throwIfNotFound: true);
         m_PlayerWalk_Look = m_PlayerWalk.FindAction("Look", throwIfNotFound: true);
         m_PlayerWalk_WeaponWheel = m_PlayerWalk.FindAction("WeaponWheel", throwIfNotFound: true);
+        // Revolver
+        m_Revolver = asset.FindActionMap("Revolver", throwIfNotFound: true);
+        m_Revolver_Shoot = m_Revolver.FindAction("Shoot", throwIfNotFound: true);
+        m_Revolver_Reload = m_Revolver.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -397,6 +449,60 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public PlayerWalkActions @PlayerWalk => new PlayerWalkActions(this);
+
+    // Revolver
+    private readonly InputActionMap m_Revolver;
+    private List<IRevolverActions> m_RevolverActionsCallbackInterfaces = new List<IRevolverActions>();
+    private readonly InputAction m_Revolver_Shoot;
+    private readonly InputAction m_Revolver_Reload;
+    public struct RevolverActions
+    {
+        private @PlayerControls m_Wrapper;
+        public RevolverActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Shoot => m_Wrapper.m_Revolver_Shoot;
+        public InputAction @Reload => m_Wrapper.m_Revolver_Reload;
+        public InputActionMap Get() { return m_Wrapper.m_Revolver; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(RevolverActions set) { return set.Get(); }
+        public void AddCallbacks(IRevolverActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RevolverActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RevolverActionsCallbackInterfaces.Add(instance);
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
+        }
+
+        private void UnregisterCallbacks(IRevolverActions instance)
+        {
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
+        }
+
+        public void RemoveCallbacks(IRevolverActions instance)
+        {
+            if (m_Wrapper.m_RevolverActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IRevolverActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RevolverActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RevolverActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public RevolverActions @Revolver => new RevolverActions(this);
     public interface IPlayerWalkActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -404,5 +510,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnWeaponWheel(InputAction.CallbackContext context);
+    }
+    public interface IRevolverActions
+    {
+        void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

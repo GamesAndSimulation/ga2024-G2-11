@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.08058546, g: 0.14679301, b: 0.20444444, a: 1}
+  m_IndirectSpecularColor: {r: 0.028241165, g: 0.060218506, b: 0.098317035, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -370,7 +370,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -1002,7 +1002,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a40502bfb69e67148acbe83def390e08,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1122679517}
   m_SourcePrefab: {fileID: 100100000, guid: a40502bfb69e67148acbe83def390e08, type: 3}
 --- !u!1 &391887902
 GameObject:
@@ -1073,7 +1077,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -1231,8 +1235,8 @@ MonoBehaviour:
   m_FrameSpace: 0
   m_AnchorPositionOverride: {fileID: 0}
   m_AnchorPositionOffset: {x: 0, y: 0, z: 0}
-  m_Yaw: -27.639977
-  m_Pitch: 13.96
+  m_Yaw: -27.639992
+  m_Pitch: 13.959994
   m_Roll: 56.260006
 --- !u!1 &468740752
 GameObject:
@@ -1716,7 +1720,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -2185,6 +2189,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 209926753}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1122679517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122679516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c587144381e654b9d8edead00d6992ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxBullets: 4
+  reloadTime: 2
+  fireRate: 1
 --- !u!1 &1123335232
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,7 +2323,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -2414,7 +2433,7 @@ Terrain:
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
   m_DetailObjectDensity: 1
-  m_HeightmapPixelError: 5
+  m_HeightmapPixelError: 200
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
   m_ShadowCastingMode: 2
@@ -2950,6 +2969,7 @@ MonoBehaviour:
   postProcessingVolume: {fileID: 1989700106}
   hiddenWeaponY: -2.423
   showingWeaponY: -0.309
+  swordShowHeightDiff: 0.2
 --- !u!114 &1504726213
 MonoBehaviour:
   m_ObjectHideFlags: 0

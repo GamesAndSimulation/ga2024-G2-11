@@ -59,4 +59,14 @@ public class InputManager : MonoBehaviour
         return playerControls.PlayerWalk.WeaponWheel.IsPressed();
     }
     
+    public bool PlayerShotRevolver()
+    {
+        return playerControls.Revolver.Shoot.triggered;
+    }
+
+    public bool PlayerJustReloaded()
+    {
+        return playerControls.Revolver.Reload.triggered;
+    }
+
 }

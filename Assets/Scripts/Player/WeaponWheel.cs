@@ -94,36 +94,34 @@ public class WeaponWheel : MonoBehaviour
         if (_afterOpeningWeaponWheel)
         {
             DOTween.To(() => postProcessingVolume.weight, x => postProcessingVolume.weight = x, 1f, 0.2f);
-            //postProcessingVolume.weight = 1f;
-            //Debug.Log(postProcessingVolume.weight);
         }
         else
         {
             DOTween.To(() => postProcessingVolume.weight, x => postProcessingVolume.weight = x, 0f, 0.2f);
-            //postProcessingVolume.weight = 0f;
-            //Debug.Log(postProcessingVolume.weight);
         }
     }
+
+    [SerializeField] private float swordShowHeightDiff = 0.2f;
 
     private void ChangeWeapon(Weapon newWeapon)
     {
 
         currentWeaponGameObject.transform.DOLocalMoveY(hiddenWeaponY, 0.2f);
-        GameObject weaponToEnable = null;
         switch (newWeapon)
         {
             case Weapon.Revolver:
-                weaponToEnable = revolver;
+                revolver.transform.DOLocalMoveY(showingWeaponY, 0.2f);
+                currentWeaponGameObject = revolver;
+                revolver.GetComponent<Revolver>().enabled = true;
                 break;
             case Weapon.Sword:
-                weaponToEnable = sword;
+                sword.transform.DOLocalMoveY(showingWeaponY + swordShowHeightDiff, 0.2f);
+                currentWeaponGameObject = sword;
+                revolver.GetComponent<Revolver>().enabled = false;
                 break;
             default:
-                weaponToEnable = sword;
                 break;
         }
-        weaponToEnable.transform.DOLocalMoveY(showingWeaponY, 0.2f);
-        currentWeaponGameObject = weaponToEnable;
     }
     
     public Weapon CheckSelectedWeapon()
