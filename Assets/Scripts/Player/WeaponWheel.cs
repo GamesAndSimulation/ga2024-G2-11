@@ -47,44 +47,54 @@ public class WeaponWheel : MonoBehaviour
         _initSensitivity = _virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
-        currentWeaponGameObject = revolver; // Starting weapon
+        currentWeaponGameObject = sword; // Starting weapon
     }
 
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            float y = revolver.transform.position.y;
-            revolver.transform.DOMoveY(y - 1.207f, 2f);
-        }
-        
         var pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         if (_inputManager.IsWeaponWheelOut())
         {
+            _afterOpeningWeaponWheel = true;
             weaponWheel.SetActive(true);
+            
             StartSlowMotion();
-            CheckSelectedWeapon();
+            
+            CheckSelectedWeapon(); // Check every frame to update the outline
+            
+            // Lock player view
             pov.m_HorizontalAxis.m_MaxSpeed = 0;
             pov.m_VerticalAxis.m_MaxSpeed = 0;
+            
+            // Unlock mouse
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            _afterOpeningWeaponWheel = true;
+            
             ToggleVignette();
         }
         else
         {
             if (!_afterOpeningWeaponWheel) return;
+            
             StopSlowMotion();
+            
+            //Update new weapon
             HeldWeapon = CheckSelectedWeapon();
             ChangeWeapon(HeldWeapon);
+            
             Debug.Log(HeldWeapon);
+            
             weaponWheel.SetActive(false);
+            
             pov.m_HorizontalAxis.m_MaxSpeed = _initSensitivity;
             pov.m_VerticalAxis.m_MaxSpeed = _initSensitivity;
+            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
             _afterOpeningWeaponWheel = false;
+            
             ToggleVignette();
         }
     }
