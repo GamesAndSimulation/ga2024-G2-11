@@ -37,7 +37,7 @@ public class WeaponWheel : MonoBehaviour
     private GameObject uiGameObjectBeingHovered;
 
     private int _uiLayer;
-    private float _initSensitivity;
+    public static float _initSensitivity;
     private bool _afterOpeningWeaponWheel;
     
     void Start()
@@ -56,6 +56,8 @@ public class WeaponWheel : MonoBehaviour
         var pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         if (_inputManager.IsWeaponWheelOut())
         {
+            if (GameManager.instance.inPuzzleMode)
+                return;
             _afterOpeningWeaponWheel = true;
             weaponWheel.SetActive(true);
             

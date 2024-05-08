@@ -1,4 +1,5 @@
 using System.Collections;
+using Cinemachine;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
@@ -125,6 +126,8 @@ public class PlayerScript : MonoBehaviour
         float additionalGravityFactor = 2f;
         rb.AddForce(Vector3.down * additionalGravityForce * additionalGravityFactor, ForceMode.Acceleration);
     }
+    
+    private bool _GameFocused = true;
 
     void HandleInputs(){
         
@@ -132,20 +135,18 @@ public class PlayerScript : MonoBehaviour
         horizontalInput = movement.x;
         verticalInput = movement.y;
 
+        // TODO change this to new input system
         if(Input.GetKeyUp(KeyCode.Space)){
             walkSpeed = initialWalkSpeed;
         }
 
-        if (Input.GetMouseButtonDown(2))
-        {
-            playerCam.DoFov(40);
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    _GameFocused = !_GameFocused;
+        //    var camPov = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>()
+        //        .GetCinemachineComponent<CinemachinePOV>();
+        //}
 
-        if (Input.GetMouseButtonUp(2))
-        {
-            playerCam.DoFov(60);
-        }
-        
         if (_inputManager.PlayerJumpedNow())
         {
             walkSpeed = Mathf.Clamp(walkSpeed + 0.1f, initialWalkSpeed, sprintSpeed);

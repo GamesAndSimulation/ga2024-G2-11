@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -15,6 +16,8 @@ public class InputManager : MonoBehaviour
     }
     
     private PlayerControls playerControls;
+    private float _initSensitivity;
+    private CinemachineVirtualCamera _virtualCamera;
     
     private void Awake()
     {
@@ -27,6 +30,8 @@ public class InputManager : MonoBehaviour
             _instance = this;
         }
         playerControls = new PlayerControls();
+        _virtualCamera = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        _initSensitivity = _virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
     }
     
     private void OnEnable()
@@ -37,6 +42,13 @@ public class InputManager : MonoBehaviour
     private void OnDisable()
     {
         playerControls.Disable();
+    }
+    
+    public void SetLookLock(bool value)
+    {
+        var povComponent = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
+        povComponent.m_HorizontalAxis.m_MaxSpeed = value ? 0 : _initSensitivity;
+        povComponent.m_VerticalAxis.m_MaxSpeed = value ? 0 : _initSensitivity;
     }
     
     public Vector2 GetPlayerMovement()

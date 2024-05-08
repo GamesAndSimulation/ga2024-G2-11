@@ -8,6 +8,8 @@ TagManager:
   - HammerUI
   - RevolverUI
   - MainVirtualCamera
+  - Puzzle
+  - PuzzlePiece
   layers:
   - Default
   - TransparentFX
