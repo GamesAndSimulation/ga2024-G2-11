@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     }
     
     public bool inPuzzleMode = false;
+    [SerializeField] private GameObject crosshair;
+    [SerializeField] private GameObject weaponHolder;
     
     private void Awake()
     {
@@ -27,6 +29,12 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
     }
-    
-    
+
+    public void SetShowWalkCrosshairAndGuns(bool show)
+    {
+        crosshair.SetActive(show);
+        weaponHolder.SetActive(show);
+    }
+
+
 }

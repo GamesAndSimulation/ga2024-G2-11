@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Grabber : MonoBehaviour
@@ -14,42 +16,85 @@ public class Grabber : MonoBehaviour
     public Material WinFrameColor;
     [SerializeField] private float gizmoSize = 0.1f;
     [SerializeField] private Color gizmoColor = Color.red;
+    [SerializeField] private GameObject PuzzleSlotPrefab;
+    [SerializeField] private Transform TopLeftCorner;
     private int _placedPieces = 0;
 
     private Dictionary<Transform, bool> _slotOccupied;
+    
+    // Each tuples contains the pieces and their respective initial transforms
+    private List<Tuple<Vector3, Quaternion>> _piecesTransforms;
     
     private float startingY;
     
     private void Start()
     {
+        _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
+        fillPieces();
+        populateSlotGrid(6, 6, TopLeftCorner);
         _slotOccupied = new Dictionary<Transform, bool>();
         foreach (Transform slot in PuzzleSlots)
         {
             _slotOccupied.Add(slot, false);
         }
-        floatingPosZ = PuzzleFrame.transform.position.z + 0.5f;
-        startingPosZ = PuzzleFrame.transform.position.z + 0.3f;
+        floatingPosZ = PuzzleFrame.transform.position.z + 0.65f;
+        startingPosZ = PuzzleFrame.transform.position.z + 0.45f;
+    }
+
+    private void fillPieces()
+    {
+        foreach (Transform child in PuzzleSlots.parent)
+        {
+            if (child.CompareTag("PuzzlePiece"))
+            {
+                _piecesTransforms.Add(new Tuple<Vector3, Quaternion>(child.transform.localPosition, child.transform.localRotation));
+            }
+        }
     }
 
     void Update()
     {
         if (!GameManager.instance.inPuzzleMode) return;
 
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Reseting pieces...");
+            int i = 0;
+            foreach (Transform piece in PuzzleSlots.parent)
+            {
+                if (piece.CompareTag("PuzzlePiece"))
+                {
+                   Debug.Log(piece);
+                   piece.localPosition = _piecesTransforms[i].Item1;
+                   piece.localRotation = _piecesTransforms[i].Item2;
+                   i++;
+                }
+            }
+
+            foreach (var key in _slotOccupied.Keys.ToList())
+            {
+                _slotOccupied[key] = false;
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Mouse Down Puzzle");
             if (_selectedObject == null)
             {
                 RaycastHit hit = CastRay();
                 if (hit.collider != null && hit.collider.CompareTag("PuzzlePiece"))
                 {
                     startingY = hit.collider.transform.position.y;
-                    startingPosZ = hit.collider.transform.position.z;
+                    //startingPosZ = hit.collider.transform.position.z;
                     _selectedObject = hit.collider.gameObject;
                     foreach(Transform child in _selectedObject.transform.parent)
                     {
                         Transform slot = FindNearestGridPosition(child.position, out bool isOccupied);
-                        _slotOccupied[slot] = false;
+                        Debug.Log($"slot is null? {slot == null}");
+                        if (slot != null)
+                        {
+                            _slotOccupied[slot] = !isOccupied;
+                        }
                     }
                     _placedPieces--; // TODO this is wrong. It shouldn't decrement if we are picking non-placed pieces
                 }
@@ -90,18 +135,36 @@ public class Grabber : MonoBehaviour
         bool isOccupied;
         Transform nearestGrid;
         Transform[] positions = new Transform[_selectedObject.transform.parent.childCount];
-        foreach(Transform child in _selectedObject.transform.parent)
+
+        //RaycastHit hit;
+        foreach (Transform child in _selectedObject.transform.parent)
         {
-            nearestGrid= FindNearestGridPosition(child.position, out isOccupied);
-            if (isOccupied)
+            nearestGrid = FindNearestGridPosition(child.position, out isOccupied);
+            if (nearestGrid != null && !isOccupied)
             {
-                Debug.Log("Can't place piece here.");
+                positions.SetValue(nearestGrid, child.GetSiblingIndex());
+            }
+            else
+            {
                 return false;
             }
-            positions.SetValue(nearestGrid, child.GetSiblingIndex());
         }
         
-        Debug.Log(positions);
+        // For every cell of the puzzle piece ======================
+        //foreach(Transform child in _selectedObject.transform.parent)
+        //{
+        //    nearestGrid= FindNearestGridPosition(child.position, out isOccupied);
+        //    if (isOccupied)
+        //    {
+        //        Debug.Log("Can't place piece here.");
+        //        return false;
+        //    }
+        //    positions.SetValue(nearestGrid, child.GetSiblingIndex());
+        //}
+        //
+        // =========================================================
+        
+        //Debug.Log(positions);
 
         foreach (Transform child in _selectedObject.transform.parent)
         {
@@ -114,21 +177,17 @@ public class Grabber : MonoBehaviour
 
     private Transform FindNearestGridPosition(Vector3 currentPos, out bool isOccupied)
     {
-        float minDistance = float.MaxValue;
-        Transform nearestSlot = null;
-        foreach (Transform slot in PuzzleSlots)
+        RaycastHit hit;
+        Physics.Raycast(currentPos, Vector3.forward * -1f, out hit);
+        Debug.Log($"tag: {hit.collider.tag}");
+        if (hit.collider.CompareTag("Puzzle"))
         {
-            float distance = Vector3.Distance(currentPos, slot.position);
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                nearestSlot = slot;
-            }
+            isOccupied = _slotOccupied[hit.transform];
+            return hit.transform;
         }
-        
-        isOccupied = _slotOccupied[nearestSlot];
 
-        return nearestSlot;
+        isOccupied = true;
+        return null;
     }
 
     private void MoveSelectedObject()
@@ -137,6 +196,11 @@ public class Grabber : MonoBehaviour
         Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
         _selectedObject.transform.parent.position = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
+        foreach (Transform child in _selectedObject.transform.parent)
+        {
+            Debug.DrawRay(child.position, child.forward * -1f, Color.red);
+        }
+        
     }
 
     private RaycastHit CastRay()
@@ -149,5 +213,21 @@ public class Grabber : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(worldMousePosNear, worldMousePosFar - worldMousePosNear, out hit);
         return hit;
-    } 
+    }
+
+    private void populateSlotGrid(int sizeX, int sizeY, Transform topLeftCorner)
+    {
+        Quaternion rotation = topLeftCorner.localRotation;
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+                GameObject slot = Instantiate(PuzzleSlotPrefab, new Vector3(topLeftCorner.localPosition.x + i, topLeftCorner.localPosition.y - j, topLeftCorner.localPosition.z), rotation);
+                slot.transform.parent = PuzzleSlots;
+                float xOffset = i * slot.transform.localScale.x;
+                float yOffset = j * slot.transform.localScale.y;
+                slot.transform.localPosition = new Vector3(topLeftCorner.localPosition.x - xOffset, topLeftCorner.localPosition.y - yOffset, topLeftCorner.localPosition.z);
+            }
+        }
+    }
 }

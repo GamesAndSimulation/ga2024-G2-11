@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -12,12 +13,12 @@ public class Interact : MonoBehaviour
 
     private Animation _doorAnimation;
     private bool _isOpened = false;
+    private GameObject _currentPuzzle;
 
     void Start()
     {
         _doorAnimation = GetComponent<Animation>();
         _doorAnimation.clip.wrapMode = WrapMode.Once;
-        playerCamera = GameObject.FindWithTag("MainCamera");
     }
 
     void Update()
@@ -28,6 +29,7 @@ public class Interact : MonoBehaviour
             switch (hit.transform.gameObject.tag) 
             {
                 case "Puzzle":
+                    _currentPuzzle = hit.transform.gameObject;
                     InteractWithPuzzle();
                     break;
             }
@@ -37,7 +39,7 @@ public class Interact : MonoBehaviour
         //    interactIcon.SetActive(false);
         //}
 
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Tab))
         {
             ExitPuzzle();
         }
@@ -54,6 +56,9 @@ public class Interact : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             GameManager.instance.inPuzzleMode = true;
+            GameManager.instance.SetShowWalkCrosshairAndGuns(false);
+            GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 0;
+            _currentPuzzle.transform.root.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 1;
             Debug.Log("Interact With Puzzle");
         }
     }
@@ -65,6 +70,9 @@ public class Interact : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         GameManager.instance.inPuzzleMode = false;
+        GameManager.instance.SetShowWalkCrosshairAndGuns(true);
+        GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 1;
+        _currentPuzzle.transform.root.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 0;
     }
 
 }
