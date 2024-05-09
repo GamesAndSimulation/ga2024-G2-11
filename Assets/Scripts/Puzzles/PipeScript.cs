@@ -7,7 +7,7 @@ public class PipePuzzle : MonoBehaviour
 
     float[] rotations = { 0, 90, 180, 270 };
 
-    public float correctRotation;
+    public float[] correctRotation;
     private bool isPlacedCorrectly = false;
 
     // Start is called before the first frame update
@@ -26,7 +26,13 @@ public class PipePuzzle : MonoBehaviour
     void OnMouseDown()
     {
         transform.Rotate(new Vector3(0, 0, 90));
-        if (transform.eulerAngles.z == correctRotation)
-            isPlacedCorrectly = true;
+
+        for (int i = 0; i < correctRotation.Length; i++)
+        {
+            if (transform.eulerAngles.z == correctRotation[i])
+                isPlacedCorrectly = true;
+        }
+        
+        
     }
 }
