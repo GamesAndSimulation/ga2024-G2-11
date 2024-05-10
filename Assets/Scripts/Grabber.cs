@@ -1,44 +1,42 @@
-using System;
-using System.Collections;
+using System;using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Grabber : MonoBehaviour
 {
-    private GameObject _selectedObject;
-    
-    private float floatingPosZ = -13.2f;
-    private float startingPosZ = -10f;
-    
-    public Transform PuzzleSlots;
-    public GameObject PuzzleFrame;
-    public Material WinFrameColor;
-    [SerializeField] private float gizmoSize = 0.1f;
-    [SerializeField] private Color gizmoColor = Color.red;
-    [SerializeField] private GameObject PuzzleSlotPrefab;
+    [SerializeField] private int slotsWidth = 6;
+    [SerializeField] private int slotsHeight = 6;
     [SerializeField] private Transform TopLeftCorner;
+
+    public Material WinFrameColor;
+
+    private GameObject _selectedObject;
+    private float floatingPosZ;
+    private float startingPosZ;
     private int _placedPieces = 0;
 
-    private Dictionary<Transform, bool> _slotOccupied;
-    
-    // Each tuples contains the pieces and their respective initial transforms
-    private List<Tuple<Vector3, Quaternion>> _piecesTransforms;
-    
-    private float startingY;
+    private Transform PuzzleSlots;
+    private GameObject PuzzleSlotPrefab;
+
+    // Data Structures
+    private Dictionary<Transform, bool> _slotOccupied;  // Tracks whether slots are occupied
+    private List<Tuple<Vector3, Quaternion>> _piecesTransforms;  // Stores initial transforms for undo or reset
     
     private void Start()
     {
+        PuzzleSlotPrefab = Resources.Load<GameObject>("Prefabs/PuzzleSlot");
+        PuzzleSlots = transform.Find("PuzzleArea").Find("Slots");
         _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
         fillPieces();
-        populateSlotGrid(6, 6, TopLeftCorner);
+        populateSlotGrid(slotsWidth, slotsHeight, TopLeftCorner);
         _slotOccupied = new Dictionary<Transform, bool>();
         foreach (Transform slot in PuzzleSlots)
         {
             _slotOccupied.Add(slot, false);
         }
-        floatingPosZ = PuzzleFrame.transform.position.z + 0.65f;
-        startingPosZ = PuzzleFrame.transform.position.z + 0.45f;
+        floatingPosZ = transform.position.z + 0.65f;
+        startingPosZ = transform.position.z + 0.45f;
     }
 
     private void fillPieces()
@@ -58,13 +56,11 @@ public class Grabber : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Debug.Log("Reseting pieces...");
             int i = 0;
             foreach (Transform piece in PuzzleSlots.parent)
             {
                 if (piece.CompareTag("PuzzlePiece"))
                 {
-                   Debug.Log(piece);
                    piece.localPosition = _piecesTransforms[i].Item1;
                    piece.localRotation = _piecesTransforms[i].Item2;
                    i++;
@@ -84,12 +80,11 @@ public class Grabber : MonoBehaviour
                 RaycastHit hit = CastRay();
                 if (hit.collider != null && hit.collider.CompareTag("PuzzlePiece"))
                 {
-                    startingY = hit.collider.transform.position.y;
                     //startingPosZ = hit.collider.transform.position.z;
                     _selectedObject = hit.collider.gameObject;
                     foreach(Transform child in _selectedObject.transform.parent)
                     {
-                        Transform slot = FindNearestGridPosition(child.position, out bool isOccupied);
+                        Transform slot = FindNearestGridPosition(child, out bool isOccupied);
                         Debug.Log($"slot is null? {slot == null}");
                         if (slot != null)
                         {
@@ -105,11 +100,6 @@ public class Grabber : MonoBehaviour
                 {
                     _selectedObject = null;
                     _placedPieces++;
-                    if (_placedPieces == 5)
-                    {
-                        Debug.Log("Puzzle complete!");
-                        PuzzleFrame.GetComponent<Renderer>().material = WinFrameColor;
-                    }
                     Debug.Log("Piece placed.");
                 }
                 
@@ -132,40 +122,30 @@ public class Grabber : MonoBehaviour
         Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y,
         Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        bool isOccupied;
-        Transform nearestGrid;
         Transform[] positions = new Transform[_selectedObject.transform.parent.childCount];
 
-        //RaycastHit hit;
+        bool someOutside = false;
+
+        // Checking if every slot is free/available
         foreach (Transform child in _selectedObject.transform.parent)
         {
-            nearestGrid = FindNearestGridPosition(child.position, out isOccupied);
-            if (nearestGrid != null && !isOccupied)
+            var nearestGrid = FindNearestGridPosition(child, out var isOccupied);
+            if (nearestGrid != child) // Means it's trying to place a piece in the grid
             {
-                positions.SetValue(nearestGrid, child.GetSiblingIndex());
+                if (isOccupied || someOutside)
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+            
+            if(nearestGrid == child)
+                someOutside = true;
+            
+            positions.SetValue(nearestGrid, child.GetSiblingIndex());
         }
         
-        // For every cell of the puzzle piece ======================
-        //foreach(Transform child in _selectedObject.transform.parent)
-        //{
-        //    nearestGrid= FindNearestGridPosition(child.position, out isOccupied);
-        //    if (isOccupied)
-        //    {
-        //        Debug.Log("Can't place piece here.");
-        //        return false;
-        //    }
-        //    positions.SetValue(nearestGrid, child.GetSiblingIndex());
-        //}
-        //
-        // =========================================================
-        
-        //Debug.Log(positions);
-
+        // Placing every cell of the piece in each slot, since
+        // we now know that every slot is free
         foreach (Transform child in _selectedObject.transform.parent)
         {
             var position = positions[child.GetSiblingIndex()].position;
@@ -175,10 +155,10 @@ public class Grabber : MonoBehaviour
         return true;
     }
 
-    private Transform FindNearestGridPosition(Vector3 currentPos, out bool isOccupied)
+    private Transform FindNearestGridPosition(Transform currentPos, out bool isOccupied)
     {
         RaycastHit hit;
-        Physics.Raycast(currentPos, Vector3.forward * -1f, out hit);
+        Physics.Raycast(currentPos.position, Vector3.forward * -1f, out hit);
         Debug.Log($"tag: {hit.collider.tag}");
         if (hit.collider.CompareTag("Puzzle"))
         {
@@ -186,16 +166,21 @@ public class Grabber : MonoBehaviour
             return hit.transform;
         }
 
-        isOccupied = true;
-        return null;
+        isOccupied = false;
+        return currentPos;
     }
+
+    private float pieceOffsetX = -0.3f;
+    private float pieceOffsetY = -0.7f;
 
     private void MoveSelectedObject()
     {
         Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y,
         Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
+        
         _selectedObject.transform.parent.position = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
+        
         foreach (Transform child in _selectedObject.transform.parent)
         {
             Debug.DrawRay(child.position, child.forward * -1f, Color.red);
@@ -203,15 +188,28 @@ public class Grabber : MonoBehaviour
         
     }
 
+    //private RaycastHit CastRay()
+    //{
+    //    Vector3 screenMousePosFar = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane);
+    //    Vector3 screenMousePosNear = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
+    //    Vector3 worldMousePosFar = Camera.main.ScreenToWorldPoint(screenMousePosFar);
+    //    Vector3 worldMousePosNear = Camera.main.ScreenToWorldPoint(screenMousePosNear);
+
+    //    RaycastHit hit;
+    //    Physics.Raycast(worldMousePosNear, worldMousePosFar - worldMousePosNear, out hit);
+    //    return hit;
+    //}
+    
     private RaycastHit CastRay()
     {
-        Vector3 screenMousePosFar = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane);
-        Vector3 screenMousePosNear = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
-        Vector3 worldMousePosFar = Camera.main.ScreenToWorldPoint(screenMousePosFar);
-        Vector3 worldMousePosNear = Camera.main.ScreenToWorldPoint(screenMousePosNear);
-
+        // Get mouse position directly in screen space
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    
         RaycastHit hit;
-        Physics.Raycast(worldMousePosNear, worldMousePosFar - worldMousePosNear, out hit);
+        if (Physics.Raycast(ray, out hit))
+        {
+            Debug.DrawLine(ray.origin, hit.point, Color.red); // Draw line in the scene view for debugging
+        }
         return hit;
     }
 

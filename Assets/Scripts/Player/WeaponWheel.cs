@@ -149,7 +149,7 @@ public class WeaponWheel : MonoBehaviour
             var curGameObject = curRaysastResult.gameObject;
             if (curGameObject.layer == _uiLayer)
             {
-                if(uiGameObjectBeingHovered != null)
+                if(uiGameObjectBeingHovered != null && uiGameObjectBeingHovered.GetComponent<Outline>() != null)
                     uiGameObjectBeingHovered.GetComponent<Outline>().enabled = false;
                 uiGameObjectBeingHovered = curGameObject;
                 Outline outline = uiGameObjectBeingHovered.GetComponent<Outline>();

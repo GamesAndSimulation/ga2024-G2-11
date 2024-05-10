@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public bool inPuzzleMode = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
+    [SerializeField] private MeshRenderer playerBody;
     
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
     {
         crosshair.SetActive(show);
         weaponHolder.SetActive(show);
+        playerBody.enabled = show;
     }
 
 

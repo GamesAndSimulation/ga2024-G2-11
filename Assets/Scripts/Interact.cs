@@ -9,7 +9,7 @@ public class Interact : MonoBehaviour
     private Vector3 forward;
     private RaycastHit hit;
 
-    [SerializeField] private GameObject playerCamera;
+    //private GameObject playerCamera;
 
     private Animation _doorAnimation;
     private bool _isOpened = false;
@@ -23,8 +23,10 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
-        forward = playerCamera.transform.TransformDirection(Vector3.forward);
-        if(Physics.Raycast(playerCamera.transform.position, forward, out hit, 30f))
+        //forward = playerCamera.transform.TransformDirection(Vector3.forward);
+        var playerCamera = Camera.main.transform;
+        Debug.DrawRay(playerCamera.position, playerCamera.forward * 30f, Color.green);
+        if(Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, 30f))
         {
             switch (hit.transform.gameObject.tag) 
             {
