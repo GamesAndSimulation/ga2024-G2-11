@@ -9,16 +9,11 @@ public class Interact : MonoBehaviour
     private Vector3 forward;
     private RaycastHit hit;
 
-    //private GameObject playerCamera;
-
-    private Animation _doorAnimation;
     private bool _isOpened = false;
     private GameObject _currentPuzzle;
 
     void Start()
     {
-        _doorAnimation = GetComponent<Animation>();
-        _doorAnimation.clip.wrapMode = WrapMode.Once;
     }
 
     void Update()

@@ -1,6 +1,7 @@
 using System;using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class Grabber : MonoBehaviour
@@ -8,6 +9,8 @@ public class Grabber : MonoBehaviour
     [SerializeField] private int slotsWidth = 6;
     [SerializeField] private int slotsHeight = 6;
     [SerializeField] private Transform TopLeftCorner;
+    [SerializeField] private float resetTime = 0.38f;
+    [SerializeField] private float smoothingSpeed = 0.1f;
 
     public Material WinFrameColor;
 
@@ -29,7 +32,7 @@ public class Grabber : MonoBehaviour
         PuzzleSlots = transform.Find("PuzzleArea").Find("Slots");
         _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
         fillPieces();
-        populateSlotGrid(slotsWidth, slotsHeight, TopLeftCorner);
+        PopulateSlotGrid(slotsWidth, slotsHeight, TopLeftCorner);
         _slotOccupied = new Dictionary<Transform, bool>();
         foreach (Transform slot in PuzzleSlots)
         {
@@ -54,6 +57,7 @@ public class Grabber : MonoBehaviour
     {
         if (!GameManager.instance.inPuzzleMode) return;
 
+        // Reset board
         if (Input.GetKeyDown(KeyCode.T))
         {
             int i = 0;
@@ -61,9 +65,11 @@ public class Grabber : MonoBehaviour
             {
                 if (piece.CompareTag("PuzzlePiece"))
                 {
-                   piece.localPosition = _piecesTransforms[i].Item1;
-                   piece.localRotation = _piecesTransforms[i].Item2;
-                   i++;
+                    piece.DOLocalMove(_piecesTransforms[i].Item1, resetTime);
+                    piece.DOLocalRotate(_piecesTransforms[i].Item2.eulerAngles, resetTime);
+                   //piece.localPosition = _piecesTransforms[i].Item1;
+                   //piece.localRotation = _piecesTransforms[i].Item2;
+                    i++;
                 }
             }
 
@@ -88,7 +94,7 @@ public class Grabber : MonoBehaviour
                         Debug.Log($"slot is null? {slot == null}");
                         if (slot != null)
                         {
-                            _slotOccupied[slot] = !isOccupied;
+                            _slotOccupied[slot] = false; //!isOccupied;
                         }
                     }
                     _placedPieces--; // TODO this is wrong. It shouldn't decrement if we are picking non-placed pieces
@@ -125,6 +131,7 @@ public class Grabber : MonoBehaviour
         Transform[] positions = new Transform[_selectedObject.transform.parent.childCount];
 
         bool someOutside = false;
+        bool someInside = false;
 
         // Checking if every slot is free/available
         foreach (Transform child in _selectedObject.transform.parent)
@@ -136,10 +143,17 @@ public class Grabber : MonoBehaviour
                 {
                     return false;
                 }
+                someInside = true;
+            }
+            else
+            {
+                if (someInside)
+                {
+                    return false;
+                }
+                someOutside = true;
             }
             
-            if(nearestGrid == child)
-                someOutside = true;
             
             positions.SetValue(nearestGrid, child.GetSiblingIndex());
         }
@@ -170,36 +184,23 @@ public class Grabber : MonoBehaviour
         return currentPos;
     }
 
-    private float pieceOffsetX = -0.3f;
-    private float pieceOffsetY = -0.7f;
-
     private void MoveSelectedObject()
     {
-        Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y,
-        Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
-        
-        _selectedObject.transform.parent.position = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
-        
+        Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y,
+            Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
+
+        Vector3 targetPosition = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
+
+        _selectedObject.transform.parent.position = Vector3.Lerp(_selectedObject.transform.parent.position, targetPosition, smoothingSpeed);
+
         foreach (Transform child in _selectedObject.transform.parent)
         {
             Debug.DrawRay(child.position, child.forward * -1f, Color.red);
         }
-        
     }
 
-    //private RaycastHit CastRay()
-    //{
-    //    Vector3 screenMousePosFar = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane);
-    //    Vector3 screenMousePosNear = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
-    //    Vector3 worldMousePosFar = Camera.main.ScreenToWorldPoint(screenMousePosFar);
-    //    Vector3 worldMousePosNear = Camera.main.ScreenToWorldPoint(screenMousePosNear);
 
-    //    RaycastHit hit;
-    //    Physics.Raycast(worldMousePosNear, worldMousePosFar - worldMousePosNear, out hit);
-    //    return hit;
-    //}
-    
     private RaycastHit CastRay()
     {
         // Get mouse position directly in screen space
@@ -213,7 +214,7 @@ public class Grabber : MonoBehaviour
         return hit;
     }
 
-    private void populateSlotGrid(int sizeX, int sizeY, Transform topLeftCorner)
+    private void PopulateSlotGrid(int sizeX, int sizeY, Transform topLeftCorner)
     {
         Quaternion rotation = topLeftCorner.localRotation;
         for (int i = 0; i < sizeX; i++)
