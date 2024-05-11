@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Grabber : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class Grabber : MonoBehaviour
         }
         floatingPosZ = transform.position.z + 0.65f;
         startingPosZ = transform.position.z + 0.45f;
+        this.enabled = false;
     }
 
     private void fillPieces()
@@ -53,30 +55,35 @@ public class Grabber : MonoBehaviour
         }
     }
 
+    public void ResetPuzzleBoard()
+    {
+        int i = 0;
+        foreach (Transform piece in PuzzleSlots.parent)
+        {
+            if (piece.CompareTag("PuzzlePiece"))
+            {
+                piece.DOLocalMove(_piecesTransforms[i].Item1, resetTime);
+                piece.DOLocalRotate(_piecesTransforms[i].Item2.eulerAngles, resetTime);
+                i++;
+            }
+        }
+
+        foreach (var key in _slotOccupied.Keys.ToList())
+        {
+            _slotOccupied[key] = false;
+        }
+    }
+
     void Update()
     {
-        if (!GameManager.instance.inPuzzleMode) return;
+        if (!GameManager.Instance.inPuzzleMode) return;
+
+        CastRay();
 
         // Reset board
         if (Input.GetKeyDown(KeyCode.T))
         {
-            int i = 0;
-            foreach (Transform piece in PuzzleSlots.parent)
-            {
-                if (piece.CompareTag("PuzzlePiece"))
-                {
-                    piece.DOLocalMove(_piecesTransforms[i].Item1, resetTime);
-                    piece.DOLocalRotate(_piecesTransforms[i].Item2.eulerAngles, resetTime);
-                   //piece.localPosition = _piecesTransforms[i].Item1;
-                   //piece.localRotation = _piecesTransforms[i].Item2;
-                    i++;
-                }
-            }
-
-            foreach (var key in _slotOccupied.Keys.ToList())
-            {
-                _slotOccupied[key] = false;
-            }
+            ResetPuzzleBoard();
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -200,19 +207,44 @@ public class Grabber : MonoBehaviour
         }
     }
 
+    public float offset = 0.5f;
 
     private RaycastHit CastRay()
     {
-        // Get mouse position directly in screen space
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //// Get mouse position directly in screen space
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
     
+        //RaycastHit hit;
+        //if (Physics.Raycast(ray, out hit))
+        //{
+        //    Debug.DrawLine(ray.origin, hit.point, Color.red); // Draw line in the scene view for debugging
+        //}
+        //return hit;
+        Camera cam = Camera.main;
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 100f;
+        mousePos = cam.ScreenToWorldPoint(mousePos);
+        
+        Vector3 pos = Input.mousePosition;
+        pos.z = cam.nearClipPlane + offset;
+        
+        //Debug.DrawRay(cam.transform.position, mousePos - cam.transform.position, Color.blue);
+        
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Debug.DrawLine ( ray.origin, ray.origin + ray.direction * 100, Color.red );
+        Debug.DrawRay ( ray.origin, ray.direction * 100, Color.blue); 
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        
+        if(Physics.Raycast(ray, out hit))
         {
-            Debug.DrawLine(ray.origin, hit.point, Color.red); // Draw line in the scene view for debugging
+            //Debug.Log(hit.collider.name);
         }
+
         return hit;
+
     }
+
+    private float _boardZ;
 
     private void PopulateSlotGrid(int sizeX, int sizeY, Transform topLeftCorner)
     {
@@ -222,6 +254,7 @@ public class Grabber : MonoBehaviour
             for (int j = 0; j < sizeY; j++)
             {
                 GameObject slot = Instantiate(PuzzleSlotPrefab, new Vector3(topLeftCorner.localPosition.x + i, topLeftCorner.localPosition.y - j, topLeftCorner.localPosition.z), rotation);
+                _boardZ = slot.transform.position.z;
                 slot.transform.parent = PuzzleSlots;
                 float xOffset = i * slot.transform.localScale.x;
                 float yOffset = j * slot.transform.localScale.y;

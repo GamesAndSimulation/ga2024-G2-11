@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public class WeaponSway : MonoBehaviour
 {
     [Header("Sway Settings")]
-    [SerializeField] private float smooth;
-    [SerializeField] private float swayMultiplier;
+    [SerializeField] private float smooth = 12f;
+    [SerializeField] private float swayMultiplier = 0.2f;
     private InputManager _inputManager;
 
     private void Start()

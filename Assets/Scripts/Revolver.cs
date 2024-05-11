@@ -34,7 +34,7 @@ public class Revolver : MonoBehaviour
     void Update()
     {
         
-        if(GameManager.instance.inPuzzleMode)
+        if(GameManager.Instance.inPuzzleMode)
             return;
         
         // Reload

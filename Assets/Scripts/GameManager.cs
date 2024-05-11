@@ -5,15 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Singleton class
-    private static GameManager _instance;
-    public static GameManager instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
-    
+    public static GameManager Instance { get; private set; }
+
     public bool inPuzzleMode = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
@@ -21,13 +14,13 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        if(_instance != null && _instance != this)
+        if(Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
         }
         else
         {
-            _instance = this;
+            Instance = this;
         }
     }
 
@@ -36,6 +29,12 @@ public class GameManager : MonoBehaviour
         crosshair.SetActive(show);
         weaponHolder.SetActive(show);
         playerBody.enabled = show;
+    }
+    
+    public void SetPuzzleMode(bool value)
+    {
+        inPuzzleMode = value;
+        SetShowWalkCrosshairAndGuns(!value);
     }
 
 

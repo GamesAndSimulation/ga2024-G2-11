@@ -56,7 +56,7 @@ public class WeaponWheel : MonoBehaviour
         var pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         if (_inputManager.IsWeaponWheelOut())
         {
-            if (GameManager.instance.inPuzzleMode)
+            if (GameManager.Instance.inPuzzleMode)
                 return;
             _afterOpeningWeaponWheel = true;
             weaponWheel.SetActive(true);

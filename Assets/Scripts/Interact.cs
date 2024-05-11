@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Interact : MonoBehaviour
 {
+    
+    [SerializeField] private GameObject PuzzleUI;
+    
     private Vector3 forward;
     private RaycastHit hit;
 
@@ -43,33 +48,52 @@ public class Interact : MonoBehaviour
         
     }
 
+    public void ResetPuzzleBoard()
+    {
+        _currentPuzzle.transform.root.GetComponent<Grabber>().ResetPuzzleBoard();
+    }
+    
     void InteractWithPuzzle() 
     {
         //interactIcon.SetActive(true);
         if (Input.GetKeyDown(KeyCode.E))
         {
             //cameraController.enabled = false;
+            FadePuzzleUI(true);
+            _currentPuzzle.transform.root.GetComponent<Grabber>().enabled = true;
             InputManager.Instance.SetLookLock(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            GameManager.instance.inPuzzleMode = true;
-            GameManager.instance.SetShowWalkCrosshairAndGuns(false);
+            GameManager.Instance.SetPuzzleMode(true);
             GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 0;
             _currentPuzzle.transform.root.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 1;
             Debug.Log("Interact With Puzzle");
         }
     }
-
+    
     public void ExitPuzzle()
     {
         //cameraController.enabled = true;
+        FadePuzzleUI(false);
         InputManager.Instance.SetLookLock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        GameManager.instance.inPuzzleMode = false;
-        GameManager.instance.SetShowWalkCrosshairAndGuns(true);
+        GameManager.Instance.SetPuzzleMode(false);
         GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 1;
         _currentPuzzle.transform.root.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 0;
+        _currentPuzzle.transform.root.GetComponent<Grabber>().enabled = false;
     }
+
+    public void FadePuzzleUI(bool fadeIn)
+    {
+        foreach(Image img in PuzzleUI.GetComponentsInChildren<Image>())
+        {
+            if (fadeIn)
+                img.DOFade(1, 0.5f);
+            else
+                img.DOFade(0, 0.5f);
+        }
+    }
+    
 
 }
