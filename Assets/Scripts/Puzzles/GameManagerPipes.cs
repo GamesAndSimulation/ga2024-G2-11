@@ -7,6 +7,7 @@ public class GameManagerPipes : MonoBehaviour
 {
     public GameObject PipesHolder;
     public GameObject[] Pipes;
+    public GameObject Gear;
 
     public int criticalPathPipes = 0;
     public int correctPipes = 0;
@@ -27,7 +28,10 @@ public class GameManagerPipes : MonoBehaviour
     void Update()
     {
         if (correctPipes == criticalPathPipes)
+        {
             Debug.Log("You won the game");
+            Gear.transform.Rotate(0, 0, 5,  Space.Self);
+        }
     }
 
     public void AddCorrectPipe()
