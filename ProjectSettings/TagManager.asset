@@ -10,6 +10,7 @@ TagManager:
   - MainVirtualCamera
   - Puzzle
   - PuzzlePiece
+  - DestructableWall
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Water
   - UI
   - PostProcessing
-  - 
+  - DestructableWall
   - 
   - 
   - 
