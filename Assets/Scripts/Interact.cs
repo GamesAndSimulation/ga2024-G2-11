@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -25,8 +27,9 @@ public class Interact : MonoBehaviour
     {
         //forward = playerCamera.transform.TransformDirection(Vector3.forward);
         var playerCamera = Camera.main.transform;
-        Debug.DrawRay(playerCamera.position, playerCamera.forward * 30f, Color.green);
-        if(Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, 30f))
+        Vector3 forwardVec = GetCameraForward();
+        Debug.DrawRay(playerCamera.position, forwardVec * 30f, Color.green);
+        if(Physics.Raycast(playerCamera.position, forwardVec, out hit, 30f))
         {
             switch (hit.transform.gameObject.tag) 
             {
@@ -46,6 +49,24 @@ public class Interact : MonoBehaviour
             ExitPuzzle();
         }
         
+    }
+
+    // Get the forward vector of the camera
+    // Using default .forward doesn't seem to 
+    // work well with cinemachine POV... 
+    private Vector3 GetCameraForward()
+    {
+        var pov = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachinePOV>();
+        float pitch = pov.m_VerticalAxis.Value;
+        float yaw = pov.m_HorizontalAxis.Value;
+        
+        float pitchRad = pitch * Mathf.Deg2Rad;
+        float yawRad = yaw * Mathf.Deg2Rad;
+        
+        float x = MathF.Cos(pitchRad) * Mathf.Sin(yawRad);
+        float y = -MathF.Sin(pitchRad);
+        float z = MathF.Cos(pitchRad) * Mathf.Cos(yawRad);
+        return new Vector3(x, y, z);
     }
 
     public void ResetPuzzleBoard()

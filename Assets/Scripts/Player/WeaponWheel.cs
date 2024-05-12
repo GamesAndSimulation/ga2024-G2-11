@@ -26,6 +26,7 @@ public class WeaponWheel : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [SerializeField] private GameObject sword;
     [SerializeField] private GameObject revolver;
+    [SerializeField] private GameObject hammer;
     [SerializeField] private Volume postProcessingVolume;
     public float hiddenWeaponY;
     public float showingWeaponY;
@@ -114,6 +115,7 @@ public class WeaponWheel : MonoBehaviour
     }
 
     [SerializeField] private float swordShowHeightDiff = 0.2f;
+    [SerializeField] private float hammerShowHeightDiff = 0.2f;
 
     private void ChangeWeapon(Weapon newWeapon)
     {
@@ -129,6 +131,11 @@ public class WeaponWheel : MonoBehaviour
             case Weapon.Sword:
                 sword.transform.DOLocalMoveY(showingWeaponY + swordShowHeightDiff, 0.2f);
                 currentWeaponGameObject = sword;
+                revolver.GetComponent<Revolver>().enabled = false;
+                break;
+            case Weapon.Hammer:
+                hammer.transform.DOLocalMoveY(showingWeaponY + hammerShowHeightDiff, 0.2f);
+                currentWeaponGameObject = hammer;
                 revolver.GetComponent<Revolver>().enabled = false;
                 break;
             default:
