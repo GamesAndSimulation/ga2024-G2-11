@@ -48,7 +48,7 @@ public class WeaponWheel : MonoBehaviour
         _initSensitivity = _virtualCamera.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
-        currentWeaponGameObject = sword; // Starting weapon
+        currentWeaponGameObject = hammer;
     }
 
     void Update()

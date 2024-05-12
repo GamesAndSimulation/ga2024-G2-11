@@ -18,7 +18,6 @@ public class Grabber : MonoBehaviour
     private GameObject _selectedObject;
     private float floatingPosZ;
     private float startingPosZ;
-    private int _placedPieces = 0;
 
     private Transform PuzzleSlots;
     private GameObject PuzzleSlotPrefab;
@@ -37,8 +36,10 @@ public class Grabber : MonoBehaviour
         _slotOccupied = new Dictionary<Transform, bool>();
         foreach (Transform slot in PuzzleSlots)
         {
-            _slotOccupied.Add(slot, false);
+            if(slot.gameObject.activeSelf)
+                _slotOccupied.Add(slot, false);
         }
+        Debug.Log($"_slotOccupied count: {_slotOccupied.Count}");
         floatingPosZ = transform.position.z + 0.65f;
         startingPosZ = transform.position.z + 0.45f;
         this.enabled = false;
@@ -104,7 +105,6 @@ public class Grabber : MonoBehaviour
                             _slotOccupied[slot] = false; //!isOccupied;
                         }
                     }
-                    _placedPieces--; // TODO this is wrong. It shouldn't decrement if we are picking non-placed pieces
                 }
             }
             else
@@ -112,8 +112,7 @@ public class Grabber : MonoBehaviour
                 if (PlaceObjectInGrid()) // Place was successful
                 {
                     _selectedObject = null;
-                    _placedPieces++;
-                    Debug.Log("Piece placed.");
+                    CheckGridFull();
                 }
                 
             }
@@ -126,6 +125,18 @@ public class Grabber : MonoBehaviour
                 _selectedObject.transform.parent.Rotate(0, 0, 90, Space.World);
             }
             MoveSelectedObject();
+        }
+    }
+
+    private void CheckGridFull()
+    {
+        //var full = _slotOccupied.Keys.All(key => _slotOccupied[key]);
+        Debug.Log($"slots count: {slotsWidth * slotsHeight}");
+        Debug.Log($"_slotOccupied count: {_slotOccupied.Count}");
+        if(_slotOccupied.Count - 1 >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
+        {
+            MeshRenderer frame = GameObject.Find("Frame").GetComponent<MeshRenderer>();
+            frame.material = WinFrameColor;
         }
     }
 
