@@ -36,8 +36,11 @@ public class Hammer : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"collider hit {other.gameObject.name}");
-        if(other.gameObject.CompareTag("DestructableWall"))
+        if (other.gameObject.CompareTag("DestructableWall"))
+        {
+            Instantiate(Resources.Load<GameObject>("Prefabs/DestructParticles"), other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+        }
     }
 
 }
