@@ -16,6 +16,7 @@ public class PipeScript : MonoBehaviour
     public GameManagerPipes gameManagerPipeGameObject;
 
     private Vector3 _initialPos;
+    private int _currRotationIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,9 @@ public class PipeScript : MonoBehaviour
         _initialPos = transform.localPosition;
             
         int rand = Random.Range(0, _rotations.Length);
+        _currRotationIndex = rand;
+        
+        // Sets a random rotation
         transform.eulerAngles = new Vector3(0, 0, _rotations[rand]);
 
         if (isPartOfSolution)
@@ -32,7 +36,7 @@ public class PipeScript : MonoBehaviour
             // Check if the pipe is correctly placed from the start
             for (int i = 0; i < correctRotation.Length; i++)
             {
-                if (transform.eulerAngles.z == correctRotation[i])
+                if (Mathf.Approximately(_rotations[_currRotationIndex], correctRotation[i]))
                 {
                     _isPlacedCorrectly = true;
                     gameManagerPipeGameObject.AddCorrectPipe();
@@ -61,6 +65,11 @@ public class PipeScript : MonoBehaviour
 
     void OnMouseDown()
     {
+
+        // Round incrementation of the current index
+        _currRotationIndex = (_currRotationIndex + 1) % _rotations.Length;
+
+        // Increments 90 degrees
         transform.Rotate(new Vector3(0, 0, 90));
 
         if (isPartOfSolution)
@@ -75,9 +84,15 @@ public class PipeScript : MonoBehaviour
                     gameManagerPipeGameObject.RemoveCorrectPipe();
                 }
 
+                Debug.Log(i);
+                Debug.Log("euler" + transform.eulerAngles.z);
+                Debug.Log("correct rotation" + correctRotation[i]);
+                
                 // If it is placed correctly, note that
-                if (transform.eulerAngles.z == correctRotation[i])
+                // Compares the current rotation with the available correct ones
+                if (Mathf.Approximately(_rotations[_currRotationIndex], correctRotation[i]))
                 {
+                    
                     _isPlacedCorrectly = true;
                     gameManagerPipeGameObject.AddCorrectPipe();
                     break;
