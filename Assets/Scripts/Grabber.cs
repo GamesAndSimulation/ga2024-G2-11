@@ -18,7 +18,7 @@ public class Grabber : MonoBehaviour
     private GameObject _selectedObject;
     private float floatingPosZ;
     private float startingPosZ;
-
+    private int _placedPiecesNum;
     private Transform PuzzleSlots;
     private GameObject PuzzleSlotPrefab;
 
@@ -28,6 +28,7 @@ public class Grabber : MonoBehaviour
     
     private void Start()
     {
+        _placedPiecesNum = 0;
         PuzzleSlotPrefab = Resources.Load<GameObject>("Prefabs/PuzzleSlot");
         PuzzleSlots = transform.Find("PuzzleArea").Find("Slots");
         _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
@@ -73,6 +74,8 @@ public class Grabber : MonoBehaviour
         {
             _slotOccupied[key] = false;
         }
+        
+        _placedPiecesNum = 0;
     }
 
     void Update()
@@ -132,11 +135,16 @@ public class Grabber : MonoBehaviour
     {
         //var full = _slotOccupied.Keys.All(key => _slotOccupied[key]);
         Debug.Log($"slots count: {slotsWidth * slotsHeight}");
-        Debug.Log($"_slotOccupied count: {_slotOccupied.Count}");
-        if(_slotOccupied.Count - 1 >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
+        Debug.Log($"_placedPiecesNum: {_placedPiecesNum}");
+        if(_placedPiecesNum >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
         {
             MeshRenderer frame = GameObject.Find("Frame").GetComponent<MeshRenderer>();
-            frame.material = WinFrameColor;
+            frame.material.DOColor(Color.green, 0.5f);
+            
+            //transform.DOMoveY(-10f, 5f).OnComplete(() =>
+            //{
+            //    Debug.Log("Puzzle Solved!");
+            //});
         }
     }
 
@@ -180,6 +188,10 @@ public class Grabber : MonoBehaviour
         // we now know that every slot is free
         foreach (Transform child in _selectedObject.transform.parent)
         {
+            if(someInside)
+                _placedPiecesNum++;
+            if(someOutside)
+                _placedPiecesNum--;
             var position = positions[child.GetSiblingIndex()].position;
             child.position = new Vector3(position.x, position.y, startingPosZ);
             _slotOccupied[positions[child.GetSiblingIndex()]] = true;

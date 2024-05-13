@@ -19907,8 +19907,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.012146473, y: 0.0071622133, z: 0.13902815}
-  m_Center: {x: -0.0009892554, y: 0.0147408955, z: 0.046864837}
+  m_Size: {x: 0.020306522, y: 0.017706467, z: 0.16192995}
+  m_Center: {x: -0.000073538715, y: 0.01490589, z: 0.035414077}
 --- !u!54 &1284149146
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42499,6 +42499,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
+        type: 3}
+      propertyPath: WinFrameColor
+      value: 
+      objectReference: {fileID: 2100000, guid: 90680b80be8c54f779dd53a4b9585548, type: 2}
     - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
         type: 3}
       propertyPath: smoothingSpeed
