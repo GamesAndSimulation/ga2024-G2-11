@@ -51889,6 +51889,7 @@ MonoBehaviour:
   PipesHolder: {fileID: 1911035694}
   Pipes: []
   Gear: {fileID: 1196496083}
+  steamSystem: {fileID: 1845499456}
   criticalPathPipes: 0
   correctPipes: 0
 --- !u!4 &1071300356
