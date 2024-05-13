@@ -31,6 +31,7 @@ public class GameManagerPipes : MonoBehaviour
         {
             Debug.Log("You won the game");
             Gear.transform.Rotate(0, 0, 5,  Space.Self);
+            
         }
     }
 
@@ -44,5 +45,10 @@ public class GameManagerPipes : MonoBehaviour
     {
         correctPipes--;
         Debug.Log("Removed pipe");
+    }
+
+    public bool IsGameWon()
+    {
+        return correctPipes == criticalPathPipes;
     }
 }
