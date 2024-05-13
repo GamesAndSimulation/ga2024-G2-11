@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class PipePuzzle : MonoBehaviour 
+public class PipeScript : MonoBehaviour 
 {
     private readonly float[] _rotations = { 0, 90, 180, 270 };
     public bool _isPlacedCorrectly = false;
@@ -45,7 +45,7 @@ public class PipePuzzle : MonoBehaviour
     private void Update()
     {
         // After the pipes are connected, starts vibrating to simulate the steam passing through
-        if (gameManagerPipeGameObject.IsGameWon())
+        if (gameManagerPipeGameObject.IsGameWon() && isPartOfSolution)
         {
             var speed = 5.0f;
             var intensity = 0.1f;
@@ -88,3 +88,6 @@ public class PipePuzzle : MonoBehaviour
 
     }
 }
+
+
+
