@@ -25,7 +25,6 @@ public class Interact : MonoBehaviour
 
     void Update()
     {
-        //forward = playerCamera.transform.TransformDirection(Vector3.forward);
         var playerCamera = Camera.main.transform;
         Vector3 forwardVec = GetCameraForward();
         Debug.DrawRay(playerCamera.position, forwardVec * 30f, Color.green);
@@ -51,9 +50,8 @@ public class Interact : MonoBehaviour
         
     }
 
-    // Get the forward vector of the camera
-    // Using default .forward doesn't seem to 
-    // work well with cinemachine POV... 
+    // Get the forward vector of the camera.
+    // Using default .forward doesn't seem to work well with cinemachine POV... 
     private Vector3 GetCameraForward()
     {
         var pov = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachinePOV>();
@@ -71,7 +69,7 @@ public class Interact : MonoBehaviour
 
     public void ResetPuzzleBoard()
     {
-        _currentPuzzle.transform.root.GetComponent<Grabber>().ResetPuzzleBoard();
+        _currentPuzzle.transform.root.GetComponent<SigilPuzzle>().ResetPuzzleBoard();
     }
     
     void InteractWithPuzzle() 
@@ -81,7 +79,7 @@ public class Interact : MonoBehaviour
         {
             //cameraController.enabled = false;
             FadePuzzleUI(true);
-            _currentPuzzle.transform.root.GetComponent<Grabber>().enabled = true;
+            _currentPuzzle.transform.root.GetComponent<SigilPuzzle>().enabled = true;
             InputManager.Instance.SetLookLock(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -102,7 +100,7 @@ public class Interact : MonoBehaviour
         GameManager.Instance.SetPuzzleMode(false);
         GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 1;
         _currentPuzzle.transform.root.GetComponentInChildren<CinemachineVirtualCamera>().Priority = 0;
-        _currentPuzzle.transform.root.GetComponent<Grabber>().enabled = false;
+        _currentPuzzle.transform.root.GetComponent<SigilPuzzle>().enabled = false;
     }
 
     public void FadePuzzleUI(bool fadeIn)
