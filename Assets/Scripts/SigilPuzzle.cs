@@ -11,7 +11,7 @@ public class SigilPuzzle: MonoBehaviour
     [SerializeField] private int slotsHeight = 6;
     [SerializeField] private Transform TopLeftCorner;
     [SerializeField] private float resetTime = 0.38f;
-    [SerializeField] private float smoothingSpeed = 0.1f;
+    [SerializeField] private float smoothingSpeed = 15f;
 
     private GameObject _selectedObject;
     private GameObject PuzzleSlotPrefab;
@@ -215,8 +215,12 @@ public class SigilPuzzle: MonoBehaviour
 
         Vector3 targetPosition = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
 
-        _selectedObject.transform.parent.position = Vector3.Lerp(_selectedObject.transform.parent.position, targetPosition, smoothingSpeed);
-
+        var parent = _selectedObject.transform.parent;
+        parent.position = Vector3.Lerp(
+            parent.position, 
+            targetPosition, 
+            smoothingSpeed * Time.deltaTime);
+        
         foreach (Transform child in _selectedObject.transform.parent)
         {
             Debug.DrawRay(child.position, child.forward * -1f, Color.red);
