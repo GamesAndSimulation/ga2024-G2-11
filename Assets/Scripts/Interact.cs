@@ -16,7 +16,6 @@ public class Interact : MonoBehaviour
     private Vector3 forward;
     private RaycastHit hit;
 
-    private bool _isOpened = false;
     private GameObject _currentPuzzle;
 
     void Start()

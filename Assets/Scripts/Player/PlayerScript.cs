@@ -127,8 +127,6 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(Vector3.down * additionalGravityForce * additionalGravityFactor, ForceMode.Acceleration);
     }
     
-    private bool _GameFocused = true;
-
     void HandleInputs(){
         
         Vector2 movement = _inputManager.GetPlayerMovement();
