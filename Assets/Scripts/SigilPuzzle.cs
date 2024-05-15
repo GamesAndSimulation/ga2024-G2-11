@@ -14,6 +14,11 @@ public class SigilPuzzle: MonoBehaviour
     [SerializeField] private float smoothingSpeed = 15f;
 
     private GameObject _selectedObject;
+    
+    // Is true if the currently selected piece was taken from outside the board.
+    // We need to know this in order to know if we should change the _placedPiecesNum or not.
+    private bool _selectedWasOutside; 
+    
     private GameObject PuzzleSlotPrefab;
     private Transform PuzzleSlots;
     private int _placedPiecesNum;
@@ -27,6 +32,7 @@ public class SigilPuzzle: MonoBehaviour
     private void Start()
     {
         _placedPiecesNum = 0;
+        _selectedWasOutside = true;
         PuzzleSlotPrefab = Resources.Load<GameObject>("Prefabs/PuzzleSlot");
         PuzzleSlots = transform.Find("PuzzleArea").Find("Slots");
         _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
@@ -95,8 +101,8 @@ public class SigilPuzzle: MonoBehaviour
                 RaycastHit hit = CastRay();
                 if (hit.collider != null && hit.collider.CompareTag("PuzzlePiece"))
                 {
-                    //startingPosZ = hit.collider.transform.position.z;
                     _selectedObject = hit.collider.gameObject;
+                    _selectedWasOutside = PieceIsOutsideBoard(hit.transform);
                     foreach(Transform child in _selectedObject.transform.parent)
                     {
                         Transform slot = FindNearestGridPosition(child, out bool isOccupied);
@@ -172,7 +178,7 @@ public class SigilPuzzle: MonoBehaviour
                 }
                 someOutside = true;
             }
-            
+
             
             positions.SetValue(nearestGrid, child.GetSiblingIndex());
         }
@@ -181,15 +187,36 @@ public class SigilPuzzle: MonoBehaviour
         // we now know that every slot is free
         foreach (Transform child in _selectedObject.transform.parent)
         {
-            if(someInside)
+            if(someInside && _selectedWasOutside)
                 _placedPiecesNum++;
-            if(someOutside)
+            if(someOutside && !_selectedWasOutside)
                 _placedPiecesNum--;
+            
             var position = positions[child.GetSiblingIndex()].position;
             child.position = new Vector3(position.x, position.y, startingPosZ);
             _slotOccupied[positions[child.GetSiblingIndex()]] = true;
         }
         return true;
+    }
+    
+    /// <summary>
+    /// Checks weather a **placed** piece is outside the board.
+    /// We don't need to check every children because if the piece is placed
+    /// either all of the parts are inside or all are outside
+    /// </summary>
+    /// <param name="piece"> Transform of piece (parent)</param>
+    /// <returns>True if the piece is placed outside the board</returns>
+    private bool PieceIsOutsideBoard(Transform piece)
+    {
+        
+        RaycastHit hit;
+        Physics.Raycast(piece.GetChild(0).position, Vector3.forward * -1f, out hit);
+        if (!hit.collider.CompareTag("Puzzle"))
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     private Transform FindNearestGridPosition(Transform currentPos, out bool isOccupied)
