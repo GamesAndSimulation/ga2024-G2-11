@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,21 +9,32 @@ public class BoardController : MonoBehaviour
 {
     
     public LayerMask groundLayer;
+    public GameObject DustParticlesPrefab;
+    public Transform Sail;
+    public float SailRotateSpeed;
     public float BoardHeight = 2f;
     public float HoverForce;
     public float ForwardForce;
     public float BackwardForce;
     public float TurnForce;
+    public float dustSpawnVelocity;
     
     private GameObject[] _topSpheres;
     private GameObject[] _bottomSpheres;
     private Rigidbody _rb;
     private InputManager _inputManager;
     
+    private float spawnDustTimer;
+    [SerializeField] private float dustSpawnRate = 0.5f;
+    [SerializeField] private Transform dustSpawnPoint;
+    
+    
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        
+        Debug.Log($"Initial euler: {Sail.eulerAngles.y}");
         
         _rb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
@@ -37,6 +50,23 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < sphereParent.transform.childCount; i++)
         {
             _bottomSpheres[i] = sphereParent.transform.GetChild(i).gameObject;
+        }
+        spawnDustTimer = dustSpawnRate;
+    }
+
+    private void Update()
+    {
+        Debug.Log(_rb.velocity.magnitude);
+        if (_inputManager.DrivingForward() && _rb.velocity.magnitude > dustSpawnVelocity)
+        {
+            spawnDustTimer -= Time.deltaTime;
+            if (spawnDustTimer <= 0)
+            {
+                var particlesObj = Instantiate(DustParticlesPrefab, dustSpawnPoint.position , Quaternion.identity);
+                particlesObj.GetComponent<ParticleSystem>().Play();
+                Destroy(particlesObj, 5f);
+                spawnDustTimer = dustSpawnRate;
+            }
         }
     }
 
@@ -61,11 +91,24 @@ public class BoardController : MonoBehaviour
         if (_inputManager.DrivingLeft())
         {
             _rb.AddTorque(TurnForce * -Vector3.up);
+            //Sail.Rotate(new Vector3(0, -SailRotateSpeed * Time.deltaTime, 0));
+            Sail.DORotate(new Vector3(0, -SailRotateSpeed, 0), SailRotateSpeed)
+                .SetEase(Ease.OutQuad) // Use any easing function you prefer
+                .OnComplete(() =>
+                {
+                    // Optional: Add logic when the rotation is complete
+                });
         }
 
         if (_inputManager.DrivingRight())
         {
             _rb.AddTorque(TurnForce * Vector3.up);
+            Sail.DORotate(new Vector3(0, SailRotateSpeed, 0), SailRotateSpeed)
+                .SetEase(Ease.OutQuad) // Use any easing function you prefer
+                .OnComplete(() =>
+                {
+                    // Optional: Add logic when the rotation is complete
+                });
         }
     }
 
