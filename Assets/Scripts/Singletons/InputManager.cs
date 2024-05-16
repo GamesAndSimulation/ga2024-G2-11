@@ -80,5 +80,26 @@ public class InputManager : MonoBehaviour
     {
         return playerControls.Revolver.Reload.triggered;
     }
+    
+    // Driving Board
+    public bool DrivingForward()
+    {
+        return playerControls.BoardDriving.Forward.IsPressed();
+    }
+    
+    public bool DrivingBackward()
+    {
+        return playerControls.BoardDriving.Back.IsPressed();
+    }
+    
+    public bool DrivingLeft()
+    {
+        return playerControls.BoardDriving.Left.IsPressed();
+    }
+    
+    public bool DrivingRight()
+    {
+        return playerControls.BoardDriving.Right.IsPressed();
+    }
 
 }

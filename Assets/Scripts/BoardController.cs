@@ -8,15 +8,23 @@ public class BoardController : MonoBehaviour
     
     public LayerMask groundLayer;
     public float BoardHeight = 2f;
-    public float HoverForce = 10f;
+    public float HoverForce;
+    public float ForwardForce;
+    public float BackwardForce;
+    public float TurnForce;
     
     private GameObject[] _topSpheres;
     private GameObject[] _bottomSpheres;
     private Rigidbody _rb;
+    private InputManager _inputManager;
     
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        
         _rb = GetComponent<Rigidbody>();
+        _inputManager = InputManager.Instance;
         var sphereParent = GameObject.Find("TopSpheres");
         _topSpheres = new GameObject[sphereParent.transform.childCount];
         for (int i = 0; i < sphereParent.transform.childCount; i++)
@@ -34,10 +42,34 @@ public class BoardController : MonoBehaviour
 
     void FixedUpdate()
     {
-        DrawDebugRays();
+        HoverBoard();
+        HandleInputs();
     }
 
-    private void DrawDebugRays()
+    private void HandleInputs()
+    {
+        if (_inputManager.DrivingForward())
+        {
+            _rb.AddForce(ForwardForce * transform.forward);
+        }
+
+        if (_inputManager.DrivingBackward())
+        {
+            _rb.AddForce(BackwardForce * -transform.forward);
+        }
+
+        if (_inputManager.DrivingLeft())
+        {
+            _rb.AddTorque(TurnForce * -Vector3.up);
+        }
+
+        if (_inputManager.DrivingRight())
+        {
+            _rb.AddTorque(TurnForce * Vector3.up);
+        }
+    }
+
+    private void HoverBoard()
     {
         int i = 0;
         foreach (var sphere in _topSpheres)
@@ -49,7 +81,6 @@ public class BoardController : MonoBehaviour
                 _bottomSpheres[i].transform.position = hit.point;
                 float distance = BoardHeight - hit.distance;
                 float proportionalForce = distance / BoardHeight  * HoverForce;
-                // Clamp force
                 proportionalForce = Mathf.Clamp(proportionalForce, 0, HoverForce * 5f);
                 if (distance > 0)
                 {
