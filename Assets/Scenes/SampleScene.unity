@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.025433775, g: 0.22025529, b: 0.35221797, a: 1}
+  m_IndirectSpecularColor: {r: 0.10152245, g: 0.33768803, b: 0.41253915, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12352,7 +12352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 4.5, z: -11.13}
+  m_FollowOffset: {x: 0, y: 4.5, z: -14}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -13041,7 +13041,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667045997}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19084764, y: 0.02878158, z: -0.0055982466, w: 0.9811817}
+  m_LocalRotation: {x: 0.15480672, y: 0.028966624, z: -0.0045409454, w: 0.9875096}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13751,7 +13751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 4.5, z: -11.13}
+  m_FollowOffset: {x: 0, y: 4.5, z: -14}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -13947,7 +13947,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729112937}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17296886, y: 0.028878657, z: -0.0050737993, w: 0.98449075}
+  m_LocalRotation: {x: 0.13681881, y: 0.029044453, z: -0.00401331, w: 0.9901621}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14816,9 +14816,9 @@ MonoBehaviour:
   m_SplineCurvature: 0.2
   m_Orbits:
   - m_Height: 7.24
-    m_Radius: 8.22
+    m_Radius: 10
   - m_Height: 4.5
-    m_Radius: 11.13
+    m_Radius: 14
   - m_Height: 0.4
     m_Radius: 5.52
   m_LegacyHeadingBias: 3.4028235e+38
@@ -14835,7 +14835,7 @@ Transform:
   m_GameObject: {fileID: 811330625}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.6524048, y: 4.4040003, z: -11.02887}
+  m_LocalPosition: {x: -0.8206177, y: 4.4040003, z: -13.893921}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17132,7 +17132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976706654}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15508029, y: 0.028965961, z: -0.0045490647, w: 0.9874667}
+  m_LocalRotation: {x: 0.11883332, y: 0.029112458, z: -0.0034857385, w: 0.99248123}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -20196,7 +20196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 5
-  m_FollowOffset: {x: 0, y: 4.5, z: -11.13}
+  m_FollowOffset: {x: 0, y: 4.5, z: -14}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -23469,7 +23469,7 @@ GameObject:
   - component: {fileID: 1343934779}
   m_Layer: 0
   m_Name: Player (Yara)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36040,9 +36040,9 @@ MonoBehaviour:
   SailRotateSpeed: 300
   BoardHeight: 5.77
   HoverForce: 300
-  ForwardForce: 2600
-  BackwardForce: 500
-  TurnForce: 500
+  ForwardForce: 3500
+  BackwardForce: 1000
+  TurnForce: 300
   dustSpawnVelocity: 0
   dustSpawnRate: 0.13
   dustSpawnPoint: {fileID: 1818744474}
@@ -36053,7 +36053,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656885750}
-  m_Material: {fileID: 13400000, guid: 8339f32c09ca35122ad0efc81ae94cc3, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -36915,7 +36915,6 @@ MonoBehaviour:
   inDrivingMode: 0
   crosshair: {fileID: 742289275}
   weaponHolder: {fileID: 1504726209}
-  playerBody: {fileID: 1879342855}
   playerScript: {fileID: 1343934777}
 --- !u!1 &1725186307 stripped
 GameObject:
@@ -39248,7 +39247,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879342853}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

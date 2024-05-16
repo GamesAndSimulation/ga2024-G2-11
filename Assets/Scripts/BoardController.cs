@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -68,6 +69,15 @@ public class BoardController : MonoBehaviour
                 spawnDustTimer = dustSpawnRate;
             }
         }
+        if(Input.GetKeyDown(KeyCode.E)) 
+        {
+            GameManager.Instance.SetDrivingMode(false);
+            GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 1;
+            var player = GameObject.FindWithTag("Player");
+            player.transform.position = transform.position + new Vector3(0, player.transform.localScale.y * 4f, 0);
+            GetComponentInChildren<CinemachineFreeLook>().Priority = 0;
+            this.enabled = false;
+        }
     }
 
     void FixedUpdate()
@@ -91,24 +101,13 @@ public class BoardController : MonoBehaviour
         if (_inputManager.DrivingLeft())
         {
             _rb.AddTorque(TurnForce * -Vector3.up);
-            //Sail.Rotate(new Vector3(0, -SailRotateSpeed * Time.deltaTime, 0));
-            Sail.DORotate(new Vector3(0, -SailRotateSpeed, 0), SailRotateSpeed)
-                .SetEase(Ease.OutQuad) // Use any easing function you prefer
-                .OnComplete(() =>
-                {
-                    // Optional: Add logic when the rotation is complete
-                });
+            Sail.DOLocalRotate(new Vector3(0, -30f, 0), 1.6f).SetEase(Ease.OutQuad);
         }
 
         if (_inputManager.DrivingRight())
         {
             _rb.AddTorque(TurnForce * Vector3.up);
-            Sail.DORotate(new Vector3(0, SailRotateSpeed, 0), SailRotateSpeed)
-                .SetEase(Ease.OutQuad) // Use any easing function you prefer
-                .OnComplete(() =>
-                {
-                    // Optional: Add logic when the rotation is complete
-                });
+            Sail.DOLocalRotate(new Vector3(0, 30f, 0), 1.6f).SetEase(Ease.OutQuad);
         }
     }
 

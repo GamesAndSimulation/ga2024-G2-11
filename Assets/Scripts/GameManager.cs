@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     public bool inDrivingMode = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
-    [SerializeField] private MeshRenderer playerBody;
     [SerializeField] private PlayerScript playerScript;
     
     private void Awake()
@@ -30,7 +29,6 @@ public class GameManager : MonoBehaviour
     {
         crosshair.SetActive(show);
         weaponHolder.SetActive(show);
-        playerBody.enabled = show; // Shouldn't it be !show ?
     }
     
     public void SetDrivingMode(bool value)
@@ -38,7 +36,6 @@ public class GameManager : MonoBehaviour
         inDrivingMode = value;
         SetShowWalkCrosshairAndGuns(!value);
         playerScript.enabled = !value;
-        playerBody.enabled = !value;
         
     }
     

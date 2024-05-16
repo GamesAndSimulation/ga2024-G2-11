@@ -17,9 +17,11 @@ public class Interact : MonoBehaviour
     private RaycastHit hit;
 
     private GameObject _currentPuzzle;
+    private GameObject _board;
 
     void Start()
     {
+        _board = GameObject.FindWithTag("Board");
     }
 
     void Update()
