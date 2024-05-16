@@ -82,8 +82,7 @@ public class InputManager : MonoBehaviour
     }
     
     // Driving Board
-    public bool DrivingForward()
-    {
+    public bool DrivingForward() {
         return playerControls.BoardDriving.Forward.IsPressed();
     }
     

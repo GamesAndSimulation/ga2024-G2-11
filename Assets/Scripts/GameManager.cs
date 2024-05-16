@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public bool inPuzzleMode = false;
+    public bool inDrivingMode = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
     [SerializeField] private MeshRenderer playerBody;
+    [SerializeField] private PlayerScript playerScript;
     
     private void Awake()
     {
@@ -28,7 +30,16 @@ public class GameManager : MonoBehaviour
     {
         crosshair.SetActive(show);
         weaponHolder.SetActive(show);
-        playerBody.enabled = show;
+        playerBody.enabled = show; // Shouldn't it be !show ?
+    }
+    
+    public void SetDrivingMode(bool value)
+    {
+        inDrivingMode = value;
+        SetShowWalkCrosshairAndGuns(!value);
+        playerScript.enabled = !value;
+        playerBody.enabled = !value;
+        
     }
     
     public void SetPuzzleMode(bool value)

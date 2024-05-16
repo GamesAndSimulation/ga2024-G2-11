@@ -35,6 +35,9 @@ public class Interact : MonoBehaviour
                     _currentPuzzle = hit.transform.gameObject;
                     InteractWithPuzzle();
                     break;
+                case "Board":
+                    InteractWithBoard();
+                    break;
             }
         }
         //else
@@ -47,6 +50,17 @@ public class Interact : MonoBehaviour
             ExitPuzzle();
         }
         
+    }
+    
+    private void InteractWithBoard()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            hit.collider.GetComponent<BoardController>().enabled = true;
+            GameManager.Instance.SetDrivingMode(true);
+            GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 0;
+            hit.collider.GetComponentInChildren<CinemachineFreeLook>().Priority = 1;
+        }
     }
 
     // Get the forward vector of the camera.

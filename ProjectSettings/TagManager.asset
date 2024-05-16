@@ -11,6 +11,7 @@ TagManager:
   - Puzzle
   - PuzzlePiece
   - DestructableWall
+  - Board
   layers:
   - Default
   - TransparentFX
