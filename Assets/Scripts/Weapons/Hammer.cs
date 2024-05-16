@@ -38,8 +38,9 @@ public class Hammer : MonoBehaviour
         Debug.Log($"collider hit {other.gameObject.name}");
         if (other.gameObject.CompareTag("DestructableWall"))
         {
-            Instantiate(Resources.Load<GameObject>("Prefabs/DestructParticles"), other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
+            var particles = Instantiate(Resources.Load<GameObject>("Prefabs/DestructParticles"), other.transform.position, Quaternion.identity);
+            Destroy(particles, 2.2f);
         }
     }
 
