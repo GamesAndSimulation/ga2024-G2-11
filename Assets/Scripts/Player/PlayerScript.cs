@@ -1,12 +1,17 @@
 using System.Collections;
 using Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
     [Header("References")]
     public PlayerCam playerCam;
-
+    
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchHeight;
+    public float standingHeight;
  
     [Header("Movement")]
     private float moveSpeed;
@@ -67,6 +72,7 @@ public class PlayerScript : MonoBehaviour
         _inputManager = InputManager.Instance;
         rb.freezeRotation = true;
         initialWalkSpeed = walkSpeed;
+        standingHeight = transform.localScale.y;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -152,6 +158,21 @@ public class PlayerScript : MonoBehaviour
                 Jump();
             }
         }
+
+        if (_inputManager.PlayerJustCrouched())
+        {
+            state = MovementState.crouching;
+            transform.localScale = new Vector3(transform.localScale.x, crouchHeight, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            walkSpeed = crouchSpeed;
+        }
+        
+        else if(_inputManager.PlayerCrouchReleased()) 
+        {
+            state = MovementState.walking;
+            transform.localScale = new Vector3(transform.localScale.x, standingHeight, transform.localScale.z);
+            walkSpeed = initialWalkSpeed;
+        }
         
     }
 
@@ -161,6 +182,9 @@ public class PlayerScript : MonoBehaviour
     private bool keepMomentum;
     private void StateHandler()
     {
+        // Mode - Crouching
+        
+        
         // Mode - Sprinting
         if (grounded && Input.GetKey(KeyCode.LeftShift))
         {
