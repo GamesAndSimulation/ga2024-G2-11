@@ -35,8 +35,6 @@ public class BoardController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         
-        Debug.Log($"Initial euler: {Sail.eulerAngles.y}");
-        
         _rb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
         var sphereParent = GameObject.Find("TopSpheres");
@@ -57,7 +55,6 @@ public class BoardController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_rb.velocity.magnitude);
         if (_inputManager.DrivingForward() && _rb.velocity.magnitude > dustSpawnVelocity)
         {
             spawnDustTimer -= Time.deltaTime;
@@ -128,7 +125,7 @@ public class BoardController : MonoBehaviour
                 {
                     _rb.AddForceAtPosition(proportionalForce * Vector3.up, sphere.transform.position);
                 }
-                else
+                else if(distance < 0)
                 {
                     _rb.AddForceAtPosition(proportionalForce * Vector3.down, sphere.transform.position);
                 }
