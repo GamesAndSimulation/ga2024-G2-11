@@ -12,7 +12,6 @@ public class BoardController : MonoBehaviour
     public LayerMask groundLayer;
     public GameObject DustParticlesPrefab;
     public Transform Sail;
-    public float SailRotateSpeed;
     public float BoardHeight = 2f;
     public float HoverForce;
     public float ForwardForce;
