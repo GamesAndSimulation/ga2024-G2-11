@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 1, g: 0.9002042, b: 0.504717, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.0006
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 0.86
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.6020826, g: 0.64495814, b: 0.7735849, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: e042e3a075d43734cb2151822f3efb89, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 0eb70009ff65e884a8c850fcf327e9ac, type: 2}
   m_HaloStrength: 0.085
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.512
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.25491962, g: 0.28392923, b: 0.3492386, a: 0.512}
+  m_IndirectSpecularColor: {r: 0.09384232, g: 0.11720681, b: 0.15683329, a: 0.512}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6976,7 +6976,7 @@ Transform:
   m_GameObject: {fileID: 389706927}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 720.29, y: 53.22497, z: 1837.5}
+  m_LocalPosition: {x: 720.29, y: 1007.2, z: 1837.5}
   m_LocalScale: {x: 4.2835946, y: 1000, z: 4.2835946}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16403,6 +16403,89 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1001 &916201705
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 822
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 151
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1743
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5bf402c296aeb384087804e22cb90017, type: 2}
+    - target: {fileID: 919132149155446097, guid: 85f53b1ad4860d849b5a83cccc553ccd,
+        type: 3}
+      propertyPath: m_Name
+      value: SkyPlane
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 85f53b1ad4860d849b5a83cccc553ccd, type: 3}
 --- !u!1 &917604156 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5655513782815905580, guid: a7072fd9beb9d7248b7195c4ed811769,
@@ -47858,6 +47941,8 @@ SceneRoots:
   - {fileID: 993050140}
   - {fileID: 1782002602}
   - {fileID: 699302288}
+  - {fileID: 410087041}
+  - {fileID: 916201705}
   - {fileID: 1343934776}
   - {fileID: 1656885751}
   - {fileID: 147062241}
@@ -47865,7 +47950,6 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 677264306}
   - {fileID: 2412260432950965902}
-  - {fileID: 410087041}
   - {fileID: 39338500}
   - {fileID: 497281}
   - {fileID: 1123335234}
