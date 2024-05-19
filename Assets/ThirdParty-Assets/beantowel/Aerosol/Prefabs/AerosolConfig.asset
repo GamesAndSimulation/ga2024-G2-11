@@ -27,7 +27,7 @@ MonoBehaviour:
     type: 3}
   Params:
     Wavelengths:
-    - 360
+    - 987.8
     - 370
     - 380
     - 390
@@ -274,7 +274,7 @@ MonoBehaviour:
     - 0.00000444
     - 0.00000444
     - 0.00000444
-    MiePhaseFunctionG: 0.8
+    MiePhaseFunctionG: 65.11
     AbsorptionExtinction:
     - 0.00000000634132
     - 0.0000000011726068
@@ -373,5 +373,5 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
-    MaxSunZenithAngle: 1.780235837034216
-    LengthUnitInMeters: 1000
+    MaxSunZenithAngle: 183.14
+    LengthUnitInMeters: -1312
