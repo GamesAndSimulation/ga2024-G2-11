@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cinemachine;
 using Unity.VisualScripting;
@@ -7,33 +8,22 @@ public class PlayerScript : MonoBehaviour
 {
     [Header("References")]
     public PlayerCam playerCam;
-    
-    [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchHeight;
-    public float standingHeight;
- 
+    public Transform orientation;
+    public Camera cam;
+    private InputManager _inputManager;
+    public Rigidbody rb;
+
     [Header("Movement")]
-    private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
+    private float moveSpeed;
     private float initialWalkSpeed;
-
     public float maxYSpeed;
-    
     public float groundDrag;
-
-    public Transform orientation;
-    private InputManager _inputManager;
 
     float horizontalInput;
     float verticalInput;
-
     Vector3 moveDirection;
-
-    Rigidbody rb;
-
-    public Camera cam;
 
     public MovementState state;
     public enum MovementState
@@ -45,10 +35,15 @@ public class PlayerScript : MonoBehaviour
         air
     }
 
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchHeight;
+    public float standingHeight;
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    public bool grounded { get; private set;}
+    public bool grounded { get; private set; }
     public Transform groundCheck;
     public float groundDistance = 0.4f;
 
@@ -57,13 +52,19 @@ public class PlayerScript : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
 
-    [Header("Quake camera rolling")]
+    [Header("Quake Camera Rolling")]
     public float rollSpeed;
     public float maxRoll;
     public float tiltAmount = 5.0f;
-    public float currentTilt {get; private set;}
-    public float currentRoll {get; private set;}
+    public float currentTilt { get; private set; }
+    public float currentRoll { get; private set; }
     public bool otherside = false;
+
+    [Header("Miscellaneous")]
+    
+    // Used to align the ray used to check if the player is in the line of sight of an enemy
+    // to the middle of the enemy's body
+    public float yOffsetRaycast = 30f;
 
  
     void Start()
@@ -84,9 +85,9 @@ public class PlayerScript : MonoBehaviour
         
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         Debug.DrawRay(transform.position, Vector3.down * (playerHeight / 2 + 0.1f), Color.red);
-
+        
         HandleInputs();
-        CameraTilting();
+        CameraTilting(); 
         StateHandler();
         SpeedControl();
         
@@ -301,4 +302,29 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(transform.up * force , ForceMode.Impulse);
     }
 
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Sight trigger: {other.tag}");
+        if (other.CompareTag("EnemySight"))
+        {
+            Vector3 enemyPosition = other.transform.parent.Find("Body").position + new Vector3(0f, yOffsetRaycast, 0f);
+        
+            Vector3 directionToEnemy = enemyPosition - transform.position;
+            
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position,  directionToEnemy, out hit, 300f))
+            {
+                Debug.Log($"raycast tag {hit.transform.tag}");
+                if (hit.transform.CompareTag("Enemy"))
+                {
+                    hit.transform.GetComponent<Enemy>().currentEnemyState = Enemy.EnemyState.Chase;
+                }
+            }
+            else
+            {
+                Debug.Log("No hit");
+            }
+        }
+    }
 }

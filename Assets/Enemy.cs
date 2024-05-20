@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Chase:
                 EnemyStateText.text = "Chase";
-                Chase();
+                Chase(player);
                 break;
             case EnemyState.Attack:
                 EnemyStateText.text = "Attack";
@@ -65,11 +65,6 @@ public class Enemy : MonoBehaviour
     
     private void Patrol()
     {
-        // If the agent is currently moving
-        //if (_agent.velocity.magnitude > Vector3.zero.magnitude || _isWaitingNewPosition)
-        //{
-        //    return;
-        //}
         if(!IsAgentMoving(_agent) && !_isWaitingNewPosition)
             StartCoroutine(RandomDestinationWithDelay());
     }
@@ -82,9 +77,9 @@ public class Enemy : MonoBehaviour
         _isWaitingNewPosition = false;
     }
 
-    private void Chase()
+    public void Chase(Transform target)
     {
-        _agent.destination = player.position;
+        _agent.destination = target.position;
         _agent.speed = chaseSpeed;
     }
 

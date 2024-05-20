@@ -12,6 +12,8 @@ TagManager:
   - PuzzlePiece
   - DestructableWall
   - Board
+  - EnemySight
+  - Enemy
   layers:
   - Default
   - TransparentFX
