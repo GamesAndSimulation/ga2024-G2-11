@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
 
     private bool _isWaitingNewPosition;
     [SerializeField] private float walkRadius = 5f;
-    [SerializeField] private float patrollingSpeed = 3.5f;
+    [SerializeField] private float patrollingSpeed;
     [SerializeField] private float chaseSpeed = 5f;
     
     void Start()
@@ -59,19 +59,27 @@ public class Enemy : MonoBehaviour
                 Attack();
                 break;
         }
+        
+        _animator.SetFloat("velocity", _agent.velocity.sqrMagnitude);
     }
     
     private void Patrol()
     {
         // If the agent is currently moving
-        if (_agent.velocity.magnitude > Vector3.zero.magnitude || _isWaitingNewPosition)
-        {
-            return;
-        }
+        //if (_agent.velocity.magnitude > Vector3.zero.magnitude || _isWaitingNewPosition)
+        //{
+        //    return;
+        //}
+        if(!IsAgentMoving(_agent) && !_isWaitingNewPosition)
+            StartCoroutine(RandomDestinationWithDelay());
+    }
 
+    private IEnumerator RandomDestinationWithDelay()
+    {
         _isWaitingNewPosition = true;
-        _animator.SetBool("Ideling", true);
-        Invoke(nameof(SetNewRandomDestination), 4f);
+        yield return new WaitForSeconds(4f);
+        SetNewRandomDestination();
+        _isWaitingNewPosition = false;
     }
 
     private void Chase()
@@ -94,8 +102,22 @@ public class Enemy : MonoBehaviour
         NavMesh.SamplePosition(randomDirection, out hit, walkRadius, 1);
         
         _agent.destination = hit.position;
-        _isWaitingNewPosition = false;
+        _animator.SetBool("isWalking", true);
         _agent.speed = patrollingSpeed;
-        _animator.SetBool("Ideling", false);
+    }
+    
+    bool IsAgentMoving(NavMeshAgent navMeshAgent)
+    {
+        if (navMeshAgent.pathPending) return true;
+
+        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
