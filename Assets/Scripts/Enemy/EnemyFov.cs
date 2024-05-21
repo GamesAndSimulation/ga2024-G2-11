@@ -10,6 +10,8 @@ public class EnemyFov : MonoBehaviour
     
     private GameObject player;
     private Enemy _enemyScript;
+    private Animator _enemyAnim;
+    [SerializeField] AnimationClip _drawAxeClip;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
@@ -18,6 +20,7 @@ public class EnemyFov : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player");
         _enemyScript = transform.GetComponent<Enemy>();
+        _enemyAnim = transform.GetComponentInChildren<Animator>();
         StartCoroutine(FOVRoutine());
     }
 
@@ -29,9 +32,21 @@ public class EnemyFov : MonoBehaviour
             yield return wait;
             if (FieldOfViewCheck())
             {
-                _enemyScript.currentEnemyState = Enemy.EnemyState.Chase;
+                StartCoroutine(StartChaseRoutine());
+                yield break;
             }
         }
+    }
+
+    private IEnumerator StartChaseRoutine()
+    {
+        _enemyAnim.SetTrigger("SpottedPlayer");
+
+        yield return new WaitForSeconds(_drawAxeClip.length);
+        
+        _enemyScript.currentEnemyState = Enemy.EnemyState.Chase;
+        
+        yield return null;
     }
     
     bool FieldOfViewCheck()

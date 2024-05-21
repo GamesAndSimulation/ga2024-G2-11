@@ -41,10 +41,6 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            currentEnemyState = EnemyState.Chase;
-        }
         
         switch (currentEnemyState)
         {

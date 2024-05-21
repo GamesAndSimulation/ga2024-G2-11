@@ -13986,6 +13986,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2317791434076085052, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: _drawAxeClip
+      value: 
+      objectReference: {fileID: 7400000, guid: f699ed7eac4051a79a0b3bf00d54cc7e, type: 2}
+    - target: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7372311281237605935, guid: 6e663330fa3897474acc41f4ab7c607e,
         type: 3}
       propertyPath: surface
@@ -46212,6 +46222,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2317791434076085052, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: _drawAxeClip
+      value: 
+      objectReference: {fileID: 7400000, guid: f699ed7eac4051a79a0b3bf00d54cc7e, type: 2}
+    - target: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7372311281237605935, guid: 6e663330fa3897474acc41f4ab7c607e,
         type: 3}
       propertyPath: surface
@@ -75729,6 +75749,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2317791434076085052, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: _drawAxeClip
+      value: 
+      objectReference: {fileID: 7400000, guid: f699ed7eac4051a79a0b3bf00d54cc7e, type: 2}
+    - target: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7372311281237605935, guid: 6e663330fa3897474acc41f4ab7c607e,
         type: 3}
       propertyPath: surface
