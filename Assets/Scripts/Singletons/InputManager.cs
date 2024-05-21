@@ -81,6 +81,11 @@ public class InputManager : MonoBehaviour
         return playerControls.Revolver.Reload.triggered;
     }
     
+    public bool PlayerSwingedSword()
+    {
+        return playerControls.Sword.Attack.triggered;
+    }
+    
     public bool PlayerJustCrouched()
     {
         return playerControls.PlayerWalk.Crouch.triggered;
@@ -111,5 +116,6 @@ public class InputManager : MonoBehaviour
     {
         return playerControls.BoardDriving.Right.IsPressed();
     }
+    
 
 }

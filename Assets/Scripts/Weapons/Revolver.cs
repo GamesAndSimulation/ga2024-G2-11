@@ -8,7 +8,6 @@ using UnityEngine.Serialization;
 public class Revolver : MonoBehaviour
 {
     private InputManager inputManager;
-    private CinemachineVirtualCamera cinemachineVirtualCamera;
     private Animator _revolverAnimator;
     
     private bool _isReloading;
@@ -29,7 +28,6 @@ public class Revolver : MonoBehaviour
     {
         _shootTimer = 0;
         inputManager = InputManager.Instance;
-        cinemachineVirtualCamera = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>();
         Bullets = maxBullets;
         ammoText.text = Bullets.ToString();
         _revolverAnimator = GetComponent<Animator>();

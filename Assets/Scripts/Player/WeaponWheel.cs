@@ -127,16 +127,22 @@ public class WeaponWheel : MonoBehaviour
                 revolver.transform.DOLocalMoveY(showingWeaponY, 0.2f);
                 currentWeaponGameObject = revolver;
                 revolver.GetComponent<Revolver>().enabled = true;
+                hammer.transform.GetChild(0).GetComponent<Hammer>().enabled = false;
+                sword.transform.GetChild(0).GetComponent<Sword>().enabled = false;
                 break;
             case Weapon.Sword:
                 sword.transform.DOLocalMoveY(showingWeaponY + swordShowHeightDiff, 0.2f);
                 currentWeaponGameObject = sword;
                 revolver.GetComponent<Revolver>().enabled = false;
+                hammer.transform.GetChild(0).GetComponent<Hammer>().enabled = false;
+                sword.transform.GetChild(0).GetComponent<Sword>().enabled = true;
                 break;
             case Weapon.Hammer:
                 hammer.transform.DOLocalMoveY(showingWeaponY + hammerShowHeightDiff, 0.2f);
                 currentWeaponGameObject = hammer;
                 revolver.GetComponent<Revolver>().enabled = false;
+                hammer.transform.GetChild(0).GetComponent<Hammer>().enabled = true;
+                sword.transform.GetChild(0).GetComponent<Sword>().enabled = false;
                 break;
             default:
                 break;

@@ -1,11 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -18,13 +15,15 @@ public class Enemy : MonoBehaviour
     }
 
     public EnemyState currentEnemyState;
-    public Transform player;
     public NavMeshSurface surface;
     public TextMeshPro EnemyStateText;
     
     private NavMeshAgent _agent;
     private Animator _animator;
+    private Transform _player;
 
+    [Header("AI")]
+    
     private bool _isWaitingNewPosition;
     [SerializeField] private float walkRadius = 5f;
     [SerializeField] private float patrollingSpeed;
@@ -35,6 +34,7 @@ public class Enemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponentInChildren<Animator>();
         currentEnemyState = EnemyState.Patrol;
+        _player = GameObject.FindWithTag("Player").transform;
     }
 
     void Update()
@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Chase:
                 EnemyStateText.text = "Chase";
-                Chase(player);
+                Chase(_player);
                 break;
             case EnemyState.Attack:
                 EnemyStateText.text = "Attack";

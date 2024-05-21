@@ -365,6 +365,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Sword",
+            "id": "efa61d9a-8595-46cd-ba1e-ccf5c7ce8291",
+            "actions": [
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "7de4db13-8ba8-4b59-a6de-849df69335e8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "871cfbe3-5c3f-47f9-a840-6946d38e3755",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
