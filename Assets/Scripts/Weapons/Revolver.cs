@@ -21,6 +21,8 @@ public class Revolver : MonoBehaviour
     [SerializeField] private float shootScreenShakeAmplitude;
     [SerializeField] private GameObject MuzzleFlash;
     [SerializeField] private float damage;
+    [SerializeField] private float bulletSpeed;
+    [SerializeField] private Transform _bulletSpawnPoint;
 
     [SerializeField] private TextMeshProUGUI ammoText;
     
@@ -62,10 +64,23 @@ public class Revolver : MonoBehaviour
             ScreenEffectUtils.Instance.ShakeScreen(0.1f, shootScreenShakeAmplitude);
             
             // Raycast and possible bullet trail
+            
+            ShootBullet();
+
         }
         
         if(_shootTimer > 0)
             _shootTimer -= Time.deltaTime;
+    }
+    
+    private void ShootBullet()
+    {
+        var bullet = Instantiate(Resources.Load<GameObject>("Prefabs/BulletTrail"), _bulletSpawnPoint.position,
+            Quaternion.identity);
+        bullet.GetComponent<Bullet>().SetDamage(damage);
+        Vector3 forwardVec = GameManager.Instance.GetCameraForward();
+        bullet.GetComponent<Rigidbody>().AddForce(forwardVec * bulletSpeed, ForceMode.Impulse);
+
     }
 
     private IEnumerator Reload()

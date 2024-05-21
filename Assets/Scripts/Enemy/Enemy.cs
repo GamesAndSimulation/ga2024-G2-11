@@ -120,6 +120,8 @@ public class Enemy : MonoBehaviour
     
     public void TakeDamage(float damage)
     {
+        if (Health <= 0)
+            return;
         Health -= damage;
         currentEnemyState = EnemyState.Chase;
         if (Health <= 0)
