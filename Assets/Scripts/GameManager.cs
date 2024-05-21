@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -43,6 +45,22 @@ public class GameManager : MonoBehaviour
     {
         inPuzzleMode = value;
         SetShowWalkCrosshairAndGuns(!value);
+    }
+    
+    
+    public Vector3 GetCameraForward()
+    {
+        var pov = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachinePOV>();
+        float pitch = pov.m_VerticalAxis.Value;
+        float yaw = pov.m_HorizontalAxis.Value;
+        
+        float pitchRad = pitch * Mathf.Deg2Rad;
+        float yawRad = yaw * Mathf.Deg2Rad;
+        
+        float x = MathF.Cos(pitchRad) * Mathf.Sin(yawRad);
+        float y = -MathF.Sin(pitchRad);
+        float z = MathF.Cos(pitchRad) * Mathf.Cos(yawRad);
+        return new Vector3(x, y, z);
     }
 
 

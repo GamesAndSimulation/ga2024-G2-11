@@ -9,6 +9,12 @@ public class Sword : MonoBehaviour
     private Animator _swordAnimator;
     public AnimationClip _swingAnimationClip;
     
+    [Header("Sword Stats")]
+    public float Damage;
+
+    public float Range;
+    
+    
     private float _attackTime;
     
     void Start()
@@ -27,6 +33,25 @@ public class Sword : MonoBehaviour
         {
             _swordAnimator.SetTrigger("SwordAttack");
             _attackTime = _swingAnimationClip.length;
+            Invoke(nameof(Attack), 0.25f);
+        }
+    }
+    
+    void Attack()
+    {
+        Vector3 fowardVec = GameManager.Instance.GetCameraForward();
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, fowardVec, out hit, Range))
+        {
+            Debug.Log($"Sword Hit {hit.transform.name}");
+            if (hit.transform.CompareTag("Enemy"))
+            {
+                var hitParticles = Instantiate( Resources.Load<GameObject>("Prefabs/SwordHitParticles"), hit.point, Quaternion.identity);
+                Destroy(hitParticles, 1f);
+                var enemyScript = hit.transform.GetComponent<Enemy>();
+                if(enemyScript.enabled)
+                    enemyScript.TakeDamage(Damage);
+            }
         }
     }
     

@@ -20,6 +20,7 @@ public class Revolver : MonoBehaviour
     [SerializeField] private float fireRateDelay;
     [SerializeField] private float shootScreenShakeAmplitude;
     [SerializeField] private GameObject MuzzleFlash;
+    [SerializeField] private float damage;
 
     [SerializeField] private TextMeshProUGUI ammoText;
     
@@ -55,13 +56,10 @@ public class Revolver : MonoBehaviour
             
             _revolverAnimator.SetTrigger("Shoot");
             
-            // Add muzzle flash
             StartCoroutine(ShowMuzzleFlash(0.1f));
             
             // Add screen shake
             ScreenEffectUtils.Instance.ShakeScreen(0.1f, shootScreenShakeAmplitude);
-            
-            // Play gun animation
             
             // Raycast and possible bullet trail
         }

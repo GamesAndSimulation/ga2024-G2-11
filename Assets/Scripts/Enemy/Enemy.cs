@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class Enemy : MonoBehaviour
     public EnemyState currentEnemyState;
     public NavMeshSurface surface;
     public TextMeshPro EnemyStateText;
+    public float Health;
     
     private NavMeshAgent _agent;
     private Animator _animator;
@@ -114,5 +116,20 @@ public class Enemy : MonoBehaviour
         }
 
         return true;
+    }
+    
+    public void TakeDamage(float damage)
+    {
+        Health -= damage;
+        currentEnemyState = EnemyState.Chase;
+        if (Health <= 0)
+        {
+            Debug.Log("Enemy died!");
+            _animator.SetTrigger("Die");
+            //transform.Find("Body").transform.position += new Vector3(0, -0.535f, 0);
+            var body = transform.Find("Body").transform;
+            body.DOMoveY(body.position.y - 0.535f, 0.5f);
+            enabled = false;
+        }
     }
 }
