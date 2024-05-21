@@ -123,8 +123,8 @@ public class Enemy : MonoBehaviour
         if (Health <= 0)
         {
             Debug.Log("Enemy died!");
+            _agent.isStopped = true;
             _animator.SetTrigger("Die");
-            //transform.Find("Body").transform.position += new Vector3(0, -0.535f, 0);
             var body = transform.Find("Body").transform;
             body.DOMoveY(body.position.y - 0.535f, 0.5f);
             enabled = false;

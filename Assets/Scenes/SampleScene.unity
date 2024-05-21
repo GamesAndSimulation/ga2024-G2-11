@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 0.86
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.6020826, g: 0.64495814, b: 0.7735849, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 0eb70009ff65e884a8c850fcf327e9ac, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 5620b6786a8eebc43ac41b78dc3267fe, type: 2}
   m_HaloStrength: 0.085
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.512
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.09384627, g: 0.11721206, b: 0.15683673, a: 0.512}
+  m_IndirectSpecularColor: {r: 0.06177092, g: 0.023170188, b: 0.01134341, a: 0.512}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -189,7 +189,7 @@ PrefabInstance:
     - target: {fileID: 3211011496637939510, guid: 397572c92cb47a1489e8ae47da5d407b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14059,11 +14059,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e663330fa3897474acc41f4ab7c607e, type: 3}
 --- !u!64 &548687999
 MeshCollider:
@@ -25724,74 +25720,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2038977089772468388, guid: a0b537427d78748439a2f049925c8ad9, type: 3}
---- !u!1001 &879155419
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993858756396349571, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3211011496637939510, guid: 397572c92cb47a1489e8ae47da5d407b,
-        type: 3}
-      propertyPath: m_Name
-      value: AerosolSkybox (1)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 397572c92cb47a1489e8ae47da5d407b, type: 3}
 --- !u!64 &880310110
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -26669,7 +26597,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30194,7 +30122,7 @@ MonoBehaviour:
   shootScreenShakeAmplitude: 6
   MuzzleFlash: {fileID: 437201318}
   damage: 40
-  bulletSpeed: 450
+  bulletSpeed: 300
   _bulletSpawnPoint: {fileID: 1895307180}
   ammoText: {fileID: 126558314}
 --- !u!95 &1122679518
@@ -46295,11 +46223,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e663330fa3897474acc41f4ab7c607e, type: 3}
 --- !u!64 &1467115517
 MeshCollider:
@@ -75822,11 +75746,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3658403699208428066, guid: 6e663330fa3897474acc41f4ab7c607e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e663330fa3897474acc41f4ab7c607e, type: 3}
 --- !u!1001 &2412260432950965902
 PrefabInstance:
@@ -78031,7 +77951,6 @@ SceneRoots:
   - {fileID: 1170631010}
   - {fileID: 1640542723}
   - {fileID: 389706931}
-  - {fileID: 879155419}
   - {fileID: 1636655069}
   - {fileID: 4990009068939298794}
   - {fileID: 1488576780}

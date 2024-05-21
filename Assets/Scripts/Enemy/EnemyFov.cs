@@ -11,7 +11,7 @@ public class EnemyFov : MonoBehaviour
     private GameObject player;
     private Enemy _enemyScript;
     private Animator _enemyAnim;
-    [SerializeField] AnimationClip _drawAxeClip;
+    [SerializeField] private AnimationClip _drawAxeClip;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
@@ -22,6 +22,12 @@ public class EnemyFov : MonoBehaviour
         _enemyScript = transform.GetComponent<Enemy>();
         _enemyAnim = transform.GetComponentInChildren<Animator>();
         StartCoroutine(FOVRoutine());
+    }
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.P))
+            _enemyAnim.SetTrigger("Attack");
     }
 
     private IEnumerator FOVRoutine()
@@ -79,8 +85,4 @@ public class EnemyFov : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
 }
