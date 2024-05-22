@@ -78,8 +78,13 @@ public class Revolver : MonoBehaviour
         var bullet = Instantiate(Resources.Load<GameObject>("Prefabs/BulletTrail"), _bulletSpawnPoint.position,
             Quaternion.identity);
         bullet.GetComponent<Bullet>().SetDamage(damage);
-        Vector3 forwardVec = GameManager.Instance.GetCameraForward();
-        bullet.GetComponent<Rigidbody>().AddForce(forwardVec * bulletSpeed, ForceMode.Impulse);
+        Vector3 direction = GameManager.Instance.GetCameraForward();
+        RaycastHit hit;
+        if (Physics.Raycast(_bulletSpawnPoint.position, direction, out hit, 1000f))
+        {
+            direction = (hit.point - _bulletSpawnPoint.position).normalized;
+        }
+        bullet.GetComponent<Rigidbody>().AddForce(direction * bulletSpeed, ForceMode.Impulse);
 
     }
 
