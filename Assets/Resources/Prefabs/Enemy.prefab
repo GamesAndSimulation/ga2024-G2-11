@@ -648,7 +648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5150958725536915528
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1599,7 +1599,6 @@ MonoBehaviour:
   radius: 60
   angle: 91
   _drawAxeClip: {fileID: 0}
-  axe: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 512
@@ -1622,9 +1621,10 @@ MonoBehaviour:
   surface: {fileID: 0}
   EnemyStateText: {fileID: 3167868615692164868}
   Health: 100
+  AttackDistance: 5
   walkRadius: 10
   patrollingSpeed: 3
-  chaseSpeed: 5.5
+  chaseSpeed: 8.2
 --- !u!1 &8378682196044396029
 GameObject:
   m_ObjectHideFlags: 0

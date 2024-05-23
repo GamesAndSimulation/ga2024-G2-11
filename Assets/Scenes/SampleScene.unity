@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.512
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.06177092, g: 0.023170188, b: 0.01134341, a: 0.512}
+  m_IndirectSpecularColor: {r: 0.01358626, g: 0.09733353, b: 0.15926051, a: 0.512}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -30365,6 +30365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c587144381e654b9d8edead00d6992ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StoredBullets: 12
   maxBullets: 4
   reloadTime: 2
   fireRateDelay: 0.4
@@ -39374,6 +39375,7 @@ MonoBehaviour:
   orientation: {fileID: 167150217}
   cam: {fileID: 147062240}
   rb: {fileID: 0}
+  MaxHealth: 0
   walkSpeed: 7
   sprintSpeed: 10
   maxYSpeed: 0
@@ -52920,7 +52922,7 @@ PrefabInstance:
     - target: {fileID: 8151558995494749779, guid: 6e663330fa3897474acc41f4ab7c607e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 60.62
+      value: 61.099
       objectReference: {fileID: 0}
     - target: {fileID: 8151558995494749779, guid: 6e663330fa3897474acc41f4ab7c607e,
         type: 3}
@@ -53922,7 +53924,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.28, y: 0.2, z: 2.91}
-  m_LocalScale: {x: 0.28856155, y: 0.28856158, z: 0.28856152}
+  m_LocalScale: {x: 0.479849, y: 0.47984904, z: 0.47984895}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 437201319}

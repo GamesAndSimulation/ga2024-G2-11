@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     public NavMeshSurface surface;
     public TextMeshPro EnemyStateText;
     public float Health;
+    public float AttackDistance;
     
     private NavMeshAgent _agent;
     private Animator _animator;
@@ -79,11 +80,27 @@ public class Enemy : MonoBehaviour
     {
         _agent.destination = target.position;
         _agent.speed = chaseSpeed;
+        if(Vector3.Distance(transform.position, _player.position) < AttackDistance)
+            currentEnemyState = EnemyState.Attack;
     }
 
     private void Attack()
     {
+        //if current clip is attack clip
+        Debug.Log($"_animator is in attack state {_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")}");
+        if(_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            return;
         
+        _animator.SetTrigger("Attack");
+        
+        // Look at player
+        Vector3 direction = (_player.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        
+        // Damage Player
+        
+        // Change state to chase
+        currentEnemyState = EnemyState.Chase;
     }
 
     private void SetNewRandomDestination()

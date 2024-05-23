@@ -12,6 +12,11 @@ public class PlayerScript : MonoBehaviour
     public Camera cam;
     private InputManager _inputManager;
     public Rigidbody rb;
+    
+    [Header("Player Stats")]
+    public float MaxHealth;
+    private float health;
+    
 
     [Header("Movement")]
     public float walkSpeed;
@@ -74,6 +79,7 @@ public class PlayerScript : MonoBehaviour
         rb.freezeRotation = true;
         initialWalkSpeed = walkSpeed;
         standingHeight = transform.localScale.y;
+        health = MaxHealth;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
