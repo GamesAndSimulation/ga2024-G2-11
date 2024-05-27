@@ -81,7 +81,7 @@ public class Revolver : MonoBehaviour
         bullet.GetComponent<Bullet>().SetDamage(damage);
         Vector3 direction = GameManager.Instance.GetCameraForward();
         RaycastHit hit;
-        if (Physics.Raycast(_bulletSpawnPoint.position, direction, out hit, 1000f))
+        if (Physics.Raycast(Camera.main.transform.position, direction, out hit, 1000f))
         {
             Debug.Log($"Bullet raycast hit: {hit.transform.name}");
             direction = (hit.point - _bulletSpawnPoint.position).normalized;
