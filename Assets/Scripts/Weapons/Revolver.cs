@@ -35,7 +35,7 @@ public class Revolver : MonoBehaviour
         inputManager = InputManager.Instance;
         BulletsInChamber = Mathf.Clamp(StoredBullets, 0, maxBullets);
         StoredBullets -= BulletsInChamber;
-        ammoChamberText.text = BulletsInChamber.ToString();
+        UpdateAmmoCount();
         _revolverAnimator = GetComponent<Animator>();
     }
 
@@ -56,7 +56,7 @@ public class Revolver : MonoBehaviour
         {
             _shootTimer = fireRateDelay;
             BulletsInChamber--;
-            ammoChamberText.text = BulletsInChamber.ToString();
+            UpdateAmmoCount();
             Debug.Log($"{BulletsInChamber} bullets left");
             
             _revolverAnimator.SetTrigger("Shoot");
@@ -99,8 +99,8 @@ public class Revolver : MonoBehaviour
         
         BulletsInChamber = Mathf.Clamp(StoredBullets, 0, maxBullets);
         StoredBullets -= BulletsInChamber;
+        UpdateAmmoCount();
         
-        ammoChamberText.text = BulletsInChamber.ToString();
         _isReloading = false;
     }
     
@@ -110,6 +110,12 @@ public class Revolver : MonoBehaviour
         MuzzleFlash.SetActive(true);
         yield return new WaitForSeconds(duration);
         MuzzleFlash.SetActive(false);
+    }
+
+    private void UpdateAmmoCount()
+    {
+        ammoChamberText.text = BulletsInChamber.ToString();
+        ammoStoredText.text = StoredBullets.ToString();
     }
     
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.512
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.01358626, g: 0.09733353, b: 0.15926051, a: 0.512}
+  m_IndirectSpecularColor: {r: 0.013334996, g: 0.097218625, b: 0.15866956, a: 0.512}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3553,12 +3553,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!81 &147062239
 AudioListener:
   m_ObjectHideFlags: 0
@@ -27652,42 +27652,42 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 8.8403
+      value: 5.8673306
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 8.8403
+      value: 5.8673306
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 8.8403
+      value: 5.8673306
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 665
+      value: 688
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 62.36
+      value: 63.63
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1925
+      value: 1863.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.0000029504295
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
@@ -27702,7 +27702,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 85f53b1ad4860d849b5a83cccc553ccd,
         type: 3}
@@ -30365,7 +30365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c587144381e654b9d8edead00d6992ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StoredBullets: 12
+  StoredBullets: 300
   maxBullets: 4
   reloadTime: 2
   fireRateDelay: 0.4
@@ -30374,7 +30374,8 @@ MonoBehaviour:
   damage: 40
   bulletSpeed: 300
   _bulletSpawnPoint: {fileID: 1895307180}
-  ammoText: {fileID: 126558314}
+  ammoChamberText: {fileID: 126558314}
+  ammoStoredText: {fileID: 2130425990}
 --- !u!95 &1122679518
 Animator:
   serializedVersion: 5
@@ -68274,12 +68275,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!20 &1759113459
 Camera:
   m_ObjectHideFlags: 0
@@ -75728,7 +75729,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 171.69379, w: 0}
+  m_margin: {x: 0, y: 0, z: 87.04776, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
