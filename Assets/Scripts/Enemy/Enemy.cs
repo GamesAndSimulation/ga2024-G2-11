@@ -64,6 +64,7 @@ public class Enemy : MonoBehaviour
     
     private void Patrol()
     {
+        _agent.isStopped = false;
         if(!IsAgentMoving(_agent) && !_isWaitingNewPosition)
             StartCoroutine(RandomDestinationWithDelay());
     }
@@ -78,6 +79,7 @@ public class Enemy : MonoBehaviour
 
     public void Chase(Transform target)
     {
+        _agent.isStopped = false;
         _agent.destination = target.position;
         _agent.speed = chaseSpeed;
         if(Vector3.Distance(transform.position, _player.position) < AttackDistance)
@@ -92,15 +94,18 @@ public class Enemy : MonoBehaviour
             return;
         
         _animator.SetTrigger("Attack");
+        _agent.isStopped = true;
         
         // Look at player
-        Vector3 direction = (_player.position - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        //Vector3 direction = _player.position - transform.position;
+        //transform.rotation = Quaternion.LookRotation(direction);
         
         // Damage Player
         
         // Change state to chase
-        currentEnemyState = EnemyState.Chase;
+        if(Vector3.Distance(transform.position, _player.position) > AttackDistance)
+            currentEnemyState = EnemyState.Chase;
+        //currentEnemyState = EnemyState.Chase;
     }
 
     private void SetNewRandomDestination()

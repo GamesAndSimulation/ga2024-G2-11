@@ -97,8 +97,9 @@ public class Revolver : MonoBehaviour
         yield return new WaitWhile(() => _revolverAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Reload");
         //Debug.Log("Animation finished.");
         
+        int currentBullets = BulletsInChamber;
         BulletsInChamber = Mathf.Clamp(StoredBullets, 0, maxBullets);
-        StoredBullets -= BulletsInChamber;
+        StoredBullets -= BulletsInChamber - currentBullets;
         UpdateAmmoCount();
         
         _isReloading = false;

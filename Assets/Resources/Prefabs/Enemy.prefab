@@ -796,12 +796,12 @@ MonoBehaviour:
   m_margin: {x: 6.7542114, y: 0, z: 0, w: 2.6709938}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 1924851603126766913}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 1924851603126766913}
+  m_maskType: 0
 --- !u!1 &3758464254981929533
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,7 +1621,7 @@ MonoBehaviour:
   surface: {fileID: 0}
   EnemyStateText: {fileID: 3167868615692164868}
   Health: 100
-  AttackDistance: 5
+  AttackDistance: 4
   walkRadius: 10
   patrollingSpeed: 3
   chaseSpeed: 8.2
