@@ -5,15 +5,15 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public bool collapsed;
-    public Tile[] tileOptions;
+    public Tile.TileRotation[] tileOptions;
 
-    public void CreateCell(bool collapsedState, Tile[] tiles)
+    public void CreateCell(bool collapsedState, Tile.TileRotation[] tiles)
     {
         collapsed = collapsedState;
         tileOptions = tiles;
     }
 
-    public void RecreateCell(Tile[] tiles)
+    public void RecreateCell(Tile.TileRotation[] tiles)
     {
         tileOptions = tiles;
     }

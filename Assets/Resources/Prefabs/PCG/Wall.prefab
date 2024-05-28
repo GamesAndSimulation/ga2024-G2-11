@@ -98,10 +98,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upNeighbours: []
   rightNeighbours:
-  - {fileID: -8562212839051431029}
-  - {fileID: 551940528475947784, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a, type: 3}
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0
   downNeighbours:
-  - {fileID: 3943072742052277784, guid: cf9df71a11f0031439ed7a74d860026a, type: 3}
+  - tile: {fileID: 0}
+    zRotation: 0
   leftNeighbours:
-  - {fileID: -8562212839051431029}
-  - {fileID: -7418846215604943466, guid: 30885c1a39ff83e47b99d15f4abd7811, type: 3}
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0

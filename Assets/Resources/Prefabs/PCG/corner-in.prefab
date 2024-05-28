@@ -99,8 +99,14 @@ MonoBehaviour:
   upNeighbours: []
   rightNeighbours: []
   downNeighbours:
-  - {fileID: 3943072742052277784, guid: cf9df71a11f0031439ed7a74d860026a, type: 3}
-  - {fileID: -7418846215604943466, guid: 30885c1a39ff83e47b99d15f4abd7811, type: 3}
+  - tile: {fileID: -8562212839051431029, guid: 320d3cd2d2f4e7f4e948050e7d247005, type: 3}
+    zRotation: 90
+  - tile: {fileID: 551940528475947784}
+    zRotation: 90
+  - tile: {fileID: -7418846215604943466, guid: 30885c1a39ff83e47b99d15f4abd7811, type: 3}
+    zRotation: 0
   leftNeighbours:
-  - {fileID: 3943072742052277784, guid: cf9df71a11f0031439ed7a74d860026a, type: 3}
-  - {fileID: -8562212839051431029, guid: 320d3cd2d2f4e7f4e948050e7d247005, type: 3}
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0

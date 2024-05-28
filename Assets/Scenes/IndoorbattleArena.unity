@@ -319,6 +319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 159740879}
   - component: {fileID: 159740880}
+  - component: {fileID: 159740881}
   m_Layer: 0
   m_Name: Map Generator
   m_TagString: Untagged
@@ -353,14 +354,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ceeb88e9a7195644a036c345fe4d37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimentions: 4
+  dimentions: 10
   tileObjects:
-  - {fileID: 3943072742052277784, guid: cf9df71a11f0031439ed7a74d860026a, type: 3}
-  - {fileID: -8562212839051431029, guid: 320d3cd2d2f4e7f4e948050e7d247005, type: 3}
-  - {fileID: 551940528475947784, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a, type: 3}
-  - {fileID: -7418846215604943466, guid: 30885c1a39ff83e47b99d15f4abd7811, type: 3}
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0
+  - tile: {fileID: 0}
+    zRotation: 0
   gridComponents: []
   cellObj: {fileID: 6529863562559016525, guid: b22f18cd8bf49054e861c9cca2c29923, type: 3}
+--- !u!114 &159740881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159740877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0570bcf619c2d0c49b0db858520b20e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sideTypeOrientations:
+  - type: 0
+    orientation: 0
+    tileOptions:
+    - tile: {fileID: 0}
+      zRotation: 0
+    - tile: {fileID: 0}
+      zRotation: 0
+  - type: 3
+    orientation: 0
+    tileOptions: []
+  - type: 2
+    orientation: 0
+    tileOptions: []
+  - type: 3
+    orientation: 0
+    tileOptions: []
 --- !u!1 &195656776
 GameObject:
   m_ObjectHideFlags: 0
