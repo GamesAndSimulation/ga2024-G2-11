@@ -1,25 +1,38 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Tile))]
-public class TileEditor : Editor
+[CustomEditor(typeof(TileData))]
+public class TileDataEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        Tile tile = (Tile)target;
+        TileData tileData = (TileData)target;
 
         if (GUILayout.Button("Initialize Sides"))
         {
-            tile.InitializeSides();
-            EditorUtility.SetDirty(tile); // Mark the object as dirty to ensure changes are saved
+            tileData.InitializeSides();
+            EditorUtility.SetDirty(tileData); // Mark the object as dirty to ensure changes are saved
         }
 
         if (GUILayout.Button("Compute Neighbors"))
         {
-            tile.ComputeAllNeighbors();
-            EditorUtility.SetDirty(tile); // Mark the object as dirty to ensure changes are saved
+            TileData[] availableTiles = FindAllTileDataAssets();
+            tileData.ComputeAllNeighbors(availableTiles);
+            EditorUtility.SetDirty(tileData); // Mark the object as dirty to ensure changes are saved
         }
+    }
+
+    private TileData[] FindAllTileDataAssets()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:TileData");
+        TileData[] tiles = new TileData[guids.Length];
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            tiles[i] = AssetDatabase.LoadAssetAtPath<TileData>(path);
+        }
+        return tiles;
     }
 }

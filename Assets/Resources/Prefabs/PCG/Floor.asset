@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
+  m_Name: Floor
+  m_EditorClassIdentifier: 
+  tilePrefab: {fileID: 9084042995131861550, guid: d7510dda35c6c3341affcb101e960220,
+    type: 3}
+  upType: 2
+  rightType: 2
+  downType: 2
+  leftType: 2
+  Sides: 02000000020000000200000002000000
+  upNeighbours:
+  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
+    zRotation: 270
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 180
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 270
+  - tile: {fileID: 11400000}
+    zRotation: 180
+  - tile: {fileID: 11400000}
+    zRotation: 270
+  - tile: {fileID: 11400000}
+    zRotation: 0
+  - tile: {fileID: 11400000}
+    zRotation: 90
+  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
+    zRotation: 180
+  rightNeighbours:
+  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
+    zRotation: 0
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 270
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 0
+  - tile: {fileID: 11400000}
+    zRotation: 270
+  - tile: {fileID: 11400000}
+    zRotation: 0
+  - tile: {fileID: 11400000}
+    zRotation: 90
+  - tile: {fileID: 11400000}
+    zRotation: 180
+  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
+    zRotation: 270
+  downNeighbours:
+  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
+    zRotation: 90
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 0
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 90
+  - tile: {fileID: 11400000}
+    zRotation: 0
+  - tile: {fileID: 11400000}
+    zRotation: 90
+  - tile: {fileID: 11400000}
+    zRotation: 180
+  - tile: {fileID: 11400000}
+    zRotation: 270
+  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
+    zRotation: 0
+  leftNeighbours:
+  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
+    zRotation: 180
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 90
+  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
+    zRotation: 180
+  - tile: {fileID: 11400000}
+    zRotation: 90
+  - tile: {fileID: 11400000}
+    zRotation: 180
+  - tile: {fileID: 11400000}
+    zRotation: 270
+  - tile: {fileID: 11400000}
+    zRotation: 0
+  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
+    zRotation: 90

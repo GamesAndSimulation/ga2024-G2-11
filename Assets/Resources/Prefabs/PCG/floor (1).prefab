@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 9084042995131861550}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 10.2856655, y: 0, z: -3.6263714}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -96,13 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f92ddfdcd711ae64c9cbd56940a957fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upType: 2
-  rightType: 2
-  downType: 2
-  leftType: 2
-  Sides: 02000000020000000200000002000000
-  upNeighbours: []
-  rightNeighbours: []
-  downNeighbours: []
-  leftNeighbours: []
-  AvailableTiles: []
+  tileData: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}

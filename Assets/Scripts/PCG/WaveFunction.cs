@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class WaveFunction : MonoBehaviour
 {
     public int dimentions;
-    public Tile.TileRotation[] tileObjects;
-    public Tile[] AvailableTiles;
+    public TileData[] AvailableTiles;
     public List<Cell> gridComponents;
     public Cell cellObj;
 
@@ -27,7 +27,7 @@ public class WaveFunction : MonoBehaviour
             for (int x = 0; x < dimentions; x++)
             {
                 Cell cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity);
-                cell.CreateCell(false, tileObjects);
+                cell.CreateCell(false, GetAllTileRotations());
                 gridComponents.Add(cell);
             }
         }
@@ -56,7 +56,7 @@ public class WaveFunction : MonoBehaviour
             tempGrid.RemoveRange(stopIndex, tempGrid.Count - stopIndex);
         }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(3f);
         CollapseCell(tempGrid);
     }
 
@@ -69,10 +69,10 @@ public class WaveFunction : MonoBehaviour
 
         cellToCollapse.collapsed = true;
         Debug.Log($"cellToCollapse tile options length: {cellToCollapse.tileOptions.Length}");
-        Tile.TileRotation selectedTileRotation = cellToCollapse.tileOptions[UnityEngine.Random.Range(0, cellToCollapse.tileOptions.Length)];
-        cellToCollapse.tileOptions = new Tile.TileRotation[] { selectedTileRotation };
+        TileData.TileRotation selectedTileRotation = cellToCollapse.tileOptions[UnityEngine.Random.Range(0, cellToCollapse.tileOptions.Length)];
+        cellToCollapse.tileOptions = new TileData.TileRotation[] { selectedTileRotation };
 
-        Instantiate(selectedTileRotation.tile, cellToCollapse.transform.position, Quaternion.Euler(0, selectedTileRotation.zRotation, 0));
+        Instantiate(selectedTileRotation.tile.tilePrefab, cellToCollapse.transform.position, Quaternion.Euler(-90,0 , selectedTileRotation.zRotation));
         UpdateGeneration();
     }
 
@@ -92,13 +92,13 @@ public class WaveFunction : MonoBehaviour
                 }
                 else
                 {
-                    List<Tile.TileRotation> options = new List<Tile.TileRotation>(tileObjects);
+                    List<TileData.TileRotation> options = new List<TileData.TileRotation>(GetAllTileRotations());
 
                     // Update above
                     if (y > 0)
                     {
                         Cell up = gridComponents[x + (y - 1) * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(up.tileOptions, t => t.GetDownNeighbours());
+                        List<TileData.TileRotation> validOptions = GetValidOptions(up.tileOptions, t => t.downNeighbours);
                         CheckValidity(options, validOptions);
                     }
 
@@ -106,7 +106,7 @@ public class WaveFunction : MonoBehaviour
                     if (x < dimentions - 1)
                     {
                         Cell right = gridComponents[x + 1 + y * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(right.tileOptions, t => t.GetLeftNeighbours());
+                        List<TileData.TileRotation> validOptions = GetValidOptions(right.tileOptions, t => t.leftNeighbours);
                         CheckValidity(options, validOptions);
                     }
 
@@ -114,7 +114,7 @@ public class WaveFunction : MonoBehaviour
                     if (y < dimentions - 1)
                     {
                         Cell down = gridComponents[x + (y + 1) * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(down.tileOptions, t => t.GetUpNeighbours());
+                        List<TileData.TileRotation> validOptions = GetValidOptions(down.tileOptions, t => t.upNeighbours);
                         CheckValidity(options, validOptions);
                     }
 
@@ -122,7 +122,7 @@ public class WaveFunction : MonoBehaviour
                     if (x > 0)
                     {
                         Cell left = gridComponents[x - 1 + y * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(left.tileOptions, t => t.GetRightNeighbours());
+                        List<TileData.TileRotation> validOptions = GetValidOptions(left.tileOptions, t => t.rightNeighbours);
                         CheckValidity(options, validOptions);
                     }
 
@@ -139,9 +139,9 @@ public class WaveFunction : MonoBehaviour
         }
     }
 
-    private List<Tile.TileRotation> GetValidOptions(Tile.TileRotation[] tileOptions, Func<Tile, Tile.TileRotation[]> getNeighbours)
+    private List<TileData.TileRotation> GetValidOptions(TileData.TileRotation[] tileOptions, Func<TileData, TileData.TileRotation[]> getNeighbours)
     {
-        List<Tile.TileRotation> validOptions = new List<Tile.TileRotation>();
+        List<TileData.TileRotation> validOptions = new List<TileData.TileRotation>();
         foreach (var tileRotation in tileOptions)
         {
             var neighbours = getNeighbours(tileRotation.tile);
@@ -150,7 +150,7 @@ public class WaveFunction : MonoBehaviour
         return validOptions.Distinct().ToList();
     }
 
-    void CheckValidity(List<Tile.TileRotation> optionList, List<Tile.TileRotation> validOptions)
+    void CheckValidity(List<TileData.TileRotation> optionList, List<TileData.TileRotation> validOptions)
     {
         for (int x = optionList.Count - 1; x >= 0; x--)
         {
@@ -160,5 +160,45 @@ public class WaveFunction : MonoBehaviour
                 optionList.RemoveAt(x);
             }
         }
+    }
+
+    private TileData.TileRotation[] GetAllTileRotations()
+    {
+        TileData[] tileDataArray = FindAllTileDataAssets();
+        List<TileData.TileRotation> allTileRotations = new List<TileData.TileRotation>();
+
+        foreach (var tileData in tileDataArray)
+        {
+            foreach (var rotation in tileData.upNeighbours)
+            {
+                allTileRotations.Add(rotation);
+            }
+            foreach (var rotation in tileData.rightNeighbours)
+            {
+                allTileRotations.Add(rotation);
+            }
+            foreach (var rotation in tileData.downNeighbours)
+            {
+                allTileRotations.Add(rotation);
+            }
+            foreach (var rotation in tileData.leftNeighbours)
+            {
+                allTileRotations.Add(rotation);
+            }
+        }
+
+        return allTileRotations.ToArray();
+    }
+
+    private TileData[] FindAllTileDataAssets()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:TileData");
+        TileData[] tiles = new TileData[guids.Length];
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            tiles[i] = AssetDatabase.LoadAssetAtPath<TileData>(path);
+        }
+        return tiles;
     }
 }
