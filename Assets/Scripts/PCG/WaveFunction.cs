@@ -8,6 +8,7 @@ public class WaveFunction : MonoBehaviour
 {
     public int dimentions;
     public Tile.TileRotation[] tileObjects;
+    public Tile[] AvailableTiles;
     public List<Cell> gridComponents;
     public Cell cellObj;
 
@@ -61,6 +62,7 @@ public class WaveFunction : MonoBehaviour
 
     private void CollapseCell(List<Cell> tempGrid)
     {
+        Debug.Log($"tempgrid count {tempGrid.Count}");
         int randIndex = UnityEngine.Random.Range(0, tempGrid.Count);
 
         Cell cellToCollapse = tempGrid[randIndex];
@@ -70,7 +72,7 @@ public class WaveFunction : MonoBehaviour
         Tile.TileRotation selectedTileRotation = cellToCollapse.tileOptions[UnityEngine.Random.Range(0, cellToCollapse.tileOptions.Length)];
         cellToCollapse.tileOptions = new Tile.TileRotation[] { selectedTileRotation };
 
-        Instantiate(selectedTileRotation.tile, cellToCollapse.transform.position, Quaternion.Euler(-90, 0, selectedTileRotation.zRotation));
+        Instantiate(selectedTileRotation.tile, cellToCollapse.transform.position, Quaternion.Euler(0, selectedTileRotation.zRotation, 0));
         UpdateGeneration();
     }
 
@@ -96,7 +98,7 @@ public class WaveFunction : MonoBehaviour
                     if (y > 0)
                     {
                         Cell up = gridComponents[x + (y - 1) * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(up.tileOptions, t => t.upNeighbours);
+                        List<Tile.TileRotation> validOptions = GetValidOptions(up.tileOptions, t => t.GetDownNeighbours());
                         CheckValidity(options, validOptions);
                     }
 
@@ -104,7 +106,7 @@ public class WaveFunction : MonoBehaviour
                     if (x < dimentions - 1)
                     {
                         Cell right = gridComponents[x + 1 + y * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(right.tileOptions, t => t.leftNeighbours);
+                        List<Tile.TileRotation> validOptions = GetValidOptions(right.tileOptions, t => t.GetLeftNeighbours());
                         CheckValidity(options, validOptions);
                     }
 
@@ -112,7 +114,7 @@ public class WaveFunction : MonoBehaviour
                     if (y < dimentions - 1)
                     {
                         Cell down = gridComponents[x + (y + 1) * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(down.tileOptions, t => t.downNeighbours);
+                        List<Tile.TileRotation> validOptions = GetValidOptions(down.tileOptions, t => t.GetUpNeighbours());
                         CheckValidity(options, validOptions);
                     }
 
@@ -120,7 +122,7 @@ public class WaveFunction : MonoBehaviour
                     if (x > 0)
                     {
                         Cell left = gridComponents[x - 1 + y * dimentions];
-                        List<Tile.TileRotation> validOptions = GetValidOptions(left.tileOptions, t => t.rightNeighbours);
+                        List<Tile.TileRotation> validOptions = GetValidOptions(left.tileOptions, t => t.GetRightNeighbours());
                         CheckValidity(options, validOptions);
                     }
 

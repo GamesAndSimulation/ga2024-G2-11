@@ -11,7 +11,9 @@ using UnityEngine;
 /// #     LF : _          #
 /// #######################
 ///
-/// We define a side's type by it's shape when looking at that side "eye to eye".
+/// We define a side's type by it's top vertices shape when looking at that side "eye to eye".
+/// The definition above in an attempt to represent the various top vertices shapes using ASCII characters.
+/// 
 /// For two sides to be compatible, they need be one of the following pairs:
 /// - RL <-> LL
 /// - HF <-> HF
