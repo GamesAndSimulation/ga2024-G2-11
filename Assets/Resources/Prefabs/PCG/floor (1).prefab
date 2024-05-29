@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2887613218095455062}
   - component: {fileID: 5128899923293394239}
   - component: {fileID: 6819875223906117387}
-  - component: {fileID: 3943072742052277784}
   m_Layer: 0
   m_Name: floor (1)
   m_TagString: Untagged
@@ -84,16 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3943072742052277784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9084042995131861550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f92ddfdcd711ae64c9cbd56940a957fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileData: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}

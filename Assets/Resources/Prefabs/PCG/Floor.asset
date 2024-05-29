@@ -20,3 +20,8 @@ MonoBehaviour:
     type: 3}
   numRotations: 0
   Sockets: 02000000020000000200000002000000
+  Prototypes:
+  - Sockets: 02000000020000000200000002000000
+    Rotation: 0
+    TilePrefab: {fileID: 9084042995131861550, guid: d7510dda35c6c3341affcb101e960220,
+      type: 3}

@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+[System.Serializable]
 public class TilePrototype 
 {
     public TileData.SideType[] Sockets;

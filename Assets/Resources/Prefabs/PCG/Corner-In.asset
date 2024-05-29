@@ -20,3 +20,20 @@ MonoBehaviour:
     type: 3}
   numRotations: 3
   Sockets: 03000000010000000000000003000000
+  Prototypes:
+  - Sockets: 03000000010000000000000003000000
+    Rotation: 0
+    TilePrefab: {fileID: 3138576879916379016, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a,
+      type: 3}
+  - Sockets: 03000000030000000100000000000000
+    Rotation: 90
+    TilePrefab: {fileID: 3138576879916379016, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a,
+      type: 3}
+  - Sockets: 00000000030000000300000001000000
+    Rotation: 180
+    TilePrefab: {fileID: 3138576879916379016, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a,
+      type: 3}
+  - Sockets: 01000000000000000300000003000000
+    Rotation: 270
+    TilePrefab: {fileID: 3138576879916379016, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a,
+      type: 3}
