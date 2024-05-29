@@ -1,153 +1,135 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "TileData", menuName = "Tiles/TileData", order = 1)]
 public class TileData : ScriptableObject
 {
+    
     public enum SideType {
-        RL,
-        LL,
+        RLS,
+        LLS,
         HF,
         LF
     }
     
     public enum SideOrientation {
-        Up,
-        Right,
-        Down,
-        Left
+        posX,
+        negZ,
+        negX,
+        posZ
     }
 
-    public static readonly Vector3[] Orientations = new Vector3[] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
+    //public static readonly Vector3[] Orientations = new Vector3[] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
     
+
+    public SideType posXType;
+    public SideType negZType;
+    public SideType negXType;
+    public SideType posZType;
+
     public GameObject tilePrefab;
 
-    [System.Serializable]
-    public struct TileRotation
+    public int numRotations;
+    
+    public SideType[] Sockets;
+
+    public TilePrototype[] Prototypes;
+
+    public void ComputePrototypes()
     {
-        public TileData tile;
-        public float zRotation;
+        Prototypes = new TilePrototype[numRotations + 1];
+        Sockets = new SideType[] {posXType, negZType, negXType, posZType};
         
-        public TileRotation(TileData tile, float zRotation)
+        for(int i = 0; i <= numRotations; i++)
         {
-            this.tile = tile;
-            this.zRotation = zRotation;
+            TilePrototype prototype = new TilePrototype
+            {
+                Sockets = new[] {
+                    Sockets[Mod(((int)SideOrientation.posX - i) ,Sockets.Length)],
+                    Sockets[Mod(((int)SideOrientation.negZ - i) ,Sockets.Length)],
+                    Sockets[Mod(((int)SideOrientation.negX - i) ,Sockets.Length)],
+                    Sockets[Mod(((int)SideOrientation.posZ - i) ,Sockets.Length)]},
+                Rotation = i * 90,
+                TilePrefab = tilePrefab
+            };
+            Prototypes[i] = prototype;
+            Debug.LogWarning(Prototypes[i].TileToString());
         }
     }
 
-    public SideType upType;
-    public SideType rightType;
-    public SideType downType;
-    public SideType leftType;
-
-    public SideType[] Sides;
-
-    public TileRotation[] upNeighbours;
-    public TileRotation[] rightNeighbours;
-    public TileRotation[] downNeighbours;
-    public TileRotation[] leftNeighbours;
-
-    public void InitializeSides()
+    public void ComputePrototypesNeighbors()
     {
-        Sides = new SideType[4];
-        Sides[0] = upType;
-        Sides[1] = rightType;
-        Sides[2] = downType;
-        Sides[3] = leftType;
-    }
-
-    public void ComputeAllNeighbors(TileData[] availableTiles)
-    {
-        if (availableTiles == null || availableTiles.Length == 0)
+        foreach(TilePrototype prototype in Prototypes)
         {
-            Debug.LogError("AvailableTiles array is not set or empty.");
-            return;
-        }
-
-        upNeighbours = ComputeNeighbours(SideOrientation.Up, upType, availableTiles);
-        rightNeighbours = ComputeNeighbours(SideOrientation.Right, rightType, availableTiles);
-        downNeighbours = ComputeNeighbours(SideOrientation.Down, downType, availableTiles);
-        leftNeighbours = ComputeNeighbours(SideOrientation.Left, leftType, availableTiles);
-    }
-
-    private TileRotation[] ComputeNeighbours(SideOrientation orientation, SideType type, TileData[] availableTiles)
-    {
-        List<TileRotation> neighbours = new List<TileRotation>();
-        foreach (TileData t in availableTiles)
-        {
-            if (t.Sides == null || t.Sides.Length == 0)
+            prototype.Neighbors = new List<TilePrototype>[4]; // posX, negZ, negX, posZ
+            for(int i = 0; i < 4; i++)
             {
-                Debug.LogError($"Tile {t.name} has not been initialized properly.");
-                continue;
-            }
-
-            for (int direction = 0; direction < t.Sides.Length; direction++)
-            {
-                if (t.Sides[direction] == getCompatibleSide(type))
+                prototype.Neighbors[i] = new List<TilePrototype>();
+                foreach(TilePrototype neighbor in Prototypes)
                 {
-                    neighbours.Add(new TileRotation(t, getAngle(orientation, direction)));
+                    if(prototype.Sockets[i].ToString().EndsWith("S")) // Asymmetric
+                    {
+                        if(prototype.Sockets[i] == SideType.LLS && neighbor.Sockets[(i + 2) % 4] == SideType.RLS
+                           || prototype.Sockets[i] == SideType.RLS && neighbor.Sockets[(i + 2) % 4] == SideType.LLS)
+                        {
+                            prototype.Neighbors[i].Add(neighbor);
+                        }
+                        
+                    }
+                    else if(prototype.Sockets[i] == neighbor.Sockets[(i + 2) % 4])
+                    {
+                        prototype.Neighbors[i].Add(neighbor);
+                    }
+                    
                 }
             }
         }
-
-        if (neighbours.Count == 0)
-        {
-            Debug.LogWarning($"No neighbors found for {orientation} with side type {type}.");
-        }
-
-        return neighbours.ToArray();
     }
-
-    private float getAngle(SideOrientation orientation, int direction)
-    {
-        Vector3 orientationNormal = GetOrientationNormal(orientation);
-        Vector3 targetNormal = Orientations[direction];
-
-        // Calculate the signed angle between the orientationNormal and targetNormal
-        float angle = Vector3.SignedAngle(orientationNormal, targetNormal, Vector3.up);
     
-        // Ensure the angle is positive
-        if (angle < 0)
-        {
-            angle += 360;
-        }
-
-        Debug.Log($"Orientation: {orientation}, Direction: {direction}, Angle: {angle}");
-        return angle;
-    }
-
-    private Vector3 GetOrientationNormal(SideOrientation orientation)
+    public void PrintPrototypesNeighbors()
     {
-        switch (orientation)
+        foreach (TilePrototype prototype in Prototypes)
         {
-            case SideOrientation.Up:
-                return Vector3.back;
-            case SideOrientation.Right:
-                return Vector3.right;
-            case SideOrientation.Down:
-                return Vector3.forward;
-            case SideOrientation.Left:
-                return Vector3.left;
-            default:
-                return Vector3.forward; // Should never happen
+            Debug.Log("Neighbors for " + prototype.TileToString());
+            for (int i = 0; i < 4; i++)
+            {
+                Debug.Log("Socket " + i + ": ");
+                foreach (TilePrototype neighbor in prototype.Neighbors[i])
+                {
+                    Debug.Log(neighbor.TileToString());
+                }
+            }
         }
     }
-
-    private SideType getCompatibleSide(SideType type)
+    
+    public void PrintPrototypes()
     {
-        switch (type)
+        foreach (TilePrototype prototype in Prototypes)
         {
-            case SideType.HF:
-                return SideType.HF;
-            case SideType.LF:
-                return SideType.LF;
-            case SideType.LL:
-                return SideType.RL;
-            case SideType.RL:
-                return SideType.LL;
-            default:
-                Debug.LogError("Unknown SideType.");
-                return SideType.HF; // Should never happen
+            Debug.Log(prototype.TileToString());
         }
+    }
+    
+    private TileData[] FindAllTileDataAssets()
+    {
+        string[] guids = AssetDatabase.FindAssets("t:TileData");
+        TileData[] tiles = new TileData[guids.Length];
+        for (int i = 0; i < guids.Length; i++)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+            tiles[i] = AssetDatabase.LoadAssetAtPath<TileData>(path);
+        }
+        return tiles;
+    }
+    
+    int Mod(int a, int b)
+    {
+        int result = a % b;
+        if (result < 0)
+        {
+            result += b;
+        }
+        return result;
     }
 }

@@ -12,46 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
   m_Name: Corner-In
   m_EditorClassIdentifier: 
+  posXType: 3
+  negZType: 1
+  negXType: 0
+  posZType: 3
   tilePrefab: {fileID: 3138576879916379016, guid: ae98bfb9963adfe4f9d80eac1f8a2d9a,
     type: 3}
-  upType: 1
-  rightType: 2
-  downType: 3
-  leftType: 3
-  Sides: 01000000020000000300000003000000
-  upNeighbours:
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-    zRotation: 270
-  rightNeighbours:
-  - tile: {fileID: 11400000}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 90
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 180
-  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-    zRotation: 270
-  downNeighbours:
-  - tile: {fileID: 11400000}
-    zRotation: 180
-  - tile: {fileID: 11400000}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-    zRotation: 180
-  leftNeighbours:
-  - tile: {fileID: 11400000}
-    zRotation: 270
-  - tile: {fileID: 11400000}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-    zRotation: 270
+  numRotations: 3
+  Sockets: 03000000010000000000000003000000

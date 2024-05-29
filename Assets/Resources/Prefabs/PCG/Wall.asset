@@ -12,46 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
+  posXType: 1
+  negZType: 2
+  negXType: 0
+  posZType: 3
   tilePrefab: {fileID: 5400077297765026523, guid: 320d3cd2d2f4e7f4e948050e7d247005,
     type: 3}
-  upType: 2
-  rightType: 0
-  downType: 3
-  leftType: 1
-  Sides: 02000000000000000300000001000000
-  upNeighbours:
-  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 180
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 180
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 0
-  - tile: {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-    zRotation: 90
-  - tile: {fileID: 11400000}
-    zRotation: 180
-  rightNeighbours:
-  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 180
-  - tile: {fileID: 11400000}
-    zRotation: 180
-  downNeighbours:
-  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
-    zRotation: 180
-  - tile: {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000}
-    zRotation: 180
-  leftNeighbours:
-  - tile: {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
-    zRotation: 270
-  - tile: {fileID: 11400000}
-    zRotation: 180
+  numRotations: 3
+  Sockets: 01000000020000000000000003000000

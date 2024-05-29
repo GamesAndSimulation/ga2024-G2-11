@@ -10,18 +10,34 @@ public class TileDataEditor : Editor
 
         TileData tileData = (TileData)target;
 
-        if (GUILayout.Button("Initialize Sides"))
+        GUILayout.Space(10);
+        GUILayout.Label("Setup Tools", EditorStyles.boldLabel);
+        
+        if (GUILayout.Button("1. Initialize Protoypes"))
         {
-            tileData.InitializeSides();
+            tileData.ComputePrototypes();
             EditorUtility.SetDirty(tileData); // Mark the object as dirty to ensure changes are saved
+        }
+        
+        if (GUILayout.Button("2. Compute Prototypes Neighbors"))
+        {
+            tileData.ComputePrototypesNeighbors();
+            EditorUtility.SetDirty(tileData); // Mark the object as dirty to ensure changes are saved
+        }
+        
+        GUILayout.Space(10);
+        GUILayout.Label("Debugging Tools", EditorStyles.boldLabel);
+        
+        if (GUILayout.Button("Print Prototypes"))
+        {
+            tileData.PrintPrototypes();
+        }
+        
+        if (GUILayout.Button("Print Prototypes Neighbors"))
+        {
+            tileData.PrintPrototypesNeighbors();
         }
 
-        if (GUILayout.Button("Compute Neighbors"))
-        {
-            TileData[] availableTiles = FindAllTileDataAssets();
-            tileData.ComputeAllNeighbors(availableTiles);
-            EditorUtility.SetDirty(tileData); // Mark the object as dirty to ensure changes are saved
-        }
     }
 
     private TileData[] FindAllTileDataAssets()

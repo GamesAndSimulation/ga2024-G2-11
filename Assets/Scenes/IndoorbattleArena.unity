@@ -354,11 +354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimentions: 3
-  AvailableTiles:
-  - {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-  - {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
-  - {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
-  - {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
   gridComponents: []
   cellObj: {fileID: 6529863562559016525, guid: b22f18cd8bf49054e861c9cca2c29923, type: 3}
 --- !u!1 &195656776

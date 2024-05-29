@@ -7,17 +7,37 @@ using UnityEngine;
 
 public class WaveFunction : MonoBehaviour
 {
-    public int dimentions;
-    public TileData[] AvailableTiles;
-    public List<Cell> gridComponents;
+    public int dimentions; // Grid dimensions
+    public List<TilePrototype> AvailablePrototypes; // All possible prototypes with already computed neighbors
+    public List<Cell> gridComponents; // A grid of cells
     public Cell cellObj;
 
-    private int iterations = 0;
+    private Vector2Int[] directions = new Vector2Int[]
+    {
+        new Vector2Int(1, 0),
+        new Vector2Int(0, -1),
+        new Vector2Int(-1, 0),
+        new Vector2Int(0, 1)
+    };
 
     private void Awake()
     {
         gridComponents = new List<Cell>();
+        GetAllPrototypes();
         InitializeGrid();
+    }
+
+    private void GetAllPrototypes()
+    {
+        var tileData = FindAllTileDataAssets();
+        foreach (var tile in tileData)
+        {
+            foreach (var prototype in tile.Prototypes)
+            {
+                AvailablePrototypes.Add(prototype);
+            }
+        }
+        
     }
 
     void InitializeGrid()
@@ -27,168 +47,122 @@ public class WaveFunction : MonoBehaviour
             for (int x = 0; x < dimentions; x++)
             {
                 Cell cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity);
-                cell.CreateCell(false, GetAllTileRotations());
+                cell.CreateCell(false, AvailablePrototypes, x, y);
                 gridComponents.Add(cell);
             }
         }
-        StartCoroutine(CheckEntropy());
+        StartCoroutine(CollapseFunction());
     }
 
-    IEnumerator CheckEntropy()
+    private IEnumerator CollapseFunction()
     {
-        List<Cell> tempGrid = new List<Cell>(gridComponents);
-        tempGrid.RemoveAll(c => c.collapsed);
-        tempGrid.Sort((a, b) => a.tileOptions.Length - b.tileOptions.Length);
-        int arrLength = tempGrid[0].tileOptions.Length;
-        int stopIndex = default;
-
-        for (int i = 0; i < tempGrid.Count; i++)
+        while(!IsFunctionCollapsed())
         {
-            if (tempGrid[i].tileOptions.Length > arrLength)
-            {
-                stopIndex = i;
-                break;
-            }
+            IterateWFC();
         }
-
-        if (stopIndex > 0)
-        {
-            tempGrid.RemoveRange(stopIndex, tempGrid.Count - stopIndex);
-        }
-
-        yield return new WaitForSeconds(3f);
-        CollapseCell(tempGrid);
+    }
+    
+    private void IterateWFC()
+    {
+        Cell cell = GetCellWithLowestEntropy();
+        CollapseCell(cell);
+        PropagateChanges(cell);
     }
 
-    private void CollapseCell(List<Cell> tempGrid)
+    private void PropagateChanges(Cell cell)
     {
-        Debug.Log($"tempgrid count {tempGrid.Count}");
-        int randIndex = UnityEngine.Random.Range(0, tempGrid.Count);
-
-        Cell cellToCollapse = tempGrid[randIndex];
-
-        cellToCollapse.collapsed = true;
-        Debug.Log($"cellToCollapse tile options length: {cellToCollapse.tileOptions.Length}");
-        TileData.TileRotation selectedTileRotation = cellToCollapse.tileOptions[UnityEngine.Random.Range(0, cellToCollapse.tileOptions.Length)];
-        cellToCollapse.tileOptions = new TileData.TileRotation[] { selectedTileRotation };
-
-        Instantiate(selectedTileRotation.tile.tilePrefab, cellToCollapse.transform.position, Quaternion.Euler(-90,0 , selectedTileRotation.zRotation));
-        UpdateGeneration();
-    }
-
-    private void UpdateGeneration()
-    {
-        List<Cell> newGenerationCell = new List<Cell>(gridComponents);
-
-        for (int y = 0; y < dimentions; y++)
+        Stack<Cell> stack = new Stack<Cell>();
+        while(stack.Count > 0)
         {
-            for (int x = 0; x < dimentions; x++)
+            Cell currentCell = stack.Pop();
+            int directionIndex = 0;
+            foreach (var direction in directions)
             {
-                var index = x + y * dimentions;
-                if (gridComponents[index].collapsed)
+                Vector2Int neighborCoordinates = currentCell.gridCoordinates + direction;
+                if (neighborCoordinates.x < 0 || neighborCoordinates.x >= dimentions || neighborCoordinates.y < 0 || neighborCoordinates.y >= dimentions)
                 {
-                    Debug.Log("called");
-                    newGenerationCell[index] = gridComponents[index];
+                    continue;
                 }
-                else
+                Cell neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                if (neighbor.collapsed)
                 {
-                    List<TileData.TileRotation> options = new List<TileData.TileRotation>(GetAllTileRotations());
-
-                    // Update above
-                    if (y > 0)
-                    {
-                        Cell up = gridComponents[x + (y - 1) * dimentions];
-                        List<TileData.TileRotation> validOptions = GetValidOptions(up.tileOptions, t => t.downNeighbours);
-                        CheckValidity(options, validOptions);
-                    }
-
-                    // Update right
-                    if (x < dimentions - 1)
-                    {
-                        Cell right = gridComponents[x + 1 + y * dimentions];
-                        List<TileData.TileRotation> validOptions = GetValidOptions(right.tileOptions, t => t.leftNeighbours);
-                        CheckValidity(options, validOptions);
-                    }
-
-                    // Look down
-                    if (y < dimentions - 1)
-                    {
-                        Cell down = gridComponents[x + (y + 1) * dimentions];
-                        List<TileData.TileRotation> validOptions = GetValidOptions(down.tileOptions, t => t.upNeighbours);
-                        CheckValidity(options, validOptions);
-                    }
-
-                    // Look left
-                    if (x > 0)
-                    {
-                        Cell left = gridComponents[x - 1 + y * dimentions];
-                        List<TileData.TileRotation> validOptions = GetValidOptions(left.tileOptions, t => t.rightNeighbours);
-                        CheckValidity(options, validOptions);
-                    }
-
-                    newGenerationCell[index].RecreateCell(options.ToArray());
+                    continue;
                 }
+                
+                var neighborPossiblePrototypes = neighbor.tileOptions.ToList();
+                var cellPrototypeValidNeighbors = GetPossibleNeighbors(currentCell, directionIndex);
+
+                if (neighborPossiblePrototypes.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (TilePrototype neighborPrototype in neighborPossiblePrototypes)
+                {
+                    if (!cellPrototypeValidNeighbors.Contains(neighborPrototype))
+                    {
+                        neighbor.tileOptions.Remove(neighborPrototype);
+                    }
+                }
+                
             }
         }
-        gridComponents = newGenerationCell;
-        iterations++;
-
-        if (iterations < dimentions * dimentions)
-        {
-            StartCoroutine(CheckEntropy());
-        }
+        
     }
-
-    private List<TileData.TileRotation> GetValidOptions(TileData.TileRotation[] tileOptions, Func<TileData, TileData.TileRotation[]> getNeighbours)
+    
+    private List<TilePrototype> GetPossibleNeighbors(Cell currentCell, int directionIndex)
     {
-        List<TileData.TileRotation> validOptions = new List<TileData.TileRotation>();
-        foreach (var tileRotation in tileOptions)
+        List<TilePrototype> possibleNeighbors = new List<TilePrototype>();
+        foreach (var prototype in currentCell.tileOptions)
         {
-            var neighbours = getNeighbours(tileRotation.tile);
-            validOptions.AddRange(neighbours);
+            possibleNeighbors.AddRange(prototype.Neighbors[directionIndex]);
         }
-        return validOptions.Distinct().ToList();
+        return possibleNeighbors;
     }
 
-    void CheckValidity(List<TileData.TileRotation> optionList, List<TileData.TileRotation> validOptions)
+    private void CollapseCell(Cell cell)
     {
-        for (int x = optionList.Count - 1; x >= 0; x--)
-        {
-            var element = optionList[x];
-            if (!validOptions.Any(v => v.tile == element.tile))
-            {
-                optionList.RemoveAt(x);
-            }
-        }
+        cell.collapsed = true;
+        int randomIndex = UnityEngine.Random.Range(0, cell.tileOptions.Count);
+        TilePrototype chosenTile = cell.tileOptions[randomIndex];
+        cell.RecreateCell(new List<TilePrototype> {chosenTile});
+        Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation));
     }
 
-    private TileData.TileRotation[] GetAllTileRotations()
+    private Cell GetCellWithLowestEntropy()
     {
-        TileData[] tileDataArray = FindAllTileDataAssets();
-        List<TileData.TileRotation> allTileRotations = new List<TileData.TileRotation>();
-
-        foreach (var tileData in tileDataArray)
+        Cell lowestEntropyCell = null;
+        float lowestEntropy = float.MaxValue;
+        foreach (var cell in gridComponents)
         {
-            foreach (var rotation in tileData.upNeighbours)
+            if (cell.collapsed)
             {
-                allTileRotations.Add(rotation);
+                continue;
             }
-            foreach (var rotation in tileData.rightNeighbours)
+            float entropy = cell.GetEntropy();
+            if (entropy < lowestEntropy)
             {
-                allTileRotations.Add(rotation);
-            }
-            foreach (var rotation in tileData.downNeighbours)
-            {
-                allTileRotations.Add(rotation);
-            }
-            foreach (var rotation in tileData.leftNeighbours)
-            {
-                allTileRotations.Add(rotation);
+                lowestEntropy = entropy;
+                lowestEntropyCell = cell;
             }
         }
-
-        return allTileRotations.ToArray();
+        return lowestEntropyCell;
     }
+
+    private bool IsFunctionCollapsed()
+    {
+        foreach (var cell in gridComponents)
+        {
+            if (!cell.collapsed)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    // Auxiliary functions
 
     private TileData[] FindAllTileDataAssets()
     {
