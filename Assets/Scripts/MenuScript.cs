@@ -11,11 +11,6 @@ public class MenuScript : MonoBehaviour
     public Canvas mainMenuCanvas;
     public PlayableDirector introScene;
 
-    private void Start()
-    {
-        Cursor.visible = true;
-    }
-
     public void play()
     {
         mainMenuCanvas.gameObject.SetActive(false);

@@ -1685,7 +1685,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287349470
+    rgba: 9159390
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -7834,6 +7834,7 @@ GameObject:
   - component: {fileID: 260029230}
   - component: {fileID: 260029229}
   - component: {fileID: 260029228}
+  - component: {fileID: 260029232}
   m_Layer: 5
   m_Name: Main Menu
   m_TagString: Untagged
@@ -7929,6 +7930,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!320 &260029232
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260029227}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -2464101472329558602, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+    value: {fileID: 866538745}
+  - key: {fileID: 1573605590490958579, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+    value: {fileID: 1789353688}
+  - key: {fileID: 2230008837416602413, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+    value: {fileID: 1406574590}
+  - key: {fileID: 5854481495670977944, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+    value: {fileID: 1663557513}
+  - key: {fileID: 4486252686053508783, guid: a9a5430c04539424ca7be8014d2d6296, type: 2}
+    value: {fileID: 576031726}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &262823014
 GameObject:
   m_ObjectHideFlags: 0
@@ -16792,6 +16820,7 @@ GameObject:
   - component: {fileID: 576031723}
   - component: {fileID: 576031725}
   - component: {fileID: 576031724}
+  - component: {fileID: 576031726}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -16915,6 +16944,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 576031722}
   m_CullTransparentMesh: 1
+--- !u!95 &576031726
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576031722}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &576543888 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: f858d3110ba2e5744b0ba391e05440c0,
@@ -25178,6 +25228,7 @@ GameObject:
   - component: {fileID: 866538742}
   - component: {fileID: 866538744}
   - component: {fileID: 866538743}
+  - component: {fileID: 866538745}
   m_Layer: 5
   m_Name: Cover
   m_TagString: Untagged
@@ -25242,6 +25293,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866538741}
   m_CullTransparentMesh: 1
+--- !u!95 &866538745
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866538741}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &867536212
 GameObject:
   m_ObjectHideFlags: 0
@@ -27884,7 +27956,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287349470
+    rgba: 9159390
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -36065,7 +36137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1277104587}
+  m_Material: {fileID: 1600344132}
   m_Color: {r: 0.12941177, g: 0.101960786, b: 0.078431375, a: 0.9529412}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -36607,7 +36679,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287349470
+    rgba: 9159390
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -36841,46 +36913,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1264045219}
   m_Mesh: {fileID: 4300042, guid: 812a6c8b7c6a1094b8c3d4065333318a, type: 3}
---- !u!21 &1277104587
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _OuterUV: {r: 0, g: 0, b: 1, a: 1}
-    - _WidthHeightRadius: {r: 1520, g: 150, b: 30, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &1280632440
 GameObject:
   m_ObjectHideFlags: 0
@@ -42131,6 +42163,7 @@ GameObject:
   - component: {fileID: 1406574589}
   - component: {fileID: 1406574588}
   - component: {fileID: 1406574587}
+  - component: {fileID: 1406574590}
   m_Layer: 5
   m_Name: ButtonQuit
   m_TagString: Untagged
@@ -42253,6 +42286,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406574585}
   m_CullTransparentMesh: 1
+--- !u!95 &1406574590
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406574585}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1407154789
 GameObject:
   m_ObjectHideFlags: 0
@@ -48496,6 +48550,46 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598170274}
   m_Mesh: {fileID: 4300078, guid: 812a6c8b7c6a1094b8c3d4065333318a, type: 3}
+--- !u!21 &1600344132
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/RoundedCorners
+  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _OuterUV: {r: 0, g: 0, b: 1, a: 1}
+    - _WidthHeightRadius: {r: 1520, g: 150, b: 30, a: 0}
+  m_BuildTextureStacks: []
 --- !u!4 &1601228647 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: fa7109f2b1223984d91652c2b463eb51,
@@ -50405,6 +50499,7 @@ GameObject:
   - component: {fileID: 1663557512}
   - component: {fileID: 1663557511}
   - component: {fileID: 1663557510}
+  - component: {fileID: 1663557513}
   m_Layer: 5
   m_Name: ButtonPlay
   m_TagString: Untagged
@@ -50527,6 +50622,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663557508}
   m_CullTransparentMesh: 1
+--- !u!95 &1663557513
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663557508}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1669909717
 GameObject:
   m_ObjectHideFlags: 0
@@ -51097,7 +51213,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1258291199
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -56014,6 +56130,7 @@ GameObject:
   - component: {fileID: 1789353687}
   - component: {fileID: 1789353686}
   - component: {fileID: 1789353685}
+  - component: {fileID: 1789353688}
   m_Layer: 5
   m_Name: ButtonOptions
   m_TagString: Untagged
@@ -56136,6 +56253,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1789353683}
   m_CullTransparentMesh: 1
+--- !u!95 &1789353688
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789353683}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1796069082
 GameObject:
   m_ObjectHideFlags: 0
@@ -62199,7 +62337,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 1258291199
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
