@@ -353,14 +353,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ceeb88e9a7195644a036c345fe4d37c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimentions: 20
+  GridDimentions: 30
+  OuterWallsHeight: 4
+  TileAnimationDuration: 0.1
   TileDatas:
   - {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
   - {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
   - {fileID: 11400000, guid: ee73ea840fdb5a24bb0ac7ccafb16cb9, type: 2}
   - {fileID: 11400000, guid: f19277cc23b0e344c9b50cd1d1a8fecc, type: 2}
-  AvailablePrototypes: []
   cellObj: {fileID: 6529863562559016525, guid: b22f18cd8bf49054e861c9cca2c29923, type: 3}
+  WallColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
+  TileColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+  LevelScaleMultiplier: 5
 --- !u!1 &195656776
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +451,7 @@ PrefabInstance:
     - target: {fileID: 1130370877621980219, guid: 98d050be1cdb1b6c698d98af2bbcfd28,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.77
+      value: 34.35
       objectReference: {fileID: 0}
     - target: {fileID: 1130370877621980219, guid: 98d050be1cdb1b6c698d98af2bbcfd28,
         type: 3}
@@ -686,7 +690,7 @@ PrefabInstance:
     - target: {fileID: 5083966910497447912, guid: b9255cc3e4270e200a595814d5af8415,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.77
+      value: 34.35
       objectReference: {fileID: 0}
     - target: {fileID: 5083966910497447912, guid: b9255cc3e4270e200a595814d5af8415,
         type: 3}
@@ -921,7 +925,7 @@ PrefabInstance:
     - target: {fileID: 6618330110305353102, guid: 253feb12507d440a4b36d24a2f29aeeb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.77
+      value: 34.35
       objectReference: {fileID: 0}
     - target: {fileID: 6618330110305353102, guid: 253feb12507d440a4b36d24a2f29aeeb,
         type: 3}

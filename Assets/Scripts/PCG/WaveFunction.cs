@@ -1,40 +1,51 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WaveFunction : MonoBehaviour
 {
-    public int dimentions; // Grid dimensions
-    public TileData[] TileDatas;
-    public List<TilePrototype> AvailablePrototypes = new List<TilePrototype>(); // Initialize the list
-    private List<Cell> gridComponents; // A grid of cells
+    [Header("Wave Function Settings")] public int GridDimentions;
+
+    public float OuterWallsHeight = 3f;
+    [Range(0.1f, 1.0f)] public float TileAnimationDuration = 0.15f;
+
+    [Header("Possible Tiles")] public TileData[] TileDatas;
+
     public Cell cellObj;
-    
-    [Range(0.1f, 1.0f)]
-    public float TileAnimationDuration = 0.15f;
-    
+
+    [Header("Colors")] public Color WallColor = Color.black;
+
+    public Color TileColor = Color.white;
+
+    public float LevelScaleMultiplier = 20;
+
+    private readonly List<TilePrototype> AvailablePrototypes = new();
+
+    private readonly Vector2Int[] directions =
+    {
+        new(1, 0),
+        new(0, -1),
+        new(-1, 0),
+        new(0, 1)
+    };
+
+    private List<Cell> gridComponents; // A grid of cells
+
 
     private int iterations;
 
-    private Vector2Int[] directions = new Vector2Int[]
-    {
-        new Vector2Int(1, 0),
-        new Vector2Int(0, -1),
-        new Vector2Int(-1, 0),
-        new Vector2Int(0, 1)
-    };
+    private GameObject[] outerWalls;
 
     private void Awake()
     {
+        outerWalls = new GameObject[4];
         gridComponents = new List<Cell>();
         GetAllPrototypes();
         InitializeGrid();
     }
-    
+
     public void RegenerateWaveFunction()
     {
         foreach (var cell in gridComponents)
@@ -42,6 +53,7 @@ public class WaveFunction : MonoBehaviour
             Destroy(cell.instantiatedTile);
             Destroy(cell.gameObject);
         }
+
         gridComponents.Clear();
         iterations = 0;
         InitializeGrid();
@@ -52,64 +64,99 @@ public class WaveFunction : MonoBehaviour
         foreach (var tile in TileDatas)
         {
             tile.ComputePrototypes();
-            foreach (var prototype in tile.Prototypes)
-            {
-                AvailablePrototypes.Add(prototype);
-            }
+            foreach (var prototype in tile.Prototypes) AvailablePrototypes.Add(prototype);
         }
 
         // Compute neighbors for each prototype
         foreach (var prototype in AvailablePrototypes)
         {
             prototype.Neighbors = new List<TilePrototype>[4]; // posX, negZ, negX, posZ
-            for(int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 prototype.Neighbors[i] = new List<TilePrototype>();
-                foreach(TilePrototype neighbor in AvailablePrototypes)
-                {
-                    if(prototype.Sockets[i].ToString().EndsWith("S")) // Asymmetric
+                foreach (var neighbor in AvailablePrototypes)
+                    if (prototype.Sockets[i].ToString().EndsWith("S")) // Asymmetric
                     {
-                        if(prototype.Sockets[i] == TileData.SideType.LLS && neighbor.Sockets[(i + 2) % 4] == TileData.SideType.RLS
-                           || prototype.Sockets[i] == TileData.SideType.RLS && neighbor.Sockets[(i + 2) % 4] == TileData.SideType.LLS)
-                        {
+                        if ((prototype.Sockets[i] == TileData.SideType.LLS &&
+                             neighbor.Sockets[(i + 2) % 4] == TileData.SideType.RLS)
+                            || (prototype.Sockets[i] == TileData.SideType.RLS &&
+                                neighbor.Sockets[(i + 2) % 4] == TileData.SideType.LLS))
                             prototype.Neighbors[i].Add(neighbor);
-                        }
-                        
                     }
-                    else if(prototype.Sockets[i] == neighbor.Sockets[(i + 2) % 4])
+                    else if (prototype.Sockets[i] == neighbor.Sockets[(i + 2) % 4])
                     {
                         prototype.Neighbors[i].Add(neighbor);
                     }
-                    
-                }
             }
             //tile.ComputePrototypesNeighbors();
         }
     }
 
-    void InitializeGrid()
+    private void InitializeGrid()
     {
-        for (int y = 0; y < dimentions; y++)
+        for (var y = 0; y < GridDimentions; y++)
+        for (var x = 0; x < GridDimentions; x++)
         {
-            for (int x = 0; x < dimentions; x++)
+            var cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity, transform);
+            if (AvailablePrototypes.Count == 0)
             {
-                Cell cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity, transform);
-                if (AvailablePrototypes.Count == 0)
-                {   
-                    Debug.LogError("No available prototypes");
-                    return;
-                }
-                cell.CreateCell(false, AvailablePrototypes, x, y);
-                gridComponents.Add(cell);
+                Debug.LogError("No available prototypes");
+                return;
             }
+
+            cell.CreateCell(false, AvailablePrototypes, x, y);
+            gridComponents.Add(cell);
         }
+
+        CreateSealingWalls();
+
         StartCoroutine(CollapseWaveFunctionWithAnim());
+    }
+
+    private void CreateSealingWalls()
+    {
+        float gridSize = GridDimentions;
+        var wallThickness = 0.1f;
+
+        // Create a material for the walls
+        var wallMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        wallMaterial.color = WallColor;
+
+        foreach (var wall in outerWalls)
+            if (wall != null)
+                Destroy(wall);
+
+        // Create walls
+        // Left wall
+        outerWalls[0] = CreateWall(new Vector3(-0.5f, 0.5f, gridSize / 2 - 0.5f),
+            new Vector3(wallThickness, OuterWallsHeight, gridSize),
+            wallMaterial);
+        // Right wall
+        outerWalls[1] = CreateWall(new Vector3(gridSize - 0.5f + wallThickness, 0.5f, gridSize / 2 - 0.5f),
+            new Vector3(wallThickness, OuterWallsHeight, gridSize), wallMaterial);
+        // Top wall
+        outerWalls[2] = CreateWall(new Vector3(gridSize / 2 - 0.5f, 0.5f, -0.5f),
+            new Vector3(gridSize, OuterWallsHeight, wallThickness),
+            wallMaterial);
+        // Bottom wall
+        outerWalls[3] = CreateWall(new Vector3(gridSize / 2 - 0.5f, 0.5f, gridSize - 0.5f + wallThickness),
+            new Vector3(gridSize, OuterWallsHeight, wallThickness), wallMaterial);
+    }
+
+    private GameObject CreateWall(Vector3 position, Vector3 scale, Material material)
+    {
+        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.transform.position = position;
+        wall.transform.localScale = scale;
+        wall.GetComponent<Renderer>().material = material;
+        wall.transform.parent = transform;
+        return wall;
     }
 
     private void CollapseWaveFunction()
     {
         // Pick a random starting cell to collapse
-        Cell startCell = gridComponents[UnityEngine.Random.Range(0, gridComponents.Count)];
+        var startCell = gridComponents[Random.Range(0, gridComponents.Count)];
         CollapseCell(startCell);
         PropagateChanges(startCell);
 
@@ -119,13 +166,14 @@ public class WaveFunction : MonoBehaviour
             IterateWFC();
             iterations++;
         }
+
         StartCoroutine(EnsureConnectivity());
     }
-    
+
     private IEnumerator CollapseWaveFunctionWithAnim()
     {
         // Pick a random starting cell to collapse
-        Cell startCell = gridComponents[UnityEngine.Random.Range(0, gridComponents.Count)];
+        var startCell = gridComponents[Random.Range(0, gridComponents.Count)];
         CollapseCell(startCell);
         PropagateChanges(startCell);
 
@@ -136,54 +184,60 @@ public class WaveFunction : MonoBehaviour
             yield return null;
             iterations++;
         }
+
+        transform.localScale *= LevelScaleMultiplier;
+        var spawnPoint = GetBestSpawnPoint();
+
+        var player = GameObject.FindWithTag("Player");
+        player.transform.parent = transform;
+        Debug.LogWarning($"Spawning player at {spawnPoint[0]} : {spawnPoint[1]}");
+        player.transform.position =
+            new Vector3(spawnPoint[0] * gridComponents[0].transform.localScale.x, 1,
+                spawnPoint[1] * gridComponents[0].transform.localScale.x);
+        player.transform.parent = null;
+        //player.GetComponent<Rigidbody>().useGravity = true;
         //StartCoroutine(EnsureConnectivity());
     }
 
     private void IterateWFC()
     {
-        Cell cell = GetCellWithLowestEntropy();
+        var cell = GetCellWithLowestEntropy();
         if (cell == null)
         {
             Debug.LogError("Failed to find cell with lowest entropy.");
             return;
         }
+
         CollapseCell(cell);
         PropagateChanges(cell);
     }
 
     private void PropagateChanges(Cell cell)
     {
-        Queue<Cell> queue = new Queue<Cell>();
+        var queue = new Queue<Cell>();
         queue.Enqueue(cell);
 
         while (queue.Count > 0)
         {
-            Cell currentCell = queue.Dequeue();
-            for (int directionIndex = 0; directionIndex < directions.Length; directionIndex++)
+            var currentCell = queue.Dequeue();
+            for (var directionIndex = 0; directionIndex < directions.Length; directionIndex++)
             {
-                Vector2Int direction = directions[directionIndex];
-                Vector2Int neighborCoordinates = currentCell.gridCoordinates + direction;
-                if (neighborCoordinates.x < 0 || neighborCoordinates.x >= dimentions || neighborCoordinates.y < 0 || neighborCoordinates.y >= dimentions)
-                {
-                    continue;
-                }
+                var direction = directions[directionIndex];
+                var neighborCoordinates = currentCell.gridCoordinates + direction;
+                if (neighborCoordinates.x < 0 || neighborCoordinates.x >= GridDimentions || neighborCoordinates.y < 0 ||
+                    neighborCoordinates.y >= GridDimentions) continue;
 
-                Cell neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
-                if (neighbor.collapsed)
-                {
-                    continue;
-                }
+                var neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                if (neighbor.collapsed) continue;
 
-                bool neighborChanged = false;
-                List<TilePrototype> validNeighbors = GetPossibleNeighbors(currentCell, directionIndex);
-                for (int i = neighbor.tileOptions.Count - 1; i >= 0; i--)
-                {
+                var neighborChanged = false;
+                var validNeighbors = GetPossibleNeighbors(currentCell, directionIndex);
+                for (var i = neighbor.tileOptions.Count - 1; i >= 0; i--)
                     if (!validNeighbors.Contains(neighbor.tileOptions[i]))
                     {
                         neighbor.tileOptions.RemoveAt(i);
                         neighborChanged = true;
                     }
-                }
 
                 if (neighbor.tileOptions.Count == 0)
                 {
@@ -191,56 +245,49 @@ public class WaveFunction : MonoBehaviour
                     return; // or handle the contradiction appropriately
                 }
 
-                if (neighborChanged)
-                {
-                    queue.Enqueue(neighbor); // Only enqueue if changes were made
-                }
+                if (neighborChanged) queue.Enqueue(neighbor); // Only enqueue if changes were made
             }
         }
     }
 
     private List<TilePrototype> GetPossibleNeighbors(Cell currentCell, int directionIndex)
     {
-        List<TilePrototype> possibleNeighbors = new List<TilePrototype>();
+        var possibleNeighbors = new List<TilePrototype>();
         foreach (var prototype in currentCell.tileOptions)
-        {
             possibleNeighbors.AddRange(prototype.Neighbors[directionIndex]);
-        }
-        if (possibleNeighbors.Count == 0)
-        {
-            Debug.LogWarning("No possible neighbors");
-        }
+        if (possibleNeighbors.Count == 0) Debug.LogWarning("No possible neighbors");
         return possibleNeighbors;
     }
 
     private void CollapseCell(Cell cell)
     {
         cell.collapsed = true;
-        int randomIndex = UnityEngine.Random.Range(0, cell.tileOptions.Count);
+        var randomIndex = Random.Range(0, cell.tileOptions.Count);
         if (randomIndex < 0 || randomIndex >= cell.tileOptions.Count)
         {
-            Debug.LogError($"{iterations} : Random index {randomIndex} out of range for tile options count {cell.tileOptions.Count}");
+            Debug.LogError(
+                $"{iterations} : Random index {randomIndex} out of range for tile options count {cell.tileOptions.Count}");
             return;
         }
-        TilePrototype chosenTile = cell.tileOptions[randomIndex];
+
+        var chosenTile = cell.tileOptions[randomIndex];
         cell.RecreateCell(new List<TilePrototype> { chosenTile });
-        cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation), transform);
-        Vector3 tempScale = cell.instantiatedTile.transform.localScale;
+        cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position,
+            Quaternion.Euler(-90, 0, chosenTile.Rotation), transform);
+        var tempScale = cell.instantiatedTile.transform.localScale;
+        cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
     }
 
     private Cell GetCellWithLowestEntropy()
     {
-        List<Cell> lowestEntropyCells = new List<Cell>();
-        float lowestEntropy = float.MaxValue;
+        var lowestEntropyCells = new List<Cell>();
+        var lowestEntropy = float.MaxValue;
 
         foreach (var cell in gridComponents)
         {
-            if (cell.collapsed)
-            {
-                continue;
-            }
+            if (cell.collapsed) continue;
             float entropy = cell.GetEntropy();
             if (entropy < lowestEntropy)
             {
@@ -254,85 +301,131 @@ public class WaveFunction : MonoBehaviour
             }
         }
 
-        if (lowestEntropyCells.Count == 0)
-        {
-            return null;
-        }
+        if (lowestEntropyCells.Count == 0) return null;
 
-        int randomIndex = UnityEngine.Random.Range(0, lowestEntropyCells.Count);
+        var randomIndex = Random.Range(0, lowestEntropyCells.Count);
         return lowestEntropyCells[randomIndex];
     }
 
     private bool IsFunctionCollapsed()
     {
         foreach (var cell in gridComponents)
-        {
             if (!cell.collapsed)
-            {
                 return false;
-            }
-        }
         return true;
     }
-    
-    private IEnumerator EnsureConnectivity()
+
+    private Vector2Int GetBestSpawnPoint()
     {
-        bool allConnected;
-        HashSet<Cell> visited = new HashSet<Cell>();
-        Queue<Cell> queue = new Queue<Cell>();
+        var visited = new HashSet<Cell>();
+        var queue = new Queue<Cell>();
+        visited.Clear();
+        queue.Clear();
 
-        do
-        {
-            allConnected = true;
-            visited.Clear();
-            queue.Clear();
+        var maxTiles = 0;
+        var bestSpawnPoint = Vector2Int.zero;
 
-            if (gridComponents.Count > 0)
+        foreach (var cell in gridComponents)
+            if (!visited.Contains(cell))
             {
-                queue.Enqueue(gridComponents[0]);
-                visited.Add(gridComponents[0]);
+                var currentTiles = 0;
+                queue.Enqueue(cell);
+                visited.Add(cell);
 
                 while (queue.Count > 0)
                 {
-                    Cell currentCell = queue.Dequeue();
-                    int directionIndex = 0;
+                    var currentCell = queue.Dequeue();
+                    currentTiles++;
+                    var directionIndex = 0;
                     foreach (var direction in directions)
                     {
-                        Vector2Int neighborCoordinates = currentCell.gridCoordinates + direction;
-                        Cell neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                        var neighborCoordinates = currentCell.gridCoordinates + direction;
+                        var neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
                         if (neighbor != null && !visited.Contains(neighbor))
                         {
-
                             var oppositeSide = neighbor.tileOptions[0].Sockets[TileData.Mod(directionIndex + 2, 4)];
-                            if (oppositeSide != TileData.SideType.LF || neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
+                            if (oppositeSide != TileData.SideType.LF ||
+                                neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
                             {
                                 visited.Add(neighbor);
                                 queue.Enqueue(neighbor);
                             }
                         }
+
                         directionIndex++;
                     }
                 }
 
-                yield return null; // Yield control to avoid freezing
-            }
-
-            // If there are unvisited cells, connect them
-            foreach (var cell in gridComponents)
-            {
-                if (!visited.Contains(cell))
+                if (currentTiles > maxTiles)
                 {
-                    Debug.LogWarning($"Isolated cell at {cell.gridCoordinates}. Connecting...");
-                    cell.ReplacePrefabWithDoor(); // Implement this method to replace with a door prefab
-                    allConnected = false;
-                    break;
+                    maxTiles = currentTiles;
+                    bestSpawnPoint = cell.gridCoordinates;
                 }
             }
-        
-            yield return null; // Yield control to avoid freezing
-        } while (!allConnected);
 
-        Debug.Log("All cells are connected.");
+        //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), bestSpawnPoint + Vector3.up * 2, Quaternion.identity, transform);
+        Debug.LogWarning($"spawn point: {bestSpawnPoint} with {maxTiles} tiles.");
+        return bestSpawnPoint;
+    }
+
+    public void FloodFillWrapper()
+    {
+        foreach (var cell in gridComponents)
+            cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
+        StartCoroutine(EnsureConnectivity());
+    }
+
+    private IEnumerator EnsureConnectivity()
+    {
+        var visited = new HashSet<Cell>();
+        var queue = new Queue<Cell>();
+        visited.Clear();
+        queue.Clear();
+
+        if (gridComponents.Count > 0)
+        {
+            var randomIndex = Random.Range(0, gridComponents.Count);
+            queue.Enqueue(gridComponents[randomIndex]);
+            visited.Add(gridComponents[randomIndex]);
+
+            while (queue.Count > 0)
+            {
+                var currentCell = queue.Dequeue();
+                var directionIndex = 0;
+                foreach (var direction in directions)
+                {
+                    var neighborCoordinates = currentCell.gridCoordinates + direction;
+                    var neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                    if (neighbor != null && !visited.Contains(neighbor))
+                    {
+                        var oppositeSide = neighbor.tileOptions[0].Sockets[TileData.Mod(directionIndex + 2, 4)];
+                        if (oppositeSide != TileData.SideType.LF ||
+                            neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
+                        {
+                            // Turn blue
+                            neighbor.instantiatedTile.GetComponent<MeshRenderer>().material
+                                .DOColor(Color.blue, TileAnimationDuration);
+                            yield return new WaitForSeconds(0.001f);
+                            visited.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+
+                    directionIndex++;
+                }
+            }
+
+            yield return null; // Yield control to avoid freezing
+        }
+
+        // If there are unvisited cells, connect them
+        foreach (var cell in gridComponents)
+            if (!visited.Contains(cell))
+            {
+                Debug.LogWarning($"Isolated cell at {cell.gridCoordinates}. Connecting...");
+                break;
+            }
+
+        yield return null; // Yield control to avoid freezing
     }
 }
-

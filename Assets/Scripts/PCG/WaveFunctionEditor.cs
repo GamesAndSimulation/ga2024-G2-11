@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(WaveFunction))]
 public class WaveFunctionEditor : Editor
@@ -8,13 +8,14 @@ public class WaveFunctionEditor : Editor
     {
         DrawDefaultInspector();
 
-        WaveFunction waveFunction = (WaveFunction)target;
-        
+        var waveFunction = (WaveFunction)target;
+
         GUILayout.Space(10);
-        
-        if(GUILayout.Button("Regenerate Wave Function"))
-        {
-            waveFunction.RegenerateWaveFunction();
-        }
+
+        GUILayout.Label("Algorithm Tools", EditorStyles.boldLabel);
+
+        if (GUILayout.Button("Regenerate Wave Function")) waveFunction.RegenerateWaveFunction();
+
+        if (GUILayout.Button("Run flood fill algorithm")) waveFunction.FloodFillWrapper();
     }
 }
