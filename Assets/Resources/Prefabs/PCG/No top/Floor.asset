@@ -16,12 +16,16 @@ MonoBehaviour:
   negZType: 2
   negXType: 2
   posZType: 2
-  tilePrefab: {fileID: 7734702357499424379, guid: 6d4776575c3b2fe4a836030944b431d3,
+  tileShape: 0
+  tilePrefab: {fileID: 3422853185943709183, guid: 427875604ec59b646aeff742153a1b6b,
     type: 3}
+  tilePrefabWithDoor: {fileID: 0}
   numRotations: 0
   Sockets: 02000000020000000200000002000000
   Prototypes:
   - Sockets: 02000000020000000200000002000000
     Rotation: 0
-    TilePrefab: {fileID: 9084042995131861550, guid: d7510dda35c6c3341affcb101e960220,
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 7142348669106549485, guid: 427875604ec59b646aeff742153a1b6b,
       type: 3}
+    TilePrefabWithDoor: {fileID: 0}

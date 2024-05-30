@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,10 @@ public class WaveFunction : MonoBehaviour
     public List<TilePrototype> AvailablePrototypes = new List<TilePrototype>(); // Initialize the list
     private List<Cell> gridComponents; // A grid of cells
     public Cell cellObj;
+    
+    [Range(0.1f, 1.0f)]
+    public float TileAnimationDuration = 0.15f;
+    
 
     private int iterations;
 
@@ -27,6 +32,18 @@ public class WaveFunction : MonoBehaviour
     {
         gridComponents = new List<Cell>();
         GetAllPrototypes();
+        InitializeGrid();
+    }
+    
+    public void RegenerateWaveFunction()
+    {
+        foreach (var cell in gridComponents)
+        {
+            Destroy(cell.instantiatedTile);
+            Destroy(cell.gameObject);
+        }
+        gridComponents.Clear();
+        iterations = 0;
         InitializeGrid();
     }
 
@@ -68,8 +85,6 @@ public class WaveFunction : MonoBehaviour
             }
             //tile.ComputePrototypesNeighbors();
         }
-
-        
     }
 
     void InitializeGrid()
@@ -78,9 +93,9 @@ public class WaveFunction : MonoBehaviour
         {
             for (int x = 0; x < dimentions; x++)
             {
-                Cell cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity);
+                Cell cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity, transform);
                 if (AvailablePrototypes.Count == 0)
-                {
+                {   
                     Debug.LogError("No available prototypes");
                     return;
                 }
@@ -88,7 +103,7 @@ public class WaveFunction : MonoBehaviour
                 gridComponents.Add(cell);
             }
         }
-        CollapseWaveFunction();
+        StartCoroutine(CollapseWaveFunctionWithAnim());
     }
 
     private void CollapseWaveFunction()
@@ -101,11 +116,27 @@ public class WaveFunction : MonoBehaviour
         // Continue with the usual process
         while (!IsFunctionCollapsed())
         {
-            Debug.Log("Iterating WFC");
             IterateWFC();
             iterations++;
         }
         StartCoroutine(EnsureConnectivity());
+    }
+    
+    private IEnumerator CollapseWaveFunctionWithAnim()
+    {
+        // Pick a random starting cell to collapse
+        Cell startCell = gridComponents[UnityEngine.Random.Range(0, gridComponents.Count)];
+        CollapseCell(startCell);
+        PropagateChanges(startCell);
+
+        // Continue with the usual process
+        while (!IsFunctionCollapsed())
+        {
+            IterateWFC();
+            yield return null;
+            iterations++;
+        }
+        //StartCoroutine(EnsureConnectivity());
     }
 
     private void IterateWFC()
@@ -193,7 +224,10 @@ public class WaveFunction : MonoBehaviour
         }
         TilePrototype chosenTile = cell.tileOptions[randomIndex];
         cell.RecreateCell(new List<TilePrototype> { chosenTile });
-        cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation));
+        cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation), transform);
+        Vector3 tempScale = cell.instantiatedTile.transform.localScale;
+        cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
+        cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
     }
 
     private Cell GetCellWithLowestEntropy()
@@ -261,15 +295,22 @@ public class WaveFunction : MonoBehaviour
                 while (queue.Count > 0)
                 {
                     Cell currentCell = queue.Dequeue();
+                    int directionIndex = 0;
                     foreach (var direction in directions)
                     {
                         Vector2Int neighborCoordinates = currentCell.gridCoordinates + direction;
                         Cell neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
                         if (neighbor != null && !visited.Contains(neighbor))
                         {
-                            visited.Add(neighbor);
-                            queue.Enqueue(neighbor);
+
+                            var oppositeSide = neighbor.tileOptions[0].Sockets[TileData.Mod(directionIndex + 2, 4)];
+                            if (oppositeSide != TileData.SideType.LF || neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
+                            {
+                                visited.Add(neighbor);
+                                queue.Enqueue(neighbor);
+                            }
                         }
+                        directionIndex++;
                     }
                 }
 

@@ -37,7 +37,7 @@ public class Cell : MonoBehaviour
         {
             Destroy(instantiatedTile);
         }
-        instantiatedTile = Instantiate(tileOptions[0].TilePrefabWithDoor, transform.position, Quaternion.Euler(0, tileOptions[0].Rotation, 0));
+        instantiatedTile = Instantiate(tileOptions[0].TilePrefabWithDoor, transform.position, Quaternion.Euler(-90, 0, tileOptions[0].Rotation));
         instantiatedTile.transform.parent = transform;
         tileOptions[0].TilePrefabShape = TileData.TileShape.Door;
     }
