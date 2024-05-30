@@ -9,7 +9,9 @@ public class TilePrototype
 {
     public TileData.SideType[] Sockets;
     public int Rotation;
+    public TileData.TileShape TilePrefabShape;
     public GameObject TilePrefab;
+    public GameObject TilePrefabWithDoor; // Only used for corner in and wall
     public List<TilePrototype>[] Neighbors; // Neighbors for each socket
     
     public string TileToString()

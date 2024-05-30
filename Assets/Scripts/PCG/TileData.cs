@@ -20,6 +20,15 @@ public class TileData : ScriptableObject
         posZ
     }
 
+    public enum TileShape
+    {
+        CornerIn,
+        CornerOut,
+        Wall,
+        Floor,
+        Door
+    }
+
     //public static readonly Vector3[] Orientations = new Vector3[] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
     
 
@@ -27,8 +36,10 @@ public class TileData : ScriptableObject
     public SideType negZType;
     public SideType negXType;
     public SideType posZType;
+    public TileShape tileShape;
 
     public GameObject tilePrefab;
+    public GameObject tilePrefabWithDoor;
 
     public int numRotations;
     
@@ -51,8 +62,13 @@ public class TileData : ScriptableObject
                     Sockets[Mod(((int)SideOrientation.negX - i) ,Sockets.Length)],
                     Sockets[Mod(((int)SideOrientation.posZ - i) ,Sockets.Length)]},
                 Rotation = i * 90,
-                TilePrefab = tilePrefab
+                TilePrefab = tilePrefab,
+                TilePrefabShape = tileShape
             };
+            if(tilePrefabWithDoor != null)
+            {
+                prototype.TilePrefabWithDoor = tilePrefabWithDoor;
+            }
             Prototypes[i] = prototype;
             Debug.LogWarning(Prototypes[i].TileToString());
         }
@@ -123,7 +139,7 @@ public class TileData : ScriptableObject
         return tiles;
     }
     
-    int Mod(int a, int b)
+    public static int Mod(int a, int b)
     {
         int result = a % b;
         if (result < 0)

@@ -88,20 +88,10 @@ public class WaveFunction : MonoBehaviour
                 gridComponents.Add(cell);
             }
         }
-        CollapseFunctionForDebug();
-        //StartCoroutine(CollapseFunction());
+        CollapseWaveFunction();
     }
 
-    private IEnumerator CollapseFunction()
-    {
-        while (!IsFunctionCollapsed())
-        {
-            IterateWFC();
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    private void CollapseFunctionForDebug()
+    private void CollapseWaveFunction()
     {
         // Pick a random starting cell to collapse
         Cell startCell = gridComponents[UnityEngine.Random.Range(0, gridComponents.Count)];
@@ -115,6 +105,7 @@ public class WaveFunction : MonoBehaviour
             IterateWFC();
             iterations++;
         }
+        StartCoroutine(EnsureConnectivity());
     }
 
     private void IterateWFC()
@@ -202,7 +193,7 @@ public class WaveFunction : MonoBehaviour
         }
         TilePrototype chosenTile = cell.tileOptions[randomIndex];
         cell.RecreateCell(new List<TilePrototype> { chosenTile });
-        Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation));
+        cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position, Quaternion.Euler(-90, 0, chosenTile.Rotation));
     }
 
     private Cell GetCellWithLowestEntropy()
@@ -249,4 +240,58 @@ public class WaveFunction : MonoBehaviour
         }
         return true;
     }
+    
+    private IEnumerator EnsureConnectivity()
+    {
+        bool allConnected;
+        HashSet<Cell> visited = new HashSet<Cell>();
+        Queue<Cell> queue = new Queue<Cell>();
+
+        do
+        {
+            allConnected = true;
+            visited.Clear();
+            queue.Clear();
+
+            if (gridComponents.Count > 0)
+            {
+                queue.Enqueue(gridComponents[0]);
+                visited.Add(gridComponents[0]);
+
+                while (queue.Count > 0)
+                {
+                    Cell currentCell = queue.Dequeue();
+                    foreach (var direction in directions)
+                    {
+                        Vector2Int neighborCoordinates = currentCell.gridCoordinates + direction;
+                        Cell neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                        if (neighbor != null && !visited.Contains(neighbor))
+                        {
+                            visited.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                        }
+                    }
+                }
+
+                yield return null; // Yield control to avoid freezing
+            }
+
+            // If there are unvisited cells, connect them
+            foreach (var cell in gridComponents)
+            {
+                if (!visited.Contains(cell))
+                {
+                    Debug.LogWarning($"Isolated cell at {cell.gridCoordinates}. Connecting...");
+                    cell.ReplacePrefabWithDoor(); // Implement this method to replace with a door prefab
+                    allConnected = false;
+                    break;
+                }
+            }
+        
+            yield return null; // Yield control to avoid freezing
+        } while (!allConnected);
+
+        Debug.Log("All cells are connected.");
+    }
 }
+

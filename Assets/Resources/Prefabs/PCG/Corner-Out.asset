@@ -16,7 +16,7 @@ MonoBehaviour:
   negZType: 2
   negXType: 2
   posZType: 0
-  tilePrefab: {fileID: 4453565863922744965, guid: 30885c1a39ff83e47b99d15f4abd7811,
+  tilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
     type: 3}
   numRotations: 3
   Sockets: 01000000020000000200000000000000
