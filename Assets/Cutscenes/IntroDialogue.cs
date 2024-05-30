@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IntroDialogue : MonoBehaviour
 {
     public TextMeshProUGUI textPlacer;
     public TextMeshProUGUI characterPlacer;
+    public Image dialogueBackground;
     private int currentLine;
 
     private int _totalCharacters;
@@ -19,7 +21,7 @@ public class IntroDialogue : MonoBehaviour
     
     private String[] dialogue =
     {
-        "Wooow!",
+        "Wow!",
         "Yara, Yara! Look!",
         "It's so cool!",
         "Can you teach me how to shoot it?",
@@ -31,12 +33,14 @@ public class IntroDialogue : MonoBehaviour
     {
         currentLine = -1;
         _currentChar = 0;
+        dialogueBackground.gameObject.SetActive(false);
     }
 
     public void nextDialogueLine()
     {
-        // Updates the line counter and sets it in the text placer
+        dialogueBackground.gameObject.SetActive(true);
         
+        // Updates the line counter and sets it in the text placer
         currentLine++;
         textPlacer.SetText(dialogue[currentLine]);
         characterPlacer.SetText(characters[charactersSequence[currentLine]]);
