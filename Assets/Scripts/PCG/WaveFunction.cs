@@ -96,6 +96,7 @@ public class WaveFunction : MonoBehaviour
     private void InitializeGrid()
     {
         LoadingScreen.SetActive(true);
+        LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = true;
         for (var y = 0; y < GridDimentions; y++)
         for (var x = 0; x < GridDimentions; x++)
         {
@@ -199,6 +200,7 @@ public class WaveFunction : MonoBehaviour
         GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = true;
 
         LoadingScreen.SetActive(false);
+        LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
     }
 
     private void UpdateColliders()
