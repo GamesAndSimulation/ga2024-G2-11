@@ -17,7 +17,7 @@ MonoBehaviour:
   negXType: 2
   posZType: 0
   tileShape: 0
-  tilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
+  tilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
     type: 3}
   tilePrefabWithDoor: {fileID: 0}
   numRotations: 3
@@ -26,24 +26,24 @@ MonoBehaviour:
   - Sockets: 01000000020000000200000000000000
     Rotation: 0
     TilePrefabShape: 0
-    TilePrefab: {fileID: 6960040426493717468, guid: 651e6c38a0a3dfd44a35e6e031359da7,
+    TilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
       type: 3}
     TilePrefabWithDoor: {fileID: 0}
   - Sockets: 00000000010000000200000002000000
     Rotation: 90
     TilePrefabShape: 0
-    TilePrefab: {fileID: 6960040426493717468, guid: 651e6c38a0a3dfd44a35e6e031359da7,
+    TilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
       type: 3}
     TilePrefabWithDoor: {fileID: 0}
   - Sockets: 02000000000000000100000002000000
     Rotation: 180
     TilePrefabShape: 0
-    TilePrefab: {fileID: 6960040426493717468, guid: 651e6c38a0a3dfd44a35e6e031359da7,
+    TilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
       type: 3}
     TilePrefabWithDoor: {fileID: 0}
   - Sockets: 02000000020000000000000001000000
     Rotation: 270
     TilePrefabShape: 0
-    TilePrefab: {fileID: 6960040426493717468, guid: 651e6c38a0a3dfd44a35e6e031359da7,
+    TilePrefab: {fileID: 2457868900071643953, guid: b306f4a70d80fcc40b9abdd2d265b295,
       type: 3}
     TilePrefabWithDoor: {fileID: 0}

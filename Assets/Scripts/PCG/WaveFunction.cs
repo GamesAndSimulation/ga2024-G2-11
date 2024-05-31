@@ -10,6 +10,7 @@ public class WaveFunction : MonoBehaviour
 
     public float OuterWallsHeight = 3f;
     [Range(0.1f, 1.0f)] public float TileAnimationDuration = 0.15f;
+    public GameObject LoadingScreen;
 
     [Header("Possible Tiles")] public TileData[] TileDatas;
 
@@ -94,6 +95,7 @@ public class WaveFunction : MonoBehaviour
 
     private void InitializeGrid()
     {
+        LoadingScreen.SetActive(true);
         for (var y = 0; y < GridDimentions; y++)
         for (var x = 0; x < GridDimentions; x++)
         {
@@ -185,18 +187,62 @@ public class WaveFunction : MonoBehaviour
             iterations++;
         }
 
-        transform.localScale *= LevelScaleMultiplier;
         var spawnPoint = GetBestSpawnPoint();
 
+        transform.localScale *= LevelScaleMultiplier;
+
+        UpdateColliders();
+
+        PlacePlayerAtSpawnPoint(spawnPoint);
+
+        yield return new WaitForSeconds(0.3f);
+        GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = true;
+
+        LoadingScreen.SetActive(false);
+    }
+
+    private void UpdateColliders()
+    {
+        foreach (var cell in gridComponents)
+            if (cell.instantiatedTile != null)
+            {
+                var existingCollider = cell.instantiatedTile.GetComponent<MeshCollider>();
+                if (existingCollider != null) Destroy(existingCollider); // Remove the existing collider
+
+                var meshFilter = cell.instantiatedTile.GetComponent<MeshFilter>();
+                if (meshFilter != null)
+                {
+                    var meshCollider = cell.instantiatedTile.AddComponent<MeshCollider>();
+                    meshCollider.sharedMesh = meshFilter.sharedMesh;
+                    meshCollider.convex = false; // Adjust based on your requirements
+                }
+                else
+                {
+                    Debug.LogError("MeshFilter not found on the instantiated tile.");
+                }
+            }
+            else
+            {
+                Debug.LogError("Instantiated tile is null.");
+            }
+    }
+
+
+    private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)
+    {
         var player = GameObject.FindWithTag("Player");
-        player.transform.parent = transform;
-        Debug.LogWarning($"Spawning player at {spawnPoint[0]} : {spawnPoint[1]}");
-        player.transform.position =
-            new Vector3(spawnPoint[0] * gridComponents[0].transform.localScale.x, 1,
-                spawnPoint[1] * gridComponents[0].transform.localScale.x);
-        player.transform.parent = null;
-        //player.GetComponent<Rigidbody>().useGravity = true;
-        //StartCoroutine(EnsureConnectivity());
+        if (player != null)
+        {
+            var worldSpawnPoint = new Vector3(
+                spawnPoint.x * gridComponents[0].transform.localScale.x * LevelScaleMultiplier,
+                1.5f * gridComponents[0].transform.localScale.y * LevelScaleMultiplier,
+                spawnPoint.y * gridComponents[0].transform.localScale.z * LevelScaleMultiplier);
+
+            player.transform.parent = transform;
+            player.transform.position = worldSpawnPoint;
+            player.transform.parent = null;
+            Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
+        }
     }
 
     private void IterateWFC()
@@ -275,7 +321,7 @@ public class WaveFunction : MonoBehaviour
         cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position,
             Quaternion.Euler(-90, 0, chosenTile.Rotation), transform);
         var tempScale = cell.instantiatedTile.transform.localScale;
-        cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
+        //cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
     }
