@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: cb32a927dfdd96540b8b9c181a819230, type: 2}
+    - {fileID: 11400000, guid: c5be652806709ae4ea8b2c25c7eaf510, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -400,6 +401,20 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 23321721}
+          m_TargetAssemblyTypeName: IntroDialogue, Assembly-CSharp
+          m_MethodName: endCutscene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &23321721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,6 +430,12 @@ MonoBehaviour:
   textPlacer: {fileID: 1987079679}
   characterPlacer: {fileID: 1679690747}
   dialogueBackground: {fileID: 1238318131}
+  camerasContainer:
+  - {fileID: 1314825167}
+  - {fileID: 1340584599}
+  - {fileID: 1127036391}
+  - {fileID: 68874955}
+  player: {fileID: 1125597314}
 --- !u!114 &23321722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1685,7 +1706,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 9159390
+    rgba: 4287349470
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -21746,6 +21767,46 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c50fd133600bf584cb8da23174c38dab, type: 3}
+--- !u!21 &726555936
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/RoundedCorners/RoundedCorners
+  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _OuterUV: {r: 0, g: 0, b: 1, a: 1}
+    - _WidthHeightRadius: {r: 1520, g: 150, b: 30, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1001 &728747384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27247,7 +27308,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3814be7bb0134b54fb1577f7f71ff81c,
         type: 3}
       propertyPath: m_Name
-      value: Simon
+      value: Symon
       objectReference: {fileID: 0}
     - target: {fileID: 1114026898505827332, guid: 3814be7bb0134b54fb1577f7f71ff81c,
         type: 3}
@@ -27956,7 +28017,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 9159390
+    rgba: 4287349470
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -36137,7 +36198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1600344132}
+  m_Material: {fileID: 726555936}
   m_Color: {r: 0.12941177, g: 0.101960786, b: 0.078431375, a: 0.9529412}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -36679,7 +36740,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 9159390
+    rgba: 4287349470
   m_fontColor: {r: 0.8705883, g: 0.7607844, b: 0.54509807, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -39050,7 +39111,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 20
+  m_Priority: 21
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -48550,46 +48611,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598170274}
   m_Mesh: {fileID: 4300078, guid: 812a6c8b7c6a1094b8c3d4065333318a, type: 3}
---- !u!21 &1600344132
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _OuterUV: {r: 0, g: 0, b: 1, a: 1}
-    - _WidthHeightRadius: {r: 1520, g: 150, b: 30, a: 0}
-  m_BuildTextureStacks: []
 --- !u!4 &1601228647 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: fa7109f2b1223984d91652c2b463eb51,
