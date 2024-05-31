@@ -56,19 +56,14 @@ public class IntroDialogue : MonoBehaviour
             cam.gameObject.SetActive(false);
             
         }
-
-        player.layer = 7;
-
-
-        foreach (Transform child in player.transform)
-        {
-            child.gameObject.layer = 7;
-        }
         
-        foreach (Transform child in player.transform.GetChild(0).transform.GetChild(0).transform)
+        
+        var children = player.GetComponentsInChildren<Transform>(includeInactive: true);
+        foreach (var child in children)
         {
             child.gameObject.layer = 7;
         }
+
         
     }
 
