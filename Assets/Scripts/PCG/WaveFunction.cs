@@ -8,9 +8,10 @@ public class WaveFunction : MonoBehaviour
 {
     [Header("Wave Function Settings")] public int GridDimentions;
 
-    public float OuterWallsHeight = 3f;
+    public float OuterWallsHeight = 80f;
     [Range(0.1f, 1.0f)] public float TileAnimationDuration = 0.15f;
     public GameObject LoadingScreen;
+    public Material WallMaterial;
 
     [Header("Possible Tiles")] public TileData[] TileDatas;
 
@@ -47,6 +48,15 @@ public class WaveFunction : MonoBehaviour
         InitializeGrid();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log($"Player standing in cell {GetCellUnderPlayer()}");
+            RegenerateWaveFunction();
+        }
+    }
+
     public void RegenerateWaveFunction()
     {
         foreach (var cell in gridComponents)
@@ -57,7 +67,7 @@ public class WaveFunction : MonoBehaviour
 
         gridComponents.Clear();
         iterations = 0;
-        InitializeGrid();
+        InitializeGrid(true);
     }
 
     private void GetAllPrototypes()
@@ -93,14 +103,22 @@ public class WaveFunction : MonoBehaviour
         }
     }
 
-    private void InitializeGrid()
+    private void InitializeGrid(bool firstCellInPlayer = false)
     {
-        LoadingScreen.SetActive(true);
-        LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = true;
+        if (!firstCellInPlayer)
+        {
+            LoadingScreen.SetActive(true);
+            LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = true;
+        }
+
+        var cellCount = 0;
+
         for (var y = 0; y < GridDimentions; y++)
         for (var x = 0; x < GridDimentions; x++)
         {
-            var cell = Instantiate(cellObj, new Vector3(x, 0, y), Quaternion.identity, transform);
+            cellCount++;
+            var cell = Instantiate(cellObj, new Vector3(x * 5, 0, y * 5), Quaternion.identity, transform);
+            cell.tag = "WFCcell";
             if (AvailablePrototypes.Count == 0)
             {
                 Debug.LogError("No available prototypes");
@@ -109,41 +127,60 @@ public class WaveFunction : MonoBehaviour
 
             cell.CreateCell(false, AvailablePrototypes, x, y);
             gridComponents.Add(cell);
+            if (cellCount % 2 == 0)
+                cell.GetComponentInChildren<Light>().gameObject.SetActive(false);
         }
 
-        CreateSealingWalls();
-
-        StartCoroutine(CollapseWaveFunctionWithAnim());
+        if (!firstCellInPlayer)
+            CreateSealingWalls();
+        StartCoroutine(!firstCellInPlayer
+            ? CollapseWaveFunctionWithAnim(true, Vector2Int.zero)
+            : CollapseWaveFunctionWithAnim(false, GetCellUnderPlayer()));
     }
 
     private void CreateSealingWalls()
     {
-        float gridSize = GridDimentions;
-        var wallThickness = 0.1f;
+        var cellSize = 5.0f; // New size of each cell
+        var gridSize = GridDimentions * cellSize * 5;
+        var wallThickness = 0.1f * cellSize;
+        var segmentHeight = OuterWallsHeight / 3; // Height of each wall segment
 
-        // Create a material for the walls
-        var wallMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-        wallMaterial.color = WallColor;
 
         foreach (var wall in outerWalls)
             if (wall != null)
                 Destroy(wall);
 
-        // Create walls
-        // Left wall
-        outerWalls[0] = CreateWall(new Vector3(-0.5f, 0.5f, gridSize / 2 - 0.5f),
-            new Vector3(wallThickness, OuterWallsHeight, gridSize),
-            wallMaterial);
-        // Right wall
-        outerWalls[1] = CreateWall(new Vector3(gridSize - 0.5f + wallThickness, 0.5f, gridSize / 2 - 0.5f),
-            new Vector3(wallThickness, OuterWallsHeight, gridSize), wallMaterial);
-        // Top wall
-        outerWalls[2] = CreateWall(new Vector3(gridSize / 2 - 0.5f, 0.5f, -0.5f),
-            new Vector3(gridSize, OuterWallsHeight, wallThickness),
-            wallMaterial);
-        // Bottom wall
-        outerWalls[3] = CreateWall(new Vector3(gridSize / 2 - 0.5f, 0.5f, gridSize - 0.5f + wallThickness),
-            new Vector3(gridSize, OuterWallsHeight, wallThickness), wallMaterial);
+        var numHorizontalSegments = Mathf.CeilToInt(gridSize / cellSize);
+        var numVerticalSegments = Mathf.CeilToInt(OuterWallsHeight / segmentHeight);
+
+        // Create segmented walls
+        for (var i = 0; i < numHorizontalSegments; i++)
+        for (var j = 0; j < numVerticalSegments; j++)
+        {
+            // Left wall segments
+            CreateWall(
+                new Vector3(-cellSize / 2, j * segmentHeight + segmentHeight / 2,
+                    i * cellSize - gridSize / 2 + cellSize / 2),
+                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+
+            // Right wall segments
+            CreateWall(
+                new Vector3(gridSize - cellSize / 2 + wallThickness, j * segmentHeight + segmentHeight / 2,
+                    i * cellSize - gridSize / 2 + cellSize / 2),
+                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+
+            // Top wall segments
+            CreateWall(
+                new Vector3(i * cellSize - gridSize / 2 + cellSize / 2, j * segmentHeight + segmentHeight / 2,
+                    -cellSize / 2),
+                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+
+            // Bottom wall segments
+            CreateWall(
+                new Vector3(i * cellSize - gridSize / 2 + cellSize / 2, j * segmentHeight + segmentHeight / 2,
+                    gridSize - cellSize / 2 + wallThickness),
+                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+        }
     }
 
     private GameObject CreateWall(Vector3 position, Vector3 scale, Material material)
@@ -173,10 +210,12 @@ public class WaveFunction : MonoBehaviour
         StartCoroutine(EnsureConnectivity());
     }
 
-    private IEnumerator CollapseWaveFunctionWithAnim()
+    private IEnumerator CollapseWaveFunctionWithAnim(bool useRandomFirstCell, Vector2Int firstCell)
     {
-        // Pick a random starting cell to collapse
-        var startCell = gridComponents[Random.Range(0, gridComponents.Count)];
+        // get cell from coordinates
+        var startCell = gridComponents.Find(c => c.gridCoordinates == firstCell);
+        if (useRandomFirstCell)
+            startCell = gridComponents[Random.Range(0, gridComponents.Count)];
         CollapseCell(startCell);
         PropagateChanges(startCell);
 
@@ -190,7 +229,7 @@ public class WaveFunction : MonoBehaviour
 
         var spawnPoint = GetBestSpawnPoint();
 
-        transform.localScale *= LevelScaleMultiplier;
+        //transform.localScale *= LevelScaleMultiplier;
 
         UpdateColliders();
 
@@ -321,11 +360,29 @@ public class WaveFunction : MonoBehaviour
         var chosenTile = cell.tileOptions[randomIndex];
         cell.RecreateCell(new List<TilePrototype> { chosenTile });
         cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position,
-            Quaternion.Euler(-90, 0, chosenTile.Rotation), transform);
+            Quaternion.Euler(-90, 0, chosenTile.Rotation), cell.transform);
         var tempScale = cell.instantiatedTile.transform.localScale;
         //cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
+    }
+
+    private Vector2Int GetCellUnderPlayer()
+    {
+        var player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(player.transform.position, Vector3.down, out hit, 10f))
+            {
+                Debug.Log(hit.collider.transform.parent.gameObject.tag);
+                Debug.Log(hit.collider.name);
+                if (hit.collider.transform.parent.gameObject.CompareTag("WFCcell"))
+                    return hit.collider.transform.parent.GetComponent<Cell>().gridCoordinates;
+            }
+        }
+
+        return Vector2Int.zero;
     }
 
     private Cell GetCellWithLowestEntropy()
@@ -413,7 +470,7 @@ public class WaveFunction : MonoBehaviour
 
         //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), bestSpawnPoint + Vector3.up * 2, Quaternion.identity, transform);
         Debug.LogWarning($"spawn point: {bestSpawnPoint} with {maxTiles} tiles.");
-        return bestSpawnPoint;
+        return new Vector2Int(bestSpawnPoint.x * 5, bestSpawnPoint.y * 5);
     }
 
     public void FloodFillWrapper()
@@ -450,7 +507,6 @@ public class WaveFunction : MonoBehaviour
                         if (oppositeSide != TileData.SideType.LF ||
                             neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
                         {
-                            // Turn blue
                             neighbor.instantiatedTile.GetComponent<MeshRenderer>().material
                                 .DOColor(Color.blue, TileAnimationDuration);
                             yield return new WaitForSeconds(0.001f);
@@ -463,10 +519,9 @@ public class WaveFunction : MonoBehaviour
                 }
             }
 
-            yield return null; // Yield control to avoid freezing
+            yield return null;
         }
 
-        // If there are unvisited cells, connect them
         foreach (var cell in gridComponents)
             if (!visited.Contains(cell))
             {
@@ -474,6 +529,6 @@ public class WaveFunction : MonoBehaviour
                 break;
             }
 
-        yield return null; // Yield control to avoid freezing
+        yield return null;
     }
 }

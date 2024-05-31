@@ -15,6 +15,7 @@ TagManager:
   - EnemySight
   - Enemy
   - WaveFunction
+  - WFCcell
   layers:
   - Default
   - TransparentFX

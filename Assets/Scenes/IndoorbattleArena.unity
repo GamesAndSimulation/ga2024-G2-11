@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -426,9 +426,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GridDimentions: 30
-  OuterWallsHeight: 4
+  OuterWallsHeight: 30
   TileAnimationDuration: 0.1
   LoadingScreen: {fileID: 2139477989}
+  WallMaterial: {fileID: 2100000, guid: 83663faeef09df5459a78582a28dfd04, type: 2}
   TileDatas:
   - {fileID: 11400000, guid: ac5b9d384ab7e814d9c46df4ba71c732, type: 2}
   - {fileID: 11400000, guid: 69db9517dd173e745bd1f4d449fe2c94, type: 2}
@@ -437,7 +438,7 @@ MonoBehaviour:
   cellObj: {fileID: 6529863562559016525, guid: b22f18cd8bf49054e861c9cca2c29923, type: 3}
   WallColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
   TileColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
-  LevelScaleMultiplier: 5
+  LevelScaleMultiplier: 1
 --- !u!1 &195656776
 GameObject:
   m_ObjectHideFlags: 0
