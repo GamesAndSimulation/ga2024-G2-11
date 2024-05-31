@@ -9,7 +9,7 @@ public class WaveFunction : MonoBehaviour
     [Header("Wave Function Settings")] public int GridDimentions;
 
     public float OuterWallsHeight = 80f;
-    [Range(0.1f, 1.0f)] public float TileAnimationDuration = 0.15f;
+    [Range(0.1f, 10.0f)] public float TileAnimationDuration = 0.15f;
     public GameObject LoadingScreen;
     public Material WallMaterial;
 
@@ -22,6 +22,7 @@ public class WaveFunction : MonoBehaviour
     public Color TileColor = Color.white;
 
     public float LevelScaleMultiplier = 20;
+    public float CellSize;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
 
@@ -59,6 +60,7 @@ public class WaveFunction : MonoBehaviour
 
     public void RegenerateWaveFunction()
     {
+        GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = false;
         foreach (var cell in gridComponents)
         {
             Destroy(cell.instantiatedTile);
@@ -140,56 +142,48 @@ public class WaveFunction : MonoBehaviour
 
     private void CreateSealingWalls()
     {
-        var cellSize = 5.0f; // New size of each cell
-        var gridSize = GridDimentions * cellSize * 5;
+        var cellSize = 5f; // New size of each cell
+        var gridSize = GridDimentions;
         var wallThickness = 0.1f * cellSize;
-        var segmentHeight = OuterWallsHeight / 3; // Height of each wall segment
+        var segmentHeight = OuterWallsHeight / 6; // Height of each wall segment
 
 
         foreach (var wall in outerWalls)
             if (wall != null)
                 Destroy(wall);
 
-        var numHorizontalSegments = Mathf.CeilToInt(gridSize / cellSize);
+        var numHorizontalSegments = gridSize;
         var numVerticalSegments = Mathf.CeilToInt(OuterWallsHeight / segmentHeight);
 
         // Create segmented walls
-        for (var i = 0; i < numHorizontalSegments; i++)
+        for (var i = 0; i < GridDimentions; i++)
         for (var j = 0; j < numVerticalSegments; j++)
         {
-            // Left wall segments
-            CreateWall(
-                new Vector3(-cellSize / 2, j * segmentHeight + segmentHeight / 2,
-                    i * cellSize - gridSize / 2 + cellSize / 2),
-                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
-
-            // Right wall segments
-            CreateWall(
-                new Vector3(gridSize - cellSize / 2 + wallThickness, j * segmentHeight + segmentHeight / 2,
-                    i * cellSize - gridSize / 2 + cellSize / 2),
-                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
-
-            // Top wall segments
-            CreateWall(
-                new Vector3(i * cellSize - gridSize / 2 + cellSize / 2, j * segmentHeight + segmentHeight / 2,
-                    -cellSize / 2),
-                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
-
-            // Bottom wall segments
-            CreateWall(
-                new Vector3(i * cellSize - gridSize / 2 + cellSize / 2, j * segmentHeight + segmentHeight / 2,
-                    gridSize - cellSize / 2 + wallThickness),
-                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+            //Left
+            var wall = CreateWall(new Vector3(-cellSize/2, j*cellSize, i*cellSize), new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+            outerWalls[0] = wall;
+            
+            //Right
+            wall = CreateWall(new Vector3(GridDimentions*5f - cellSize/2, j * cellSize, i * cellSize), new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+            outerWalls[1] = wall;
+            
+            //Top
+            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, GridDimentions*5f - cellSize/2), new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+            outerWalls[2] = wall;
+            
+            //Bottom
+            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, -cellSize/2), new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+            outerWalls[3] = wall;
         }
     }
 
     private GameObject CreateWall(Vector3 position, Vector3 scale, Material material)
     {
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wall.transform.position = position;
+        wall.transform.parent = transform;
+        wall.transform.localPosition = position;
         wall.transform.localScale = scale;
         wall.GetComponent<Renderer>().material = material;
-        wall.transform.parent = transform;
         return wall;
     }
 
@@ -227,13 +221,16 @@ public class WaveFunction : MonoBehaviour
             iterations++;
         }
 
-        var spawnPoint = GetBestSpawnPoint();
 
         //transform.localScale *= LevelScaleMultiplier;
 
         UpdateColliders();
 
-        PlacePlayerAtSpawnPoint(spawnPoint);
+        if (useRandomFirstCell)
+        {
+            PlacePlayerAtSpawnPoint(GetBestSpawnPoint());
+        }
+
 
         yield return new WaitForSeconds(0.3f);
         GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = true;
@@ -282,7 +279,7 @@ public class WaveFunction : MonoBehaviour
             player.transform.parent = transform;
             player.transform.position = worldSpawnPoint;
             player.transform.parent = null;
-            Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
+            //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
         }
     }
 
