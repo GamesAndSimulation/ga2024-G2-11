@@ -1,5 +1,4 @@
-using System.Collections;
-using DG.Tweening;
+using System.Collections;using DG.Tweening;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -19,11 +18,18 @@ public class Enemy : MonoBehaviour
     public NavMeshSurface surface;
     public TextMeshPro EnemyStateText;
     public float Health;
+    
+    [Header("Attack")]
     public float AttackDistance;
+    public float Damage;
+    public float AttackCheckAngle;
+    public float AttackDelayTime;
     
     private NavMeshAgent _agent;
     private Animator _animator;
     private Transform _player;
+    private EnemyFov _enemyFov;
+    private bool _attacking;
 
     [Header("AI")]
     
@@ -35,6 +41,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _enemyFov = GetComponent<EnemyFov>();
         _animator = GetComponentInChildren<Animator>();
         currentEnemyState = EnemyState.Patrol;
         _player = GameObject.FindWithTag("Player").transform;
@@ -55,7 +62,8 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.Attack:
                 EnemyStateText.text = "Attack";
-                Attack();
+                if(!_attacking)
+                    Attack();
                 break;
         }
         
@@ -82,31 +90,33 @@ public class Enemy : MonoBehaviour
         _agent.isStopped = false;
         _agent.destination = target.position;
         _agent.speed = chaseSpeed;
-        if(Vector3.Distance(transform.position, _player.position) < AttackDistance)
+        if(Vector3.Distance(transform.position, _player.position) < AttackDistance && _enemyFov.FieldOfViewCheck(AttackCheckAngle))
             currentEnemyState = EnemyState.Attack;
     }
 
     private void Attack()
     {
-        //if current clip is attack clip
-        Debug.Log($"_animator is in attack state {_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")}");
-        if(_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        if (_attacking || _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            Debug.Log("Already attacking or attack animation is playing.");
             return;
-        
-        _animator.SetTrigger("Attack");
+        }
+
+        Debug.Log("Starting Attack");
+        _attacking = true;
+
         _agent.isStopped = true;
-        
-        // Look at player
-        //Vector3 direction = _player.position - transform.position;
-        //transform.rotation = Quaternion.LookRotation(direction);
-        
-        // Damage Player
-        
-        // Change state to chase
-        if(Vector3.Distance(transform.position, _player.position) > AttackDistance)
-            currentEnemyState = EnemyState.Chase;
-        //currentEnemyState = EnemyState.Chase;
+        _animator.SetTrigger("Attack");
+        _player.GetComponent<PlayerStats>().TakeDamage(Damage);
+        Invoke(nameof(StopAttacking), AttackDelayTime);
     }
+
+    private void StopAttacking()
+    {
+        _attacking = false;
+        currentEnemyState = EnemyState.Chase;
+    }
+
 
     private void SetNewRandomDestination()
     {
@@ -145,6 +155,7 @@ public class Enemy : MonoBehaviour
         if (Health <= 0)
         {
             Debug.Log("Enemy died!");
+            _player.GetComponent<PlayerStats>().AddEnemyKill();
             _agent.isStopped = true;
             _animator.SetTrigger("Die");
             var body = transform.Find("Body").transform;

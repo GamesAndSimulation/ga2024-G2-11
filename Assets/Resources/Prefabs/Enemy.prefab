@@ -219,7 +219,7 @@ Transform:
   m_GameObject: {fileID: 1399723919546404161}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.010009766, y: -5.700001, z: 0.049926758}
+  m_LocalPosition: {x: 0.010009766, y: -1.71, z: 0.049926758}
   m_LocalScale: {x: 0.92045, y: 0.92045, z: 0.92045}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -665,7 +665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.5, y: -3.29}
+  m_AnchoredPosition: {x: 1.5, y: 0.7000017}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1924851603126766913
@@ -1531,7 +1531,7 @@ Transform:
   m_GameObject: {fileID: 8210065788707269641}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 717.92, y: 60.62, z: 1879.15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1561,7 +1561,7 @@ CapsuleCollider:
   m_Radius: 0.59000015
   m_Height: 2.780447
   m_Direction: 1
-  m_Center: {x: 0.0016126633, y: -4.370469, z: 0.04}
+  m_Center: {x: 0.0016126633, y: -0.57, z: 0.04}
 --- !u!195 &1685503614986273808
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1581,7 +1581,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 0.82
-  m_BaseOffset: 5.6
+  m_BaseOffset: 1.79
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &2317791434076085052
@@ -1621,7 +1621,10 @@ MonoBehaviour:
   surface: {fileID: 0}
   EnemyStateText: {fileID: 3167868615692164868}
   Health: 100
-  AttackDistance: 4
+  AttackDistance: 5
+  Damage: 10
+  AttackCheckAngle: 50
+  AttackDelayTime: 1.5
   walkRadius: 10
   patrollingSpeed: 3
   chaseSpeed: 8.2

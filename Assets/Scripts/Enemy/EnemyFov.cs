@@ -25,9 +25,9 @@ public class EnemyFov : MonoBehaviour
     }
 
     void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P))
-            _enemyAnim.SetTrigger("Attack");
+    { 
+        //if(Input.GetKeyDown(KeyCode.P))
+        //    _enemyAnim.SetTrigger("Attack");
     }
 
     private IEnumerator FOVRoutine()
@@ -36,7 +36,7 @@ public class EnemyFov : MonoBehaviour
         while (true)
         {
             yield return wait;
-            if (FieldOfViewCheck())
+            if (FieldOfViewCheck(angle))
             {
                 StartCoroutine(StartChaseRoutine());
                 yield break;
@@ -55,7 +55,7 @@ public class EnemyFov : MonoBehaviour
         yield return null;
     }
     
-    bool FieldOfViewCheck()
+    public bool FieldOfViewCheck(float angle)
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
         if (rangeChecks.Length != 0)
@@ -83,6 +83,22 @@ public class EnemyFov : MonoBehaviour
         {
             return false;
         }
+    }
+    
+    //draw field of view gizmo
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 1f);
+        Vector3 fovLine1 = Quaternion.AngleAxis(50/ 2, transform.up) * transform.forward * radius;
+        Vector3 fovLine2 = Quaternion.AngleAxis(-50/ 2, transform.up) * transform.forward * radius;
+        
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, fovLine1);
+        Gizmos.DrawRay(transform.position, fovLine2);
+        
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, transform.forward * radius);
     }
 
 }

@@ -25,6 +25,8 @@ public class WaveFunction : MonoBehaviour
     public float CellSize;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
+    
+    private Vector2Int playerCoords;
 
     private readonly Vector2Int[] directions =
     {
@@ -45,6 +47,7 @@ public class WaveFunction : MonoBehaviour
     {
         outerWalls = new GameObject[4];
         gridComponents = new List<Cell>();
+        playerCoords = new Vector2Int(-1, -1);
         GetAllPrototypes();
         InitializeGrid();
     }
@@ -60,14 +63,19 @@ public class WaveFunction : MonoBehaviour
 
     public void RegenerateWaveFunction()
     {
-        GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = false;
+        Debug.Log("Entered RegenerateWaveFunction");
+        playerCoords = GetCellUnderPlayer();
         foreach (var cell in gridComponents)
         {
-            Destroy(cell.instantiatedTile);
-            Destroy(cell.gameObject);
+            if (cell != gridComponents.Find(c => c.gridCoordinates == playerCoords))
+            {
+                Destroy(cell.instantiatedTile);
+                Destroy(cell.gameObject);
+            }
         }
 
-        gridComponents.Clear();
+        //clear gridcomponents except the player cell
+        gridComponents.RemoveAll(c => c.gridCoordinates != playerCoords);
         iterations = 0;
         InitializeGrid(true);
     }
@@ -107,6 +115,7 @@ public class WaveFunction : MonoBehaviour
 
     private void InitializeGrid(bool firstCellInPlayer = false)
     {
+        Debug.Log("Entered InitializeGrid");
         if (!firstCellInPlayer)
         {
             LoadingScreen.SetActive(true);
@@ -114,11 +123,14 @@ public class WaveFunction : MonoBehaviour
         }
 
         var cellCount = 0;
-
         for (var y = 0; y < GridDimentions; y++)
         for (var x = 0; x < GridDimentions; x++)
         {
             cellCount++;
+            if (firstCellInPlayer && playerCoords.x == x && playerCoords.y == y)
+            {
+                continue;
+            }
             var cell = Instantiate(cellObj, new Vector3(x * 5, 0, y * 5), Quaternion.identity, transform);
             cell.tag = "WFCcell";
             if (AvailablePrototypes.Count == 0)
@@ -134,10 +146,13 @@ public class WaveFunction : MonoBehaviour
         }
 
         if (!firstCellInPlayer)
+        {
             CreateSealingWalls();
+        }
+            
         StartCoroutine(!firstCellInPlayer
             ? CollapseWaveFunctionWithAnim(true, Vector2Int.zero)
-            : CollapseWaveFunctionWithAnim(false, GetCellUnderPlayer()));
+            : CollapseWaveFunctionWithAnim(false, playerCoords));
     }
 
     private void CreateSealingWalls()
@@ -206,11 +221,12 @@ public class WaveFunction : MonoBehaviour
 
     private IEnumerator CollapseWaveFunctionWithAnim(bool useRandomFirstCell, Vector2Int firstCell)
     {
+        Debug.Log("Entered CollapseWaveFunctionWithAnim");
         // get cell from coordinates
         var startCell = gridComponents.Find(c => c.gridCoordinates == firstCell);
         if (useRandomFirstCell)
             startCell = gridComponents[Random.Range(0, gridComponents.Count)];
-        CollapseCell(startCell);
+        //CollapseCell(startCell);
         PropagateChanges(startCell);
 
         // Continue with the usual process
@@ -224,7 +240,7 @@ public class WaveFunction : MonoBehaviour
 
         //transform.localScale *= LevelScaleMultiplier;
 
-        UpdateColliders();
+        //UpdateColliders();
 
         if (useRandomFirstCell)
         {
@@ -233,37 +249,36 @@ public class WaveFunction : MonoBehaviour
 
 
         yield return new WaitForSeconds(0.3f);
-        GameObject.FindWithTag("Player").GetComponent<Rigidbody>().useGravity = true;
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
     }
 
-    private void UpdateColliders()
-    {
-        foreach (var cell in gridComponents)
-            if (cell.instantiatedTile != null)
-            {
-                var existingCollider = cell.instantiatedTile.GetComponent<MeshCollider>();
-                if (existingCollider != null) Destroy(existingCollider); // Remove the existing collider
+    //private void UpdateColliders()
+    //{
+    //    foreach (var cell in gridComponents)
+    //        if (cell.instantiatedTile != null)
+    //        {
+    //            var existingCollider = cell.instantiatedTile.GetComponent<MeshCollider>();
+    //            if (existingCollider != null) Destroy(existingCollider); // Remove the existing collider
 
-                var meshFilter = cell.instantiatedTile.GetComponent<MeshFilter>();
-                if (meshFilter != null)
-                {
-                    var meshCollider = cell.instantiatedTile.AddComponent<MeshCollider>();
-                    meshCollider.sharedMesh = meshFilter.sharedMesh;
-                    meshCollider.convex = false; // Adjust based on your requirements
-                }
-                else
-                {
-                    Debug.LogError("MeshFilter not found on the instantiated tile.");
-                }
-            }
-            else
-            {
-                Debug.LogError("Instantiated tile is null.");
-            }
-    }
+    //            var meshFilter = cell.instantiatedTile.GetComponent<MeshFilter>();
+    //            if (meshFilter != null)
+    //            {
+    //                var meshCollider = cell.instantiatedTile.AddComponent<MeshCollider>();
+    //                meshCollider.sharedMesh = meshFilter.sharedMesh;
+    //                meshCollider.convex = false; // Adjust based on your requirements
+    //            }
+    //            else
+    //            {
+    //                Debug.LogError("MeshFilter not found on the instantiated tile.");
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("Instantiated tile is null.");
+    //        }
+    //}
 
 
     private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)
@@ -285,6 +300,7 @@ public class WaveFunction : MonoBehaviour
 
     private void IterateWFC()
     {
+        
         var cell = GetCellWithLowestEntropy();
         if (cell == null)
         {
@@ -292,12 +308,14 @@ public class WaveFunction : MonoBehaviour
             return;
         }
 
+        
         CollapseCell(cell);
         PropagateChanges(cell);
     }
 
     private void PropagateChanges(Cell cell)
     {
+        Debug.Log("Entered PropagateChanges");
         var queue = new Queue<Cell>();
         queue.Enqueue(cell);
 
@@ -366,6 +384,7 @@ public class WaveFunction : MonoBehaviour
 
     private Vector2Int GetCellUnderPlayer()
     {
+        Debug.Log("Entered GetCellUnderPlayer");
         var player = GameObject.FindWithTag("Player");
         if (player != null)
         {
@@ -389,7 +408,7 @@ public class WaveFunction : MonoBehaviour
 
         foreach (var cell in gridComponents)
         {
-            if (cell.collapsed) continue;
+            if (cell.collapsed || (cell.gridCoordinates.x == playerCoords.x && cell.gridCoordinates.y == playerCoords.y)) continue;
             float entropy = cell.GetEntropy();
             if (entropy < lowestEntropy)
             {
@@ -411,6 +430,7 @@ public class WaveFunction : MonoBehaviour
 
     private bool IsFunctionCollapsed()
     {
+        Debug.Log("Entered IsFunctionCollapsed");
         foreach (var cell in gridComponents)
             if (!cell.collapsed)
                 return false;
