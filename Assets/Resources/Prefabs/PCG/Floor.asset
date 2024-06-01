@@ -16,7 +16,7 @@ MonoBehaviour:
   negZType: 2
   negXType: 2
   posZType: 2
-  tileShape: 0
+  tileShape: 3
   tilePrefab: {fileID: 7216469231479098245, guid: e30dec79842b724428585734ee401817,
     type: 3}
   tilePrefabWithDoor: {fileID: 0}
@@ -26,6 +26,6 @@ MonoBehaviour:
   - Sockets: 02000000020000000200000002000000
     Rotation: 0
     TilePrefabShape: 0
-    TilePrefab: {fileID: 7734702357499424379, guid: 6d4776575c3b2fe4a836030944b431d3,
+    TilePrefab: {fileID: 7216469231479098245, guid: e30dec79842b724428585734ee401817,
       type: 3}
     TilePrefabWithDoor: {fileID: 0}

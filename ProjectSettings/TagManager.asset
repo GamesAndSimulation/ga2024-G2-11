@@ -16,6 +16,7 @@ TagManager:
   - Enemy
   - WaveFunction
   - WFCcell
+  - PuzzleUI
   layers:
   - Default
   - TransparentFX

@@ -25,8 +25,9 @@ public class WaveFunction : MonoBehaviour
     public float CellSize;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
-    
+
     private Vector2Int playerCoords;
+    private Vector2Int corridorCoords;
 
     private readonly Vector2Int[] directions =
     {
@@ -61,9 +62,39 @@ public class WaveFunction : MonoBehaviour
         }
     }
 
+    private void MakeCorridor()
+    {
+        int x = Random.Range(4, GridDimentions - 4);
+        int y = Random.Range(4, GridDimentions - 4);
+
+        corridorCoords = new Vector2Int(x, y);
+
+        for (int i = 0; i < 4; i++)
+        {
+            var cell = gridComponents.Find(c => c.gridCoordinates == new Vector2Int(x, y + i));
+            Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), cell.transform.position, Quaternion.identity,
+                transform);
+            cell.collapsed = true;
+            cell.tileOptions.Clear();
+            cell.tileOptions.Add(AvailablePrototypes.Find(p =>
+                p.TilePrefabShape == TileData.TileShape.Wall && p.Rotation == 90));
+            SpawnTileInCell(cell, cell.tileOptions[0]);
+            PropagateChanges(cell);
+            cell = gridComponents.Find(c => c.gridCoordinates == new Vector2Int(x - 1, y + i));
+            cell.tileOptions.Clear();
+            cell.tileOptions.Add(AvailablePrototypes.Find(p =>
+                p.TilePrefabShape == TileData.TileShape.Wall && p.Rotation == 270));
+            SpawnTileInCell(cell, cell.tileOptions[0]);
+            PropagateChanges(cell);
+            if (i == 3)
+            {
+                Instantiate(Resources.Load("Prefabs/Puzzles/Puzzle (Medium)"), cell.transform.position + Vector3.up * 3, Quaternion.identity, null);
+            }
+        }
+    }
+
     public void RegenerateWaveFunction()
     {
-        Debug.Log("Entered RegenerateWaveFunction");
         playerCoords = GetCellUnderPlayer();
         foreach (var cell in gridComponents)
         {
@@ -115,7 +146,6 @@ public class WaveFunction : MonoBehaviour
 
     private void InitializeGrid(bool firstCellInPlayer = false)
     {
-        Debug.Log("Entered InitializeGrid");
         if (!firstCellInPlayer)
         {
             LoadingScreen.SetActive(true);
@@ -131,6 +161,7 @@ public class WaveFunction : MonoBehaviour
             {
                 continue;
             }
+
             var cell = Instantiate(cellObj, new Vector3(x * 5, 0, y * 5), Quaternion.identity, transform);
             cell.tag = "WFCcell";
             if (AvailablePrototypes.Count == 0)
@@ -145,11 +176,13 @@ public class WaveFunction : MonoBehaviour
                 cell.GetComponentInChildren<Light>().gameObject.SetActive(false);
         }
 
-        if (!firstCellInPlayer)
-        {
-            CreateSealingWalls();
-        }
-            
+        //if (!firstCellInPlayer)
+        //{
+        //    CreateSealingWalls();
+        //}
+
+        MakeCorridor();
+
         StartCoroutine(!firstCellInPlayer
             ? CollapseWaveFunctionWithAnim(true, Vector2Int.zero)
             : CollapseWaveFunctionWithAnim(false, playerCoords));
@@ -175,19 +208,23 @@ public class WaveFunction : MonoBehaviour
         for (var j = 0; j < numVerticalSegments; j++)
         {
             //Left
-            var wall = CreateWall(new Vector3(-cellSize/2, j*cellSize, i*cellSize), new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+            var wall = CreateWall(new Vector3(-cellSize / 2, j * cellSize, i * cellSize),
+                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
             outerWalls[0] = wall;
-            
+
             //Right
-            wall = CreateWall(new Vector3(GridDimentions*5f - cellSize/2, j * cellSize, i * cellSize), new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
+            wall = CreateWall(new Vector3(GridDimentions * 5f - cellSize / 2, j * cellSize, i * cellSize),
+                new Vector3(wallThickness, segmentHeight, cellSize), WallMaterial);
             outerWalls[1] = wall;
-            
+
             //Top
-            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, GridDimentions*5f - cellSize/2), new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, GridDimentions * 5f - cellSize / 2),
+                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
             outerWalls[2] = wall;
-            
+
             //Bottom
-            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, -cellSize/2), new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
+            wall = CreateWall(new Vector3(i * cellSize, j * cellSize, -cellSize / 2),
+                new Vector3(cellSize, segmentHeight, wallThickness), WallMaterial);
             outerWalls[3] = wall;
         }
     }
@@ -221,7 +258,6 @@ public class WaveFunction : MonoBehaviour
 
     private IEnumerator CollapseWaveFunctionWithAnim(bool useRandomFirstCell, Vector2Int firstCell)
     {
-        Debug.Log("Entered CollapseWaveFunctionWithAnim");
         // get cell from coordinates
         var startCell = gridComponents.Find(c => c.gridCoordinates == firstCell);
         if (useRandomFirstCell)
@@ -238,61 +274,28 @@ public class WaveFunction : MonoBehaviour
         }
 
 
-        //transform.localScale *= LevelScaleMultiplier;
+        //transform.localScale *= LevelScaleMaultiplier;
 
         //UpdateColliders();
 
         if (useRandomFirstCell)
         {
-            PlacePlayerAtSpawnPoint(GetBestSpawnPoint());
+            PlacePlayerAtSpawnPoint(GetBestSpawnCorridor());
         }
 
-
-        yield return new WaitForSeconds(0.3f);
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
     }
-
-    //private void UpdateColliders()
-    //{
-    //    foreach (var cell in gridComponents)
-    //        if (cell.instantiatedTile != null)
-    //        {
-    //            var existingCollider = cell.instantiatedTile.GetComponent<MeshCollider>();
-    //            if (existingCollider != null) Destroy(existingCollider); // Remove the existing collider
-
-    //            var meshFilter = cell.instantiatedTile.GetComponent<MeshFilter>();
-    //            if (meshFilter != null)
-    //            {
-    //                var meshCollider = cell.instantiatedTile.AddComponent<MeshCollider>();
-    //                meshCollider.sharedMesh = meshFilter.sharedMesh;
-    //                meshCollider.convex = false; // Adjust based on your requirements
-    //            }
-    //            else
-    //            {
-    //                Debug.LogError("MeshFilter not found on the instantiated tile.");
-    //            }
-    //        }
-    //        else
-    //        {
-    //            Debug.LogError("Instantiated tile is null.");
-    //        }
-    //}
-
 
     private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)
     {
         var player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            var worldSpawnPoint = new Vector3(
-                spawnPoint.x * gridComponents[0].transform.localScale.x * LevelScaleMultiplier,
-                1.5f * gridComponents[0].transform.localScale.y * LevelScaleMultiplier,
-                spawnPoint.y * gridComponents[0].transform.localScale.z * LevelScaleMultiplier);
 
             player.transform.parent = transform;
-            player.transform.position = worldSpawnPoint;
+            player.transform.position = gridComponents.Find(c => c.gridCoordinates == spawnPoint).transform.position + Vector3.up * 4;
             player.transform.parent = null;
             //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
         }
@@ -300,7 +303,7 @@ public class WaveFunction : MonoBehaviour
 
     private void IterateWFC()
     {
-        
+
         var cell = GetCellWithLowestEntropy();
         if (cell == null)
         {
@@ -308,14 +311,13 @@ public class WaveFunction : MonoBehaviour
             return;
         }
 
-        
+
         CollapseCell(cell);
         PropagateChanges(cell);
     }
 
     private void PropagateChanges(Cell cell)
     {
-        Debug.Log("Entered PropagateChanges");
         var queue = new Queue<Cell>();
         queue.Enqueue(cell);
 
@@ -374,25 +376,27 @@ public class WaveFunction : MonoBehaviour
 
         var chosenTile = cell.tileOptions[randomIndex];
         cell.RecreateCell(new List<TilePrototype> { chosenTile });
+        SpawnTileInCell(cell, chosenTile);
+    }
+
+    private void SpawnTileInCell(Cell cell, TilePrototype chosenTile)
+    {
+        cell.RecreateCell(new List<TilePrototype> { chosenTile });
         cell.instantiatedTile = Instantiate(chosenTile.TilePrefab, cell.transform.position,
             Quaternion.Euler(-90, 0, chosenTile.Rotation), cell.transform);
         var tempScale = cell.instantiatedTile.transform.localScale;
-        //cell.instantiatedTile.GetComponent<MeshRenderer>().material.color = TileColor;
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
     }
 
     private Vector2Int GetCellUnderPlayer()
     {
-        Debug.Log("Entered GetCellUnderPlayer");
         var player = GameObject.FindWithTag("Player");
         if (player != null)
         {
             RaycastHit hit;
             if (Physics.Raycast(player.transform.position, Vector3.down, out hit, 10f))
             {
-                Debug.Log(hit.collider.transform.parent.gameObject.tag);
-                Debug.Log(hit.collider.name);
                 if (hit.collider.transform.parent.gameObject.CompareTag("WFCcell"))
                     return hit.collider.transform.parent.GetComponent<Cell>().gridCoordinates;
             }
@@ -408,7 +412,8 @@ public class WaveFunction : MonoBehaviour
 
         foreach (var cell in gridComponents)
         {
-            if (cell.collapsed || (cell.gridCoordinates.x == playerCoords.x && cell.gridCoordinates.y == playerCoords.y)) continue;
+            if (cell.collapsed ||
+                (cell.gridCoordinates.x == playerCoords.x && cell.gridCoordinates.y == playerCoords.y)) continue;
             float entropy = cell.GetEntropy();
             if (entropy < lowestEntropy)
             {
@@ -430,11 +435,65 @@ public class WaveFunction : MonoBehaviour
 
     private bool IsFunctionCollapsed()
     {
-        Debug.Log("Entered IsFunctionCollapsed");
         foreach (var cell in gridComponents)
             if (!cell.collapsed)
                 return false;
         return true;
+    }
+
+    // Get farthes cell from the corridor
+    private Vector2Int GetBestSpawnCorridor()
+    {
+        var visited = new HashSet<Cell>();
+        var queue = new Queue<Cell>();
+        var distanceMap = new Dictionary<Cell, int>();
+        visited.Clear();
+        queue.Clear();
+        Vector2Int farthestCell = Vector2Int.zero;
+
+        if (gridComponents.Count > 0)
+        {
+            var startCell = gridComponents.Find(c => c.gridCoordinates == corridorCoords);
+            queue.Enqueue(startCell);
+            visited.Add(startCell);
+            distanceMap[startCell] = 0;
+            farthestCell = corridorCoords;
+
+            while (queue.Count > 0)
+            {
+                var currentCell = queue.Dequeue();
+                int currentDistance = distanceMap[currentCell];
+                var directionIndex = 0;
+                foreach (var direction in directions)
+                {
+                    var neighborCoordinates = currentCell.gridCoordinates + direction;
+                    var neighbor = gridComponents.Find(c => c.gridCoordinates == neighborCoordinates);
+                    if (neighbor != null && !visited.Contains(neighbor))
+                    {
+                        var oppositeSide = neighbor.tileOptions[0].Sockets[TileData.Mod(directionIndex + 2, 4)];
+                        if (oppositeSide != TileData.SideType.LF ||
+                            neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
+                        {
+                            visited.Add(neighbor);
+                            queue.Enqueue(neighbor);
+                            distanceMap[neighbor] = currentDistance + 1;
+
+                            if (distanceMap[neighbor] > distanceMap[gridComponents.Find(c => c.gridCoordinates == farthestCell)])
+                            {
+                                farthestCell = neighbor.gridCoordinates;
+                            }
+                        }
+                    }
+                    directionIndex++;
+                }
+            }
+        }
+
+        Cell farthestCellObj = gridComponents.Find(c => c.gridCoordinates == farthestCell);
+        Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), farthestCellObj.transform.position, Quaternion.identity, transform);
+
+        return farthestCell;
+
     }
 
     private Vector2Int GetBestSpawnPoint()
@@ -524,9 +583,6 @@ public class WaveFunction : MonoBehaviour
                         if (oppositeSide != TileData.SideType.LF ||
                             neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Door)
                         {
-                            neighbor.instantiatedTile.GetComponent<MeshRenderer>().material
-                                .DOColor(Color.blue, TileAnimationDuration);
-                            yield return new WaitForSeconds(0.001f);
                             visited.Add(neighbor);
                             queue.Enqueue(neighbor);
                         }
@@ -542,7 +598,6 @@ public class WaveFunction : MonoBehaviour
         foreach (var cell in gridComponents)
             if (!visited.Contains(cell))
             {
-                Debug.LogWarning($"Isolated cell at {cell.gridCoordinates}. Connecting...");
                 break;
             }
 
