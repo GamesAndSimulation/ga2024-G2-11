@@ -51,6 +51,11 @@ public class GameManager : MonoBehaviour
             Time.fixedDeltaTime = (Time.timeScale == 0) ? _startTimeScale : 0; 
         }
     }
+    
+    public Vector3 GetPlayerPosition()
+    {
+        return playerScript.transform.position;
+    }
 
     public void SetShowWalkCrosshairAndGuns(bool show)
     {

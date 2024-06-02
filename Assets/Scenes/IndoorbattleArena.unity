@@ -16219,6 +16219,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422215585}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &423904649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8799617333206733826, guid: 399cd1ab84bcdd30dbab7983d60e314f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1208974582}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &430487160
 GameObject:
   m_ObjectHideFlags: 0
@@ -33742,6 +33748,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 320957830610607663, guid: 98d050be1cdb1b6c698d98af2bbcfd28,
+        type: 3}
+      propertyPath: DeathScreen
+      value: 
+      objectReference: {fileID: 423904649}
     - target: {fileID: 614701036022248810, guid: 98d050be1cdb1b6c698d98af2bbcfd28,
         type: 3}
       propertyPath: rb
@@ -47568,7 +47579,7 @@ PrefabInstance:
     - target: {fileID: 8799617333206733826, guid: 399cd1ab84bcdd30dbab7983d60e314f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -79523,6 +79534,11 @@ PrefabInstance:
     - target: {fileID: 2303298528674409033, guid: 2241fc32c9bc69f43b71c954612b203d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3925742742091223572, guid: 2241fc32c9bc69f43b71c954612b203d,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

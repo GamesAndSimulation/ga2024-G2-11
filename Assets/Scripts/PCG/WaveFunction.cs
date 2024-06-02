@@ -54,7 +54,6 @@ public class WaveFunction : MonoBehaviour
         playerCoords = new Vector2Int(-1, -1);
         GetAllPrototypes();
         InitializeGrid();
-        DisableTurretsCloseToPlayer();
     }
 
     private void Update()
@@ -71,7 +70,9 @@ public class WaveFunction : MonoBehaviour
     {
            foreach (var cell in gridComponents)
            {
-               if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) < TurretInitialDistanceFromPlayer && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn)
+               if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) < TurretInitialDistanceFromPlayer 
+                   && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn
+                   && cell.instantiatedTile.transform.childCount > 0)
                {
                    cell.instantiatedTile.transform.GetChild(0).gameObject.SetActive(false);
                }
@@ -344,6 +345,7 @@ public class WaveFunction : MonoBehaviour
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
+        DisableTurretsCloseToPlayer();
     }
 
     private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)

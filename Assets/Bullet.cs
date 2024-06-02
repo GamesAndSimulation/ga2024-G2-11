@@ -6,9 +6,22 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private float _bulletDamage;
+    private PlayerStats _playerScript;
+    
+    private void Start()
+    {
+        _playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerStats>();
+    }
     
     private void OnCollisionEnter(Collision other)
     {
+        if (other.transform.CompareTag(transform.parent.tag))
+        {
+            Debug.Log("Bullet hit parent");
+            return;
+        }
+            
+        
         if (other.transform.CompareTag("Enemy"))
         {
             other.transform.GetComponent<Enemy>().TakeDamage(_bulletDamage);
@@ -16,8 +29,17 @@ public class Bullet : MonoBehaviour
             Destroy(particles, 1f);
         }
 
+        else if (other.transform.CompareTag("Turret"))
+        {
+            other.transform.GetComponent<Turret>().TakeDamage(_bulletDamage);
+        }
+        else if (other.transform.CompareTag("Player"))
+        {
+            _playerScript.TakeDamage(_bulletDamage);
+        }
+
         transform.GetComponent<Rigidbody>().isKinematic = true;
-        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         transform.GetComponent<SphereCollider>().enabled = false;
         Destroy(gameObject, 2f);
     }

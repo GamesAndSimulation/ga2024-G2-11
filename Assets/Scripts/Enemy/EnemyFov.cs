@@ -4,30 +4,35 @@ using UnityEngine;
 
 public class EnemyFov : MonoBehaviour
 {
+    public enum EnemyType {Soldier, Turret}
+    
+    public EnemyType enemyType;
+    
     public float radius;
     [Range(0, 360)]
     public float angle;
     
-    private GameObject player;
     private Enemy _enemyScript;
+    private Turret _turretScript;
     private Animator _enemyAnim;
     [SerializeField] private AnimationClip _drawAxeClip;
+    [SerializeField] private Transform povTransform;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
     
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
-        _enemyScript = transform.GetComponent<Enemy>();
+        if(enemyType == EnemyType.Soldier)
+            _enemyScript = transform.GetComponent<Enemy>();
+        else if(enemyType == EnemyType.Turret)
+            _turretScript = transform.GetComponent<Turret>();
         _enemyAnim = transform.GetComponentInChildren<Animator>();
+        if (povTransform == null)
+        {
+            povTransform = transform;
+        }
         StartCoroutine(FOVRoutine());
-    }
-
-    void Update()
-    { 
-        //if(Input.GetKeyDown(KeyCode.P))
-        //    _enemyAnim.SetTrigger("Attack");
     }
 
     private IEnumerator FOVRoutine()
@@ -38,9 +43,19 @@ public class EnemyFov : MonoBehaviour
             yield return wait;
             if (FieldOfViewCheck(angle))
             {
-                StartCoroutine(StartChaseRoutine());
-                yield break;
+                switch (enemyType)
+                {
+                    case EnemyType.Soldier:
+                        StartCoroutine(StartChaseRoutine());
+                        yield break;
+                    case EnemyType.Turret:
+                        Debug.Log("Turret : Player in sight!");
+                        _turretScript.SetCanShoot(true);
+                        break;   
+                }
             }
+            else if (enemyType == EnemyType.Turret)
+                _turretScript.SetCanShoot(false);
         }
     }
 
@@ -57,15 +72,15 @@ public class EnemyFov : MonoBehaviour
     
     public bool FieldOfViewCheck(float angle)
     {
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+        Collider[] rangeChecks = Physics.OverlapSphere(povTransform.position, radius, targetMask);
         if (rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
+            Vector3 directionToTarget = (target.position - povTransform.position).normalized;
+            if (Vector3.Angle(povTransform.forward, directionToTarget) < angle / 2)
             {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
+                float distanceToTarget = Vector3.Distance(povTransform.position, target.position);
+                if (!Physics.Raycast(povTransform.position, directionToTarget, distanceToTarget, obstacleMask))
                 {
                     return true;
                 }
@@ -89,16 +104,16 @@ public class EnemyFov : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 1f);
-        Vector3 fovLine1 = Quaternion.AngleAxis(50/ 2, transform.up) * transform.forward * radius;
-        Vector3 fovLine2 = Quaternion.AngleAxis(-50/ 2, transform.up) * transform.forward * radius;
+        Gizmos.DrawWireSphere(povTransform.position, 1f);
+        Vector3 fovLine1 = Quaternion.AngleAxis(50/ 2, povTransform.up) * povTransform.forward * radius;
+        Vector3 fovLine2 = Quaternion.AngleAxis(-50/ 2, povTransform.up) * povTransform.forward * radius;
         
         Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, fovLine1);
-        Gizmos.DrawRay(transform.position, fovLine2);
+        Gizmos.DrawRay(povTransform.position, fovLine1);
+        Gizmos.DrawRay(povTransform.position, fovLine2);
         
         Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position, transform.forward * radius);
+        Gizmos.DrawRay(povTransform.position, povTransform.forward * radius);
     }
 
 }

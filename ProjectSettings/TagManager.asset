@@ -17,6 +17,7 @@ TagManager:
   - WaveFunction
   - WFCcell
   - PuzzleUI
+  - Turret
   layers:
   - Default
   - TransparentFX
