@@ -31,7 +31,7 @@ public class Interact : MonoBehaviour
         Debug.DrawRay(playerCamera.position, forwardVec * 30f, Color.green);
         if(Physics.Raycast(playerCamera.position, forwardVec, out hit, 30f))
         {
-            switch (hit.transform.gameObject.tag) 
+            switch (hit.transform.gameObject.tag)
             {
                 case "Puzzle":
                     _currentPuzzle = hit.transform.gameObject;
@@ -42,10 +42,6 @@ public class Interact : MonoBehaviour
                     break;
             }
         }
-        //else
-        //{
-        //    interactIcon.SetActive(false);
-        //}
 
         if(Input.GetKeyDown(KeyCode.Tab))
         {

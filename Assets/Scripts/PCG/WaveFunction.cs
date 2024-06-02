@@ -86,9 +86,10 @@ public class WaveFunction : MonoBehaviour
                 p.TilePrefabShape == TileData.TileShape.Wall && p.Rotation == 270));
             SpawnTileInCell(cell, cell.tileOptions[0]);
             PropagateChanges(cell);
-            if (i == 3)
+            if (i == 1)
             {
-                Instantiate(Resources.Load("Prefabs/Puzzles/Puzzle (Medium)"), cell.transform.position + Vector3.up * 3, Quaternion.identity, null);
+                Vector3 puzzlePos = cell.transform.position + Vector3.up * 2f + Vector3.right * 2.5f;
+                Instantiate(Resources.Load("Prefabs/Puzzles/Puzzle (Medium)"), puzzlePos, Quaternion.identity, null);
             }
         }
     }

@@ -24,6 +24,7 @@ public class SigilPuzzle: MonoBehaviour
     private int _placedPiecesNum;
     private float floatingPosZ;
     private float startingPosZ;
+    private WaveFunction _waveFunction;
 
     // Data Structures
     private Dictionary<Transform, bool> _slotOccupied;  // Tracks whether slots are occupied
@@ -45,9 +46,12 @@ public class SigilPuzzle: MonoBehaviour
                 _slotOccupied.Add(slot, false);
         }
         Debug.Log($"_slotOccupied count: {_slotOccupied.Count}");
-        floatingPosZ = transform.position.z + 0.65f;
-        startingPosZ = transform.position.z + 0.45f;
-        this.enabled = false;
+        var transform1 = transform;
+        floatingPosZ = transform1.position.z + 0.65f;
+        startingPosZ = transform1.position.z + 0.45f;
+        enabled = false;
+        transform1.localScale *= 0.7f;
+        _waveFunction = GameObject.FindWithTag("WaveFunction").GetComponent<WaveFunction>();
     }
 
     private void fillPieces()
@@ -142,7 +146,8 @@ public class SigilPuzzle: MonoBehaviour
         if(_placedPiecesNum >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
         {
             MeshRenderer frame = transform.Find("Frame").GetComponent<MeshRenderer>();
-            frame.material.DOColor(Color.green, 0.5f);
+            frame.material.DOColor(Color.green , 0.5f);
+            _waveFunction.RegenerateWaveFunction();
             
         }
     }
