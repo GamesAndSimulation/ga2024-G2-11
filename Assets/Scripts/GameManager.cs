@@ -11,10 +11,15 @@ public class GameManager : MonoBehaviour
 
     public bool inPuzzleMode = false;
     public bool inDrivingMode = false;
+    public bool inFreeCamMode = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
     [SerializeField] private PlayerScript playerScript;
-    
+    [SerializeField] private GameObject FPSCounter;
+    private float _startTimeScale;
+    private float _startFixedDeltaTime;
+
+
     private void Awake()
     {
         if(Instance != null && Instance != this)
@@ -24,6 +29,26 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+        }
+    }
+    
+    private void Start()
+    {
+        _startTimeScale = Time.timeScale;
+        _startFixedDeltaTime = Time.fixedDeltaTime;
+    }
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            FPSCounter.SetActive(!FPSCounter.activeSelf);
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Time.timeScale =(Time.timeScale == 0) ? _startTimeScale : 0;
+            Time.fixedDeltaTime = (Time.timeScale == 0) ? _startTimeScale : 0; 
         }
     }
 

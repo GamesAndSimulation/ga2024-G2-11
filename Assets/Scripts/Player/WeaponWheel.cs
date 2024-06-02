@@ -55,7 +55,7 @@ public class WeaponWheel : MonoBehaviour
     {
 
         var pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
-        if (_inputManager.IsWeaponWheelOut())
+        if (_inputManager.IsWeaponWheelOut() && !GameManager.Instance.inFreeCamMode)
         {
             if (GameManager.Instance.inPuzzleMode)
                 return;

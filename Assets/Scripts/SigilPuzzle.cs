@@ -145,11 +145,21 @@ public class SigilPuzzle: MonoBehaviour
         Debug.Log($"_placedPiecesNum: {_placedPiecesNum}");
         if(_placedPiecesNum >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
         {
-            MeshRenderer frame = transform.Find("Frame").GetComponent<MeshRenderer>();
-            frame.material.DOColor(Color.green , 0.5f);
-            _waveFunction.RegenerateWaveFunction();
-            
+            StartCoroutine(CompletingRoutine());
         }
+    }
+    
+    private IEnumerator CompletingRoutine()
+    {
+        MeshRenderer frame = transform.Find("Frame").GetComponent<MeshRenderer>();
+        frame.material.DOColor(Color.green , 0.5f);
+        yield return new WaitForSeconds(1f);
+        GameObject.FindWithTag("Player").GetComponent<Interact>().ExitPuzzle();
+        yield return new WaitForSeconds(0.7f);
+        transform.DOMoveY(-10, 3f);
+        yield return new WaitForSeconds(0.8f);
+        _waveFunction.RegenerateWaveFunction();
+        Destroy(gameObject);
     }
 
     // Returns true if successful

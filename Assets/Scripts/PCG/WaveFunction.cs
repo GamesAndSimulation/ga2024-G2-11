@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class WaveFunction : MonoBehaviour
@@ -12,10 +13,12 @@ public class WaveFunction : MonoBehaviour
     [Range(0.1f, 10.0f)] public float TileAnimationDuration = 0.15f;
     public GameObject LoadingScreen;
     public Material WallMaterial;
+    [FormerlySerializedAs("ChangeToSpawnTurret")] public float ChanceToSpawnTurret = 25f;
 
     [Header("Possible Tiles")] public TileData[] TileDatas;
 
     public Cell cellObj;
+    public int TurretInitialDistanceFromPlayer;
 
     [Header("Colors")] public Color WallColor = Color.black;
 
@@ -51,21 +54,75 @@ public class WaveFunction : MonoBehaviour
         playerCoords = new Vector2Int(-1, -1);
         GetAllPrototypes();
         InitializeGrid();
+        DisableTurretsCloseToPlayer();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O))
+        //Regenerate thing
+        if (Input.GetKeyDown(KeyCode.L))
         {
             Debug.Log($"Player standing in cell {GetCellUnderPlayer()}");
             RegenerateWaveFunction();
         }
     }
+    
+    private void DisableTurretsCloseToPlayer()
+    {
+           foreach (var cell in gridComponents)
+           {
+               if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) < TurretInitialDistanceFromPlayer && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn)
+               {
+                   cell.instantiatedTile.transform.GetChild(0).gameObject.SetActive(false);
+               }
+               
+           }
+    }
 
-    private void MakeCorridor()
+    private void MakeCorridorToCell(int cX, int cY)
+    {
+        
+        Debug.LogWarning("Entering MakeCorridorToCell");
+        playerCoords = GetCellUnderPlayer();
+        
+        int diffX = playerCoords.x - cX;
+        int diffY = playerCoords.y - cY;
+
+        Vector2Int currentCellCoords = playerCoords;
+        Cell currentCell;
+        
+        for (int i = 0; i < Mathf.Abs(diffX); i++)
+        {
+            var placeCoord = (diffX >= 0) ? new Vector2Int(playerCoords.x - i, playerCoords.y) : new Vector2Int(playerCoords.x + i, playerCoords.y);
+            currentCellCoords = placeCoord; 
+            currentCell = gridComponents.Find(c => c.gridCoordinates == placeCoord);
+            currentCell.collapsed = true;
+            currentCell.tileOptions.Clear();
+            currentCell.tileOptions.Add(AvailablePrototypes.Find(p => p.TilePrefabShape == TileData.TileShape.Floor));
+            SpawnTileInCell(currentCell, currentCell.tileOptions[0]);
+            PropagateChanges(currentCell);
+        }
+        
+        for (int j = 0; j < Mathf.Abs(diffY); j++)
+        {
+            var placeCoord = (diffY >= 0) ? new Vector2Int(currentCellCoords.x, currentCellCoords.y - 1) : new Vector2(currentCellCoords.x, currentCellCoords.y + 1);
+            currentCell = gridComponents.Find(c => c.gridCoordinates == placeCoord);
+            currentCell.collapsed = true;
+            currentCell.tileOptions.Clear();
+            currentCell.tileOptions.Add(AvailablePrototypes.Find(p => p.TilePrefabShape == TileData.TileShape.Floor));
+            SpawnTileInCell(currentCell, currentCell.tileOptions[0]);
+            PropagateChanges(currentCell);
+        }
+        
+    }
+
+    private void MakeShortPuzzleCorridor(bool firstTime = true)
     {
         int x = Random.Range(4, GridDimentions - 4);
         int y = Random.Range(4, GridDimentions - 4);
+        
+        if(!firstTime)
+            MakeCorridorToCell(x, y);
 
         corridorCoords = new Vector2Int(x, y);
 
@@ -173,8 +230,8 @@ public class WaveFunction : MonoBehaviour
 
             cell.CreateCell(false, AvailablePrototypes, x, y);
             gridComponents.Add(cell);
-            if (cellCount % 2 == 0)
-                cell.GetComponentInChildren<Light>().gameObject.SetActive(false);
+            if (cellCount % 3 == 0)
+                cell.GetComponentInChildren<Light>().enabled = true;
         }
 
         //if (!firstCellInPlayer)
@@ -182,7 +239,7 @@ public class WaveFunction : MonoBehaviour
         //    CreateSealingWalls();
         //}
 
-        MakeCorridor();
+        MakeShortPuzzleCorridor(!firstCellInPlayer);
 
         StartCoroutine(!firstCellInPlayer
             ? CollapseWaveFunctionWithAnim(true, Vector2Int.zero)
@@ -346,8 +403,9 @@ public class WaveFunction : MonoBehaviour
 
                 if (neighbor.tileOptions.Count == 0)
                 {
-                    Debug.LogError("Propagation led to an empty tileOptions at " + neighbor.gridCoordinates);
-                    return; // or handle the contradiction appropriately
+                    Debug.LogWarning("Propagation led to an empty tileOptions at " + neighbor.gridCoordinates);
+                    RegenerateWaveFunction(); // Re-run algorithm again. Don't have time to come up with a better solution :(
+                    return;
                 }
 
                 if (neighborChanged) queue.Enqueue(neighbor); // Only enqueue if changes were made
@@ -388,9 +446,25 @@ public class WaveFunction : MonoBehaviour
         var tempScale = cell.instantiatedTile.transform.localScale;
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
+        
+        // if tile is corner-in there's a change to spawn a turret
+        if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) > TurretInitialDistanceFromPlayer
+            && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn
+            && Random.Range(0, 100) < ChanceToSpawnTurret)
+        {
+            GameObject tile = cell.instantiatedTile;
+            tile.transform.GetChild(0).gameObject.SetActive(true);
+            cell.GetComponentInChildren<Light>().gameObject.SetActive(false);
+        }
     }
 
     private Vector2Int GetCellUnderPlayer()
+    {
+        Cell temp;
+        return GetCellUnderPlayer(out temp);
+    }
+
+    private Vector2Int GetCellUnderPlayer(out Cell cell)
     {
         var player = GameObject.FindWithTag("Player");
         if (player != null)
@@ -399,10 +473,14 @@ public class WaveFunction : MonoBehaviour
             if (Physics.Raycast(player.transform.position, Vector3.down, out hit, 10f))
             {
                 if (hit.collider.transform.parent.gameObject.CompareTag("WFCcell"))
-                    return hit.collider.transform.parent.GetComponent<Cell>().gridCoordinates;
+                {
+                    cell = hit.collider.transform.parent.GetComponent<Cell>();
+                    return cell.gridCoordinates;
+                }
             }
         }
 
+        cell = null;
         return Vector2Int.zero;
     }
 
