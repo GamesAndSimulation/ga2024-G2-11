@@ -91,7 +91,7 @@ public class CreateOutpost : MonoBehaviour
 
         int step = StrongWallLength;
         // Front & Back facade (x axis)
-        for (var x = step; x < xWidth - step; x += step)
+        for (var x = step; x < xWidth; x += step)
         {
             GameObject instance = strongWall;
             
@@ -110,8 +110,26 @@ public class CreateOutpost : MonoBehaviour
         }
 
         
-        // lateral facade (z axis)
+        // Lateral facade (z axis)
+        for (var z = step; z < zLength; z += step)
+        {
+            GameObject instance = strongWall;
+            
+            // First facade
+            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            Vector3 rotation = new Vector3(0, 0, 0);
+            
+            GameObject myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
+            myInstance.transform.SetParent(specifiedObject.transform);
+            
+            // Second facade
+            position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+
+            myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
+            myInstance.transform.SetParent(specifiedObject.transform);
+        }
         /*for (var z = 1; z < zLength; z += 2)
+         
         {
             GameObject instance = null;
             

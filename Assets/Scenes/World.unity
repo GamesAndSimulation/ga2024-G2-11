@@ -36699,7 +36699,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097373906}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.020542597, y: -0.9829695, z: 0.07966544, w: 0.16432396}
+  m_LocalRotation: {x: 0.020542607, y: -0.9829695, z: 0.07966546, w: 0.164324}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -97312,8 +97312,8 @@ MonoBehaviour:
   strongEnd: {fileID: 8403509562376808167, guid: 25a1892852ed7c844b16b311c4ac7c09,
     type: 3}
   tower: {fileID: 7440272942287667037, guid: 003d1b0d74095244c92692b521a3f520, type: 3}
-  xWidth: 20
-  zLength: 20
+  xWidth: 30
+  zLength: 60
   selectedEntrance: 0
   useSpecifiedStartingPosition: 1
   specifiedObject: {fileID: 160333590}
