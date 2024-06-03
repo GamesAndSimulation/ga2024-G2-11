@@ -5,18 +5,20 @@ using UnityEngine;
 
 public class CreateOutpost : MonoBehaviour
 {
+    public Terrain terrain;
+
     // ----------- Constants -----------
     // Walls
     private const int SimpleWall = 0;
     private const int StrongWall = 1;
     private const int StrongWallDoor = 2;
     // Corners
-    private const int SimpleCorner = 1;
-    private const int StrongCorner = 1;
+    private const int SimpleCorner = 3;
+    private const int StrongCorner = 4;
     // Wall End
-    private const int StrongEnd = 1;
+    private const int StrongEnd = 5;
     // Tower
-    private const int Tower = 1;
+    private const int Tower = 6;
     
     // ----------- Constant Measures -----------
     private const int SimpleWallLength = 4;
@@ -47,8 +49,12 @@ public class CreateOutpost : MonoBehaviour
     // ----------- Starting Point -----------
     public bool useSpecifiedStartingPosition;
     public GameObject specifiedObject; // probably an empty one
-    public Vector3 specifiedObjectPosition; 
+    public Vector3 specifiedObjectPosition;
 
+    private GameObject[] assets;
+
+    private float heightOffset = 0;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -57,8 +63,13 @@ public class CreateOutpost : MonoBehaviour
             specifiedObjectPosition = Vector3.zero;
         else
             specifiedObjectPosition = specifiedObject.transform.position;
+
+        assets = new GameObject[]
+            { simpleWall, strongWall, strongWallDoor, simpleCorner, strongCorner, strongEnd, tower };
+
         
         Build();
+        RepositionBuilding();
     }
 
     // Update is called once per frame
@@ -93,10 +104,10 @@ public class CreateOutpost : MonoBehaviour
         // Front & Back facade (x axis)
         for (var x = step; x < xWidth; x += step)
         {
-            GameObject instance = strongWall;
+            GameObject instance = GetFortressComponent(true, 0);
             
             // Front facade
-            Vector3 position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y, specifiedObjectPosition.z);
+            Vector3 position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z);
             Vector3 rotation = new Vector3(0, 90, 0);
 
             GameObject myInstance;
@@ -110,8 +121,10 @@ public class CreateOutpost : MonoBehaviour
             }
             
             // Back
-            position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength);
-
+            instance = GetFortressComponent(true, 0);
+            position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + zLength);
+            
+            
             if (!(selectedEntrance == EntrancePositionSelector.Back &&
                   ((xWidth / 2 - 6) <= x && x <= (xWidth / 2 + 6))))
             {
@@ -124,10 +137,10 @@ public class CreateOutpost : MonoBehaviour
         // Lateral facade (z axis)
         for (var z = step; z < zLength; z += step)
         {
-            GameObject instance = strongWall;
+            GameObject instance = GetFortressComponent(true, 0);
             
             // First facade
-            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
             Vector3 rotation = new Vector3(0, 0, 0);
             
             GameObject myInstance;
@@ -138,8 +151,10 @@ public class CreateOutpost : MonoBehaviour
                 myInstance.transform.SetParent(specifiedObject.transform);
             }
 
+            instance = GetFortressComponent(true, 0);
+            
             // Second facade
-            position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
             if (!(selectedEntrance == EntrancePositionSelector.Right &&
                   ((zLength / 2 - 6) <= z && z <= (zLength / 2 + 6))))
             {
@@ -148,6 +163,34 @@ public class CreateOutpost : MonoBehaviour
             }
         }
     }
-    
+
+    private GameObject GetFortressComponent(bool isRandom, int assetNum)
+    {
+        heightOffset = 0;
+        int idx = assetNum;
+
+        int[] possibleRandomStructs = { SimpleWall, StrongWall, StrongWallDoor, Tower };
+
+        if (isRandom)
+            idx = possibleRandomStructs[Random.Range(0, possibleRandomStructs.Length)];
+
+        if (idx == Tower) heightOffset = 3.028076f;
+        if (idx == SimpleWall) heightOffset = -0.7219238f;
+            
+        return assets[idx]; 
+    }
+
+    void RepositionBuilding()
+    {
+        float yOffset = 0;
+        float yVal = Terrain.activeTerrain.SampleHeight(new Vector3(specifiedObjectPosition.x, 0, specifiedObjectPosition.z));
+
+        //Apply Offset if needed
+        yVal += yOffset;
+
+        specifiedObject.transform.position = new Vector3(specifiedObjectPosition.x, yVal, specifiedObjectPosition.z);
+        
+
+    }
 }
 
