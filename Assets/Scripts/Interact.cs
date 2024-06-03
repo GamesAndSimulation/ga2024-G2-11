@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.ProBuilder;
 using UnityEngine.SceneManagement;
@@ -36,16 +37,27 @@ public class Interact : MonoBehaviour
             switch (hit.transform.gameObject.tag)
             {
                 case "Puzzle":
+                    interactIcon.GetComponentInChildren<TextMeshProUGUI>().text = "Use";
                     _currentPuzzle = hit.transform.gameObject;
                     InteractWithPuzzle();
                     break;
                 case "Board":
+                    interactIcon.GetComponentInChildren<TextMeshProUGUI>().text = "Drive";
                     interactIcon.SetActive(true);
                     InteractWithBoard();
                     break;
                 case "CaveEntrance":
+                    interactIcon.GetComponentInChildren<TextMeshProUGUI>().text = "Enter";
                     interactIcon.SetActive(true);
                     EnterCave();
+                    break;
+                case "Loot":
+                    interactIcon.GetComponentInChildren<TextMeshProUGUI>().text = "Scavenge";
+                    interactIcon.SetActive(true);
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        hit.collider.GetComponent<Loot>().Scavenge();
+                    }
                     break;
                 default:
                     interactIcon.SetActive(false);

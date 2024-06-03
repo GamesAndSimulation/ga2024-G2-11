@@ -353,6 +353,7 @@ public class WaveFunction : MonoBehaviour
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
         GameManager.Instance.gameLoading = false;
+        GameManager.Instance.ManualLevelStarFade();
         EnableTurrets();
     }
 

@@ -3383,6 +3383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e8a5e40fbc49b439175e58cf4af537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numPuzzlesSolved: 0
   TreasureRoom: {fileID: 1248886137}
   treasurePlayerSpawnPoint: {fileID: 957949907}
 --- !u!4 &54799271
@@ -5938,6 +5939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e8a5e40fbc49b439175e58cf4af537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numPuzzlesSolved: 0
   TreasureRoom: {fileID: 1248886137}
   treasurePlayerSpawnPoint: {fileID: 0}
 --- !u!1 &97254577
@@ -62189,6 +62191,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4330793235984774794, guid: 399cd1ab84bcdd30dbab7983d60e314f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4861037198377773808, guid: 399cd1ab84bcdd30dbab7983d60e314f,
         type: 3}
       propertyPath: m_IsActive
@@ -62233,6 +62240,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1327769537}
   m_SourcePrefab: {fileID: 100100000, guid: 399cd1ab84bcdd30dbab7983d60e314f, type: 3}
+--- !u!1 &1208974583 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4330793235984774794, guid: 399cd1ab84bcdd30dbab7983d60e314f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1208974582}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209590225
 GameObject:
   m_ObjectHideFlags: 0
@@ -83559,6 +83572,16 @@ PrefabInstance:
       propertyPath: weaponHolder
       value: 
       objectReference: {fileID: 978646216}
+    - target: {fileID: 1984555184988123906, guid: 4004a663d5f5b67a98cb0be0f587f4fc,
+        type: 3}
+      propertyPath: loadingScreen
+      value: 
+      objectReference: {fileID: 2139477989}
+    - target: {fileID: 1984555184988123906, guid: 4004a663d5f5b67a98cb0be0f587f4fc,
+        type: 3}
+      propertyPath: LevelStartFade
+      value: 
+      objectReference: {fileID: 1208974583}
     - target: {fileID: 2840579502133424535, guid: 4004a663d5f5b67a98cb0be0f587f4fc,
         type: 3}
       propertyPath: m_Name

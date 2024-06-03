@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerScript playerScript;
     [SerializeField] private GameObject FPSCounter;
     [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private GameObject LevelStartFade;
     private float _startTimeScale;
     private float _startFixedDeltaTime;
 
@@ -40,6 +43,19 @@ public class GameManager : MonoBehaviour
     {
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
+        LevelStartFadeEffect();
+    }
+    
+    public void ManualLevelStarFade()
+    {
+        LevelStartFade.SetActive(true);
+        LevelStartFadeEffect();
+    }
+    
+    private void LevelStartFadeEffect()
+    {
+        if(LevelStartFade.activeSelf)
+            LevelStartFade.GetComponent<RawImage>().DOFade(0, 3f).SetEase(Ease.InQuad).OnComplete(() => LevelStartFade.SetActive(false)); 
     }
     
     private void Update()

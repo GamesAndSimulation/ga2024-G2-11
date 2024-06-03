@@ -112,6 +112,12 @@ public class Revolver : MonoBehaviour
         yield return new WaitForSeconds(duration);
         MuzzleFlash.SetActive(false);
     }
+    
+    public void AddAmmo(int amount)
+    {
+        StoredBullets += amount;
+        UpdateAmmoCount();
+    }
 
     private void UpdateAmmoCount()
     {
