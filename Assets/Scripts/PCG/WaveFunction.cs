@@ -452,11 +452,11 @@ public class WaveFunction : MonoBehaviour
         // if tile is corner-in there's a change to spawn a turret
         if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) > TurretInitialDistanceFromPlayer
             && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn
-            && Random.Range(0, 100) < ChanceToSpawnTurret)
+            && Random.Range(0, 100) > ChanceToSpawnTurret)
         {
             GameObject tile = cell.instantiatedTile;
-            tile.transform.GetChild(0).gameObject.SetActive(true);
-            cell.GetComponentInChildren<Light>().gameObject.SetActive(false);
+            Destroy(tile.transform.GetChild(0).gameObject);
+            Debug.Log("Destroyed turret from cell");
         }
     }
 

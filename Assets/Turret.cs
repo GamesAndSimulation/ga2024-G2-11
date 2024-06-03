@@ -11,7 +11,10 @@ public class Turret : MonoBehaviour
     public float damagePerBullet = 10f;
     public float shootInterval = 1f;
     public float bulletSpeed = 300f;
-    [SerializeField] private GameObject _turretHead;
+    public Transform _turretHead;
+    private bool _shooting = false;
+    [SerializeField] private float dieForce = 3;
+    
     
     public void TakeDamage(float damage)
     {
@@ -19,8 +22,18 @@ public class Turret : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            var explosion = Instantiate(Resources.Load("Prefabs/SwordHitParticles"), transform.position, Quaternion.identity) as GameObject;
+            explosion.transform.localScale *= 9;
+            GetComponentInChildren<Animator>().SetTrigger("TurretDie");
+            GetComponentInChildren<Light>().enabled = false;
+            var rb = transform.AddComponent<Rigidbody>();
+            rb.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), 1, UnityEngine.Random.Range(-1f, 1f)) * dieForce, ForceMode.Impulse);
+            StopAllCoroutines();
+            enabled = false;
+
         }
+
+        _turretHead = transform.Find("TurretHead");
     }
     
     private IEnumerator ShootRoutine()
@@ -29,9 +42,9 @@ public class Turret : MonoBehaviour
         while (true)
         {
             yield return wait;
-            var bullet = Instantiate(Resources.Load("Prefabs/BulletTrail"), _turretHead.transform.position, Quaternion.identity, transform);
+            var bullet = Instantiate(Resources.Load("Prefabs/BulletTrail"), _turretHead.position, Quaternion.identity);
             bullet.GetComponent<Bullet>().SetDamage(damagePerBullet);
-            Vector3 direction = (GameManager.Instance.GetPlayerPosition() - _turretHead.transform.position).normalized;
+            Vector3 direction = (GameManager.Instance.GetPlayerPosition() - _turretHead.position).normalized;
             bullet.GetComponent<Rigidbody>().AddForce(direction * bulletSpeed, ForceMode.Impulse);
             // Play shoot sound
         }
@@ -39,10 +52,16 @@ public class Turret : MonoBehaviour
 
     public void SetCanShoot(bool canShoot)
     {
-        if(canShoot)
-            StartCoroutine(ShootRoutine());
-        else
+        if (!canShoot)
+        {
+            _shooting = false;
             StopAllCoroutines();
+        }
+        else if (!_shooting)
+        {
+            StartCoroutine(ShootRoutine());
+            _shooting = true;
+        }
     }
 
 }

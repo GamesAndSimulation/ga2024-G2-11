@@ -14,6 +14,7 @@ public class FreeMoveCameraController : MonoBehaviour
     private CinemachineVirtualCamera mainCam;
     private Transform player;
     [SerializeField] private TextMeshProUGUI _freeCamOnText;
+    private float _startTimeScale;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class FreeMoveCameraController : MonoBehaviour
         player = GameObject.FindWithTag("Player").transform;
         mainCam = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>();
         _freeCamOnText.text = "Free Moving Camera ON\n<size=80%>E : Raise Camera\nQ : Lower Camera</size>";
+        _startTimeScale = Time.timeScale;
     }
     
     void Update()
@@ -47,12 +49,17 @@ public class FreeMoveCameraController : MonoBehaviour
             }
             
         }
+        
+    }
 
+    private void LateUpdate()
+    {
         if (isFreeCameraActive)
         {
             MoveCamera();
             RotateCamera();
         }
+        
     }
 
     void MoveCamera()

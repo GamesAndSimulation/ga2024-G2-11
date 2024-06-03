@@ -328,5 +328,6 @@ public class PlayerScript : MonoBehaviour
                 Debug.Log("No hit");
             }
         }
+        
     }
 }

@@ -31,13 +31,15 @@ public class PlayerStats : MonoBehaviour
         Debug.Log("Player health: " + health);
         if (health <= 0)
         {
-            Die();
+            StartCoroutine(Die());
         }
     }
     
-    private void Die()
+    private IEnumerator Die()
     {
         DeathScreen.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        GameManager.Instance.RestartGame();
     }
 }
 

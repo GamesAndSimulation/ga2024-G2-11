@@ -15,12 +15,6 @@ public class Bullet : MonoBehaviour
     
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.CompareTag(transform.parent.tag))
-        {
-            Debug.Log("Bullet hit parent");
-            return;
-        }
-            
         
         if (other.transform.CompareTag("Enemy"))
         {
@@ -31,7 +25,10 @@ public class Bullet : MonoBehaviour
 
         else if (other.transform.CompareTag("Turret"))
         {
+            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
             other.transform.GetComponent<Turret>().TakeDamage(_bulletDamage);
+            var particles = Instantiate(Resources.Load<GameObject>("Prefabs/SwordHitParticles"), other.GetContact(0).point, Quaternion.identity);
+            Destroy(particles, 1f);
         }
         else if (other.transform.CompareTag("Player"))
         {

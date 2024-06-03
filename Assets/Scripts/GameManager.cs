@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     public bool inPuzzleMode = false;
     public bool inDrivingMode = false;
     public bool inFreeCamMode = false;
+    public bool gamePaused = false;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
     [SerializeField] private PlayerScript playerScript;
@@ -47,8 +49,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Time.timeScale =(Time.timeScale == 0) ? _startTimeScale : 0;
-            Time.fixedDeltaTime = (Time.timeScale == 0) ? _startTimeScale : 0; 
+            gamePaused = !gamePaused;
         }
     }
     
@@ -75,6 +76,15 @@ public class GameManager : MonoBehaviour
     {
         inPuzzleMode = value;
         SetShowWalkCrosshairAndGuns(!value);
+    }
+    
+    public void RestartGame()
+    {
+        Time.timeScale = _startTimeScale;
+        Time.fixedDeltaTime = _startFixedDeltaTime;
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
+        
     }
     
     
