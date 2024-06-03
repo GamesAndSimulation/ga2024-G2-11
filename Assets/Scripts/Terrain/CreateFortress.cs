@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class CreateOutpost : MonoBehaviour
 {
-    public Terrain terrain;
-
+  
+    Terrain[] _terrains;
+    
     // ----------- Constants -----------
     // Walls
     private const int SimpleWall = 0;
@@ -19,6 +20,7 @@ public class CreateOutpost : MonoBehaviour
     private const int StrongEnd = 5;
     // Tower
     private const int Tower = 6;
+    private const int DestructibleWall = 7;
     
     // ----------- Constant Measures -----------
     private const int SimpleWallLength = 4;
@@ -30,6 +32,7 @@ public class CreateOutpost : MonoBehaviour
     public GameObject simpleWall;
     public GameObject strongWall;
     public GameObject strongWallDoor;
+    public GameObject destructibleWall;
     // Corners
     public GameObject simpleCorner;
     public GameObject strongCorner;
@@ -54,10 +57,13 @@ public class CreateOutpost : MonoBehaviour
     private GameObject[] assets;
 
     private float heightOffset = 0;
+    private float rotationOffset = 0;
     
     // Start is called before the first frame update
     void Start()
     {
+        _terrains = Terrain.activeTerrains;
+        
         // if no initial position specified, use zero, otherwise, use the object position
         if (!useSpecifiedStartingPosition)
             specifiedObjectPosition = Vector3.zero;
@@ -65,7 +71,7 @@ public class CreateOutpost : MonoBehaviour
             specifiedObjectPosition = specifiedObject.transform.position;
 
         assets = new GameObject[]
-            { simpleWall, strongWall, strongWallDoor, simpleCorner, strongCorner, strongEnd, tower };
+            { simpleWall, strongWall, strongWallDoor, simpleCorner, strongCorner, strongEnd, tower, destructibleWall };
 
         
         Build();
@@ -108,7 +114,7 @@ public class CreateOutpost : MonoBehaviour
             
             // Front facade
             Vector3 position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z);
-            Vector3 rotation = new Vector3(0, 90, 0);
+            Vector3 rotation = new Vector3(rotationOffset, 90, 0);
 
             GameObject myInstance;
             
@@ -123,7 +129,7 @@ public class CreateOutpost : MonoBehaviour
             // Back
             instance = GetFortressComponent(true, 0);
             position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + zLength);
-            
+            rotation = new Vector3(rotationOffset, 90, 0);
             
             if (!(selectedEntrance == EntrancePositionSelector.Back &&
                   ((xWidth / 2 - 6) <= x && x <= (xWidth / 2 + 6))))
@@ -141,7 +147,7 @@ public class CreateOutpost : MonoBehaviour
             
             // First facade
             Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
-            Vector3 rotation = new Vector3(0, 0, 0);
+            Vector3 rotation = new Vector3(rotationOffset, 0, 0);
             
             GameObject myInstance;
             if (!(selectedEntrance == EntrancePositionSelector.Left &&
@@ -152,6 +158,7 @@ public class CreateOutpost : MonoBehaviour
             }
 
             instance = GetFortressComponent(true, 0);
+            rotation = new Vector3(rotationOffset, 0, 0);
             
             // Second facade
             position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
@@ -167,15 +174,20 @@ public class CreateOutpost : MonoBehaviour
     private GameObject GetFortressComponent(bool isRandom, int assetNum)
     {
         heightOffset = 0;
+        rotationOffset = 0;
         int idx = assetNum;
 
-        int[] possibleRandomStructs = { SimpleWall, StrongWall, StrongWallDoor, Tower };
+        int[] possibleRandomStructs = { SimpleWall, StrongWall, StrongWallDoor, Tower, DestructibleWall };
 
         if (isRandom)
             idx = possibleRandomStructs[Random.Range(0, possibleRandomStructs.Length)];
 
         if (idx == Tower) heightOffset = 3.028076f;
         if (idx == SimpleWall) heightOffset = -0.7219238f;
+
+        if (idx == DestructibleWall) { rotationOffset = 90;
+            heightOffset = -0.3112183f;
+        }
             
         return assets[idx]; 
     }
@@ -193,5 +205,43 @@ public class CreateOutpost : MonoBehaviour
         float yOffset = 4;
         specifiedObject.transform.position += new Vector3(0, yOffset, 0);
     }
+
+    void GenerateObstacles()
+    {
+        float securityOffset = 8;
+        
+        // Generate random x and z coordinates
+        float xPos = Random.Range(specifiedObjectPosition.x + securityOffset,
+            specifiedObjectPosition.x + xWidth - securityOffset);
+        float zPos = Random.Range(specifiedObjectPosition.z + securityOffset,
+            specifiedObjectPosition.z + zLength - securityOffset);
+
+        Vector3 instancePos = new Vector3(xPos, 0, zPos);
+        float yPos = _terrains[GetClosestTerrain(instancePos)].SampleHeight(instancePos);
+        
+        
+            
+        
+    }
+    int GetClosestTerrain(Vector3 positionToBeChecked)
+    {
+        int terrainIndex = 0;
+        float lowDist = float.MaxValue;
+
+        for (int i = 0; i < _terrains.Length; i++)
+        {
+            var center = new Vector3(_terrains[i].transform.position.x + _terrains[i].terrainData.size.x / 2, positionToBeChecked.y, _terrains[i].transform.position.z + _terrains[i].terrainData.size.z / 2);
+
+            float dist = Vector3.Distance(center, positionToBeChecked);
+
+            if (dist < lowDist)
+            {
+                lowDist = dist;
+                terrainIndex = i;
+            }
+        }
+        return terrainIndex;
+    }
+
 }
 
