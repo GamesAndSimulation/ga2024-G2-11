@@ -84,6 +84,7 @@ public class PlayerScript : MonoBehaviour
  
     void Update()
     {
+        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading) return;
         
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         Debug.DrawRay(transform.position, Vector3.down * (playerHeight / 2 + 0.1f), Color.red);

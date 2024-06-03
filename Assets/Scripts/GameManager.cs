@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public bool inDrivingMode = false;
     public bool inFreeCamMode = false;
     public bool gamePaused = false;
+    public bool gameLoading;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject weaponHolder;
     [SerializeField] private PlayerScript playerScript;

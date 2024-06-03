@@ -7,10 +7,30 @@ public class Bullet : MonoBehaviour
 {
     private float _bulletDamage;
     private PlayerStats _playerScript;
+    private Rigidbody _rb;
+    private Vector3 _storedVelocity;
+    private bool pausedLastFrame;
     
     private void Start()
     {
         _playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerStats>();
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance.gamePaused)
+        {
+            _rb.isKinematic = true;
+            _storedVelocity = _rb.velocity;
+            _rb.velocity = Vector3.zero;
+
+        }
+        else if(pausedLastFrame)
+        {
+            _rb.velocity = _storedVelocity;
+            pausedLastFrame = false;
+        }
     }
     
     private void OnCollisionEnter(Collision other)
@@ -25,7 +45,6 @@ public class Bullet : MonoBehaviour
 
         else if (other.transform.CompareTag("Turret"))
         {
-            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
             other.transform.GetComponent<Turret>().TakeDamage(_bulletDamage);
             var particles = Instantiate(Resources.Load<GameObject>("Prefabs/SwordHitParticles"), other.GetContact(0).point, Quaternion.identity);
             Destroy(particles, 1f);

@@ -205,6 +205,7 @@ public class WaveFunction : MonoBehaviour
 
     private void InitializeGrid(bool firstCellInPlayer = false)
     {
+        GameManager.Instance.gameLoading = true;
         if (!firstCellInPlayer)
         {
             LoadingScreen.SetActive(true);
@@ -345,6 +346,7 @@ public class WaveFunction : MonoBehaviour
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
+        GameManager.Instance.gameLoading = false;
         DisableTurretsCloseToPlayer();
     }
 

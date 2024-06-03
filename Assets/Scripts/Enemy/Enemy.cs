@@ -53,10 +53,12 @@ public class Enemy : MonoBehaviour
         if (GameManager.Instance.gamePaused)
         {
             _agent.isStopped = true;
+            _animator.speed = 0;
             return;
         }
         
         _agent.isStopped = false;
+        _animator.speed = 1;
         
         switch (currentEnemyState)
         {

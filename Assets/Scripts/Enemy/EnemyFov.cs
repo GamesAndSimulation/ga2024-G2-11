@@ -37,23 +37,19 @@ public class EnemyFov : MonoBehaviour
         StartCoroutine(FOVRoutine());
     }
     
-    void Update()
-    {
-        if (GameManager.Instance.gamePaused)
-        {
-            _enemyAnim.speed = 0;
-        }
-        
-    }
-
     private IEnumerator FOVRoutine()
     {
         WaitForSeconds wait = new WaitForSeconds(0.2f);
         while (true)
         {
             yield return wait;
-            if(GameManager.Instance.gamePaused)
-                continue;
+            if (GameManager.Instance.gamePaused)
+            {
+                _enemyAnim.speed = 0;
+                continue;   
+            }
+            _enemyAnim.speed = 1;
+            
             if (FieldOfViewCheck(angle))
             {
                 switch (enemyType)
