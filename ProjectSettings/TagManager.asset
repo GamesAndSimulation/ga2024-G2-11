@@ -18,6 +18,7 @@ TagManager:
   - WFCcell
   - PuzzleUI
   - Turret
+  - Loot
   layers:
   - Default
   - TransparentFX

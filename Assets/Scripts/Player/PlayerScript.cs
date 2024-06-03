@@ -84,7 +84,6 @@ public class PlayerScript : MonoBehaviour
  
     void Update()
     {
-        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading) return;
         
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         Debug.DrawRay(transform.position, Vector3.down * (playerHeight / 2 + 0.1f), Color.red);
@@ -139,6 +138,7 @@ public class PlayerScript : MonoBehaviour
     
     void HandleInputs(){
         
+        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading) return;
         Vector2 movement = _inputManager.GetPlayerMovement();
         horizontalInput = movement.x;
         verticalInput = movement.y;
