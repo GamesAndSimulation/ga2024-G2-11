@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
+using Unity.AI.Navigation;
 
 public class CreateOutpost : MonoBehaviour
 {
@@ -59,6 +60,8 @@ public class CreateOutpost : MonoBehaviour
 
     [Range(0, 10)]
     public int numberOfObstacles = 5;
+
+    public NavMeshSurface navMeshSurface;
     
     // Start is called before the first frame update
     void Start()
@@ -72,6 +75,7 @@ public class CreateOutpost : MonoBehaviour
         Build();
         RepositionBuilding();
         GenerateObstacles();
+        navMeshSurface.BuildNavMesh();
     }
 
     private void Build()
