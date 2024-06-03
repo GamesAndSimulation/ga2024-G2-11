@@ -14,6 +14,7 @@ public class Turret : MonoBehaviour
     public Transform _turretHead;
     private bool _shooting = false;
     [SerializeField] private float dieForce = 3;
+    public bool dead = false;
     
     
     public void TakeDamage(float damage)
@@ -29,15 +30,15 @@ public class Turret : MonoBehaviour
 
     private void Die()
     {
+        dead = true;
+        GetComponent<EnemyFov>().enabled = false;
         var explosion = Instantiate(Resources.Load("Prefabs/SwordHitParticles"), transform.position, Quaternion.identity) as GameObject;
         explosion.transform.localScale *= 9;
         GetComponentInChildren<Animator>().SetTrigger("TurretDie");
         GetComponentInChildren<Light>().enabled = false;
         var rb = transform.AddComponent<Rigidbody>();
         rb.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), 1, UnityEngine.Random.Range(-1f, 1f)) * dieForce, ForceMode.Impulse);
-        GetComponent<EnemyFov>().enabled = false;
         SetCanShoot(false);
-        StopAllCoroutines();
         enabled = false;
     }
     
@@ -46,6 +47,7 @@ public class Turret : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(shootInterval);
         while (true)
         {
+            if(dead) yield break;
             yield return wait;
             var bullet = Instantiate(Resources.Load("Prefabs/BulletTrail"), _turretHead.position, Quaternion.identity);
             bullet.GetComponent<Bullet>().SetDamage(damagePerBullet);
