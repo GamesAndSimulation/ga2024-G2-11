@@ -6495,6 +6495,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1991193234}
+    - targetCorrespondingSourceObject: {fileID: 2840579502133424535, guid: 4004a663d5f5b67a98cb0be0f587f4fc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1991193237}
   m_SourcePrefab: {fileID: 100100000, guid: 4004a663d5f5b67a98cb0be0f587f4fc, type: 3}
 --- !u!1 &108217153
 GameObject:
@@ -7430,6 +7434,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &160333590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160333591}
+  m_Layer: 0
+  m_Name: FortressPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160333591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160333590}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1079.5, y: 89.221924, z: 2531}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &167746926 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 443365872301371743, guid: 5d07a8e20ce4ede488758aff1878c2ff,
@@ -36664,7 +36699,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097373906}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.020542603, y: -0.9829695, z: 0.079665445, w: 0.16432399}
+  m_LocalRotation: {x: 0.020542597, y: -0.9829695, z: 0.07966544, w: 0.16432396}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -97252,6 +97287,37 @@ MonoBehaviour:
   specifiedObject: {fileID: 167746926}
   specifiedObjectPosition: {x: 0, y: 0, z: 0}
   maxNumberOfWindows: 7
+--- !u!114 &1991193237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991193228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b9ca7f6f5d8e7f4ab4c1df4d00f161d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  simpleWall: {fileID: 4039351830732429107, guid: 1fe8243464b35e84a80b460f9e1695aa,
+    type: 3}
+  strongWall: {fileID: 8592559497330309560, guid: a4ed57729e709704b9d687b43e8e7066,
+    type: 3}
+  strongWallDoor: {fileID: 5042498612383322410, guid: a7846c2ae854d75478c7d2396bfb8b61,
+    type: 3}
+  simpleCorner: {fileID: 7878646559482886016, guid: f308b956f6d62d14f925e2f43af30a4e,
+    type: 3}
+  strongCorner: {fileID: 7459662756077021461, guid: b410ec040b0fac24495cd177138a4fba,
+    type: 3}
+  strongEnd: {fileID: 8403509562376808167, guid: 25a1892852ed7c844b16b311c4ac7c09,
+    type: 3}
+  tower: {fileID: 7440272942287667037, guid: 003d1b0d74095244c92692b521a3f520, type: 3}
+  xWidth: 20
+  zLength: 20
+  selectedEntrance: 0
+  useSpecifiedStartingPosition: 1
+  specifiedObject: {fileID: 160333590}
+  specifiedObjectPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1996408994
 GameObject:
   m_ObjectHideFlags: 0
@@ -101781,3 +101847,4 @@ SceneRoots:
   - {fileID: 7481580615146147693}
   - {fileID: 2770337599054946096}
   - {fileID: 4779097893705741621}
+  - {fileID: 160333591}
