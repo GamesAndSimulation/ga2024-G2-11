@@ -31,6 +31,7 @@ public class FreeMoveCameraController : MonoBehaviour
         {
             isFreeCameraActive = !isFreeCameraActive;
             GameManager.Instance.inFreeCamMode = isFreeCameraActive;
+            GameManager.Instance.SetPlayerGodMode(isFreeCameraActive);
 
             if (isFreeCameraActive)
             {

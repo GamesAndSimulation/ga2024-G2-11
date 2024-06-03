@@ -10,6 +10,7 @@ public class PlayerStats : MonoBehaviour
     public float MaxHealth;
 
     public GameObject DeathScreen;
+    public bool godModeOn;
     
     private float health;
     private int enemiesKilled;
@@ -23,9 +24,10 @@ public class PlayerStats : MonoBehaviour
     {
         enemiesKilled++;
     }
-
+    
     public void TakeDamage(float damage)
     {
+        if (godModeOn) return;
         health -= damage;
         ScreenEffectUtils.Instance.DamageEffect();
         Debug.Log("Player health: " + health);

@@ -19,6 +19,8 @@ TagManager:
   - PuzzleUI
   - Turret
   - Loot
+  - CaveEntrance
+  - PuzzleManager
   layers:
   - Default
   - TransparentFX
@@ -31,7 +33,7 @@ TagManager:
   - Weapons
   - Player
   - Room
-  - 
+  - Enemy
   - 
   - 
   - 

@@ -1,36 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class WaveFunction : MonoBehaviour
 {
-    [Header("Wave Function Settings")] public int GridDimentions;
-
+    [Header("Wave Function Settings")]
+    public int GridDimentions;
     public float OuterWallsHeight = 80f;
     [Range(0.1f, 10.0f)] public float TileAnimationDuration = 0.15f;
     public GameObject LoadingScreen;
     public Material WallMaterial;
-    [FormerlySerializedAs("ChangeToSpawnTurret")] public float ChanceToSpawnTurret = 25f;
-
-    [Header("Possible Tiles")] public TileData[] TileDatas;
-
-    public Cell cellObj;
-    public int TurretInitialDistanceFromPlayer;
-
-    [Header("Colors")] public Color WallColor = Color.black;
-
-    public Color TileColor = Color.white;
-
     public float LevelScaleMultiplier = 20;
     public float CellSize;
+    
+    [Header("TurretSpawing")]
+    public LayerMask playerLayerMask;
+    public float ChanceToSpawnTurret = 25f;
+    public int TurretInitialDistanceFromPlayer;
+    
+    [Header("Possible Tiles")]
+    public TileData[] TileDatas;
+    public Cell cellObj;
+
+    [Header("Colors")]
+    public Color WallColor = Color.black;
+    public Color TileColor = Color.white;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
-
+    private List<GameObject> PossibleTurretTiles;
     private Vector2Int playerCoords;
     private Vector2Int corridorCoords;
+    private GameObject currentPuzzle;
 
     private readonly Vector2Int[] directions =
     {
@@ -47,15 +52,16 @@ public class WaveFunction : MonoBehaviour
 
     private GameObject[] outerWalls;
 
-    private void Awake()
+    private void Start()
     {
         outerWalls = new GameObject[4];
         gridComponents = new List<Cell>();
-        playerCoords = new Vector2Int(-1, -1);
+        PossibleTurretTiles = new List<GameObject>();
+        playerCoords = new Vector2Int(-1, -1); 
         GetAllPrototypes();
         InitializeGrid();
     }
-
+    
     private void Update()
     {
         //Regenerate thing
@@ -64,21 +70,20 @@ public class WaveFunction : MonoBehaviour
             Debug.Log($"Player standing in cell {GetCellUnderPlayer()}");
             RegenerateWaveFunction();
         }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            EnableTurrets();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent.Find("PuzzleCamera").position;
+        }
+        
     }
     
-    private void DisableTurretsCloseToPlayer()
-    {
-           foreach (var cell in gridComponents)
-           {
-               if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) < TurretInitialDistanceFromPlayer 
-                   && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn
-                   && cell.instantiatedTile.transform.childCount > 0)
-               {
-                   cell.instantiatedTile.transform.GetChild(0).gameObject.SetActive(false);
-               }
-               
-           }
-    }
+    
 
     private void MakeCorridorToCell(int cX, int cY)
     {
@@ -130,8 +135,7 @@ public class WaveFunction : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             var cell = gridComponents.Find(c => c.gridCoordinates == new Vector2Int(x, y + i));
-            Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), cell.transform.position, Quaternion.identity,
-                transform);
+            //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), cell.transform.position, Quaternion.identity, transform);
             cell.collapsed = true;
             cell.tileOptions.Clear();
             cell.tileOptions.Add(AvailablePrototypes.Find(p =>
@@ -147,7 +151,7 @@ public class WaveFunction : MonoBehaviour
             if (i == 1)
             {
                 Vector3 puzzlePos = cell.transform.position + Vector3.up * 2f + Vector3.right * 2.5f;
-                Instantiate(Resources.Load("Prefabs/Puzzles/Puzzle (Medium)"), puzzlePos, Quaternion.identity, null);
+                currentPuzzle = Instantiate(Resources.Load<GameObject>("Prefabs/Puzzles/Puzzle (Medium)"), puzzlePos, Quaternion.identity, null);
             }
         }
     }
@@ -166,8 +170,10 @@ public class WaveFunction : MonoBehaviour
 
         //clear gridcomponents except the player cell
         gridComponents.RemoveAll(c => c.gridCoordinates != playerCoords);
+        PossibleTurretTiles.Clear();
         iterations = 0;
         InitializeGrid(true);
+        //StartCoroutine(DisableTurretsAfterDelay());
     }
 
     private void GetAllPrototypes()
@@ -205,7 +211,7 @@ public class WaveFunction : MonoBehaviour
 
     private void InitializeGrid(bool firstCellInPlayer = false)
     {
-        GameManager.Instance.gameLoading = true;
+        //GameManager.Instance.gameLoading = true;
         if (!firstCellInPlayer)
         {
             LoadingScreen.SetActive(true);
@@ -338,16 +344,16 @@ public class WaveFunction : MonoBehaviour
 
         //UpdateColliders();
 
-        if (useRandomFirstCell)
-        {
-            PlacePlayerAtSpawnPoint(GetBestSpawnCorridor());
-        }
+        //if (useRandomFirstCell)
+        //{
+        PlacePlayerAtSpawnPoint(GetBestSpawnCorridor());
+        //}
 
-
+        
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
         GameManager.Instance.gameLoading = false;
-        DisableTurretsCloseToPlayer();
+        EnableTurrets();
     }
 
     private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)
@@ -359,7 +365,31 @@ public class WaveFunction : MonoBehaviour
             player.transform.parent = transform;
             player.transform.position = gridComponents.Find(c => c.gridCoordinates == spawnPoint).transform.position + Vector3.up * 4;
             player.transform.parent = null;
+            //EnableTurrets();
             //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
+        }
+    }
+
+    private void EnableTurrets()
+    {
+        foreach(var turret in PossibleTurretTiles)
+        {
+            Transform turretSpot = turret.transform.Find("TurretSpot");
+            Transform playerTransformGiz = GameObject.FindWithTag("Player").transform;
+            Vector3 directionToPlayer = (playerTransformGiz.position - turretSpot.position).normalized;
+            float distanceToPlayer = Vector3.Distance(turretSpot.position, playerTransformGiz.transform.position);
+
+            RaycastHit hit;
+            if (Physics.Raycast(turretSpot.position, directionToPlayer, out hit, distanceToPlayer))
+            { 
+                if(!hit.transform.CompareTag("Player"))
+                {
+                    if (Random.Range(0, 100) < ChanceToSpawnTurret)
+                    {
+                        turret.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                }
+            }
         }
     }
 
@@ -407,6 +437,7 @@ public class WaveFunction : MonoBehaviour
 
                 if (neighbor.tileOptions.Count == 0)
                 {
+                    Destroy(currentPuzzle);
                     Debug.LogWarning("Propagation led to an empty tileOptions at " + neighbor.gridCoordinates);
                     RegenerateWaveFunction(); // Re-run algorithm again. Don't have time to come up with a better solution :(
                     return;
@@ -451,15 +482,25 @@ public class WaveFunction : MonoBehaviour
         cell.instantiatedTile.transform.localScale = Vector3.zero; // Start from zero scale
         cell.instantiatedTile.transform.DOScale(tempScale, TileAnimationDuration).SetEase(Ease.OutBounce);
         
-        // if tile is corner-in there's a change to spawn a turret
-        if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) > TurretInitialDistanceFromPlayer
-            && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn
-            && Random.Range(0, 100) > ChanceToSpawnTurret)
+        GameObject tile = cell.instantiatedTile;
+        if (cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn)
         {
-            GameObject tile = cell.instantiatedTile;
-            Destroy(tile.transform.GetChild(0).gameObject);
-            Debug.Log("Destroyed turret from cell");
+            PossibleTurretTiles.Add(tile);
         }
+        // if tile is corner-in there's a change to spawn a turret
+        //if (Vector2Int.Distance(cell.gridCoordinates, playerCoords) > TurretInitialDistanceFromPlayer
+        //    && cell.tileOptions[0].TilePrefabShape == TileData.TileShape.CornerIn)
+        //{
+        //    if (Random.Range(0, 100) > ChanceToSpawnTurret)
+        //    {
+        //        Destroy(tile.transform.GetChild(0).gameObject);
+        //        Debug.Log("Destroyed turret from cell");
+        //    }
+        //    else
+        //    {
+        //        turrets.Add(tile.transform.GetChild(0).gameObject);
+        //    }
+        //}
     }
 
     private Vector2Int GetCellUnderPlayer()
@@ -573,7 +614,7 @@ public class WaveFunction : MonoBehaviour
         }
 
         Cell farthestCellObj = gridComponents.Find(c => c.gridCoordinates == farthestCell);
-        Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), farthestCellObj.transform.position, Quaternion.identity, transform);
+        //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), farthestCellObj.transform.position, Quaternion.identity, transform);
 
         return farthestCell;
 

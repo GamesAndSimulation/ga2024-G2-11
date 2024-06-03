@@ -29,6 +29,7 @@ public class SigilPuzzle: MonoBehaviour
     // Data Structures
     private Dictionary<Transform, bool> _slotOccupied;  // Tracks whether slots are occupied
     private List<Tuple<Vector3, Quaternion>> _piecesTransforms;  // Stores initial transforms for undo or reset
+    private List<Vector3[]> _subPiecesTransforms;
     
     private void Start()
     {
@@ -37,6 +38,7 @@ public class SigilPuzzle: MonoBehaviour
         PuzzleSlotPrefab = Resources.Load<GameObject>("Prefabs/PuzzleSlot");
         PuzzleSlots = transform.Find("PuzzleArea").Find("Slots");
         _piecesTransforms = new List<Tuple<Vector3, Quaternion>>();
+        _subPiecesTransforms = new List<Vector3[]>();
         fillPieces();
         PopulateSlotGrid(slotsWidth, slotsHeight, TopLeftCorner);
         _slotOccupied = new Dictionary<Transform, bool>();
@@ -60,7 +62,16 @@ public class SigilPuzzle: MonoBehaviour
         {
             if (child.CompareTag("PuzzlePiece"))
             {
-                _piecesTransforms.Add(new Tuple<Vector3, Quaternion>(child.transform.localPosition, child.transform.localRotation));
+                _piecesTransforms.Add(new Tuple<Vector3, Quaternion>(child.transform.localPosition,
+                    child.transform.localRotation));
+                Vector3[] subPieces = new Vector3[4];
+                int i = 0;
+                foreach (Transform subChild in child)
+                {
+                    subPieces[i] = subChild.transform.localPosition;
+                    i++;
+                }
+                _subPiecesTransforms.Add(subPieces);
             }
         }
     }
@@ -68,12 +79,19 @@ public class SigilPuzzle: MonoBehaviour
     public void ResetPuzzleBoard()
     {
         int i = 0;
+        int j;
         foreach (Transform piece in PuzzleSlots.parent)
         {
             if (piece.CompareTag("PuzzlePiece"))
             {
                 piece.DOLocalMove(_piecesTransforms[i].Item1, resetTime);
                 piece.DOLocalRotate(_piecesTransforms[i].Item2.eulerAngles, resetTime);
+                j = 0;
+                foreach(Transform subChild in piece)
+                {
+                    subChild.transform.localPosition = _subPiecesTransforms[i][j];
+                    j++;
+                }
                 i++;
             }
         }
@@ -158,13 +176,16 @@ public class SigilPuzzle: MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         transform.DOMoveY(-10, 3f);
         yield return new WaitForSeconds(0.8f);
-        _waveFunction.RegenerateWaveFunction();
+        GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().AddPuzzleSolved();
+        if(GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().numPuzzlesSolved < 2)
+            _waveFunction.RegenerateWaveFunction();
         Destroy(gameObject);
     }
 
     // Returns true if successful
     private bool PlaceObjectInGrid()
     {
+        _selectedObject.transform.parent.position = currentDestination;
         Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y,
         Camera.main.WorldToScreenPoint(_selectedObject.transform.position).z);
         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
@@ -248,6 +269,8 @@ public class SigilPuzzle: MonoBehaviour
         isOccupied = false;
         return currentPos;
     }
+    
+    Vector3 currentDestination;
 
     private void MoveSelectedObject()
     {
@@ -256,6 +279,7 @@ public class SigilPuzzle: MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
 
         Vector3 targetPosition = new Vector3(worldPosition.x, worldPosition.y, floatingPosZ);
+        currentDestination = targetPosition;
 
         var parent = _selectedObject.transform.parent;
         parent.position = Vector3.Lerp(

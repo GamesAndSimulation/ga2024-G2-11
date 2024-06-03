@@ -37,6 +37,31 @@ public class EnemyFov : MonoBehaviour
         StartCoroutine(FOVRoutine());
     }
     
+
+    public bool isPlayerInLineOfSight()
+    {
+        // Assuming you have a reference to the player's transform
+        Transform playerTransformGiz = GameObject.FindWithTag("Player").transform;
+        Vector3 directionToPlayer = (playerTransformGiz.position - povTransform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(povTransform.position, playerTransformGiz.transform.position);
+
+        RaycastHit hit;
+        if (Physics.Raycast(povTransform.position, directionToPlayer, out hit, distanceToPlayer))
+        {
+            Debug.LogWarning($"HERE IS WHAT I HIIIIIIIIIIIIIIT {hit.transform.gameObject.name} WITH TAG {hit.transform.gameObject.tag}");
+            if (hit.transform.CompareTag("Player"))
+            {
+                return true;
+            }
+
+            if (hit.transform.parent != null && hit.transform.parent.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private IEnumerator FOVRoutine()
     {
         WaitForSeconds wait = new WaitForSeconds(0.2f);
@@ -127,8 +152,9 @@ public class EnemyFov : MonoBehaviour
         Gizmos.DrawRay(povTransform.position, povTransform.forward * radius);
 
         // Assuming you have a reference to the player's transform
-        Vector3 directionToPlayer = (playerTransform - povTransform.position).normalized;
-        float distanceToPlayer = Vector3.Distance(povTransform.position, playerTransform);
+        Transform playerTransformGiz = GameObject.FindWithTag("Player").transform;
+        Vector3 directionToPlayer = (playerTransformGiz.position - povTransform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(povTransform.position, playerTransformGiz.transform.position);
 
         RaycastHit hit;
         if (Physics.Raycast(povTransform.position, directionToPlayer, out hit, distanceToPlayer))
@@ -136,7 +162,7 @@ public class EnemyFov : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(hit.point, 0.2f); // Draws a small sphere at the point of collision
             Gizmos.color = Color.magenta;
-            Gizmos.DrawLine(povTransform.position, playerTransform);
+            Gizmos.DrawLine(povTransform.position, playerTransformGiz.position);
         }
     }
 

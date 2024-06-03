@@ -22,18 +22,23 @@ public class Turret : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            var explosion = Instantiate(Resources.Load("Prefabs/SwordHitParticles"), transform.position, Quaternion.identity) as GameObject;
-            explosion.transform.localScale *= 9;
-            GetComponentInChildren<Animator>().SetTrigger("TurretDie");
-            GetComponentInChildren<Light>().enabled = false;
-            var rb = transform.AddComponent<Rigidbody>();
-            rb.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), 1, UnityEngine.Random.Range(-1f, 1f)) * dieForce, ForceMode.Impulse);
-            StopAllCoroutines();
-            enabled = false;
-
+            Die();
         }
-
         _turretHead = transform.Find("TurretHead");
+    }
+
+    private void Die()
+    {
+        var explosion = Instantiate(Resources.Load("Prefabs/SwordHitParticles"), transform.position, Quaternion.identity) as GameObject;
+        explosion.transform.localScale *= 9;
+        GetComponentInChildren<Animator>().SetTrigger("TurretDie");
+        GetComponentInChildren<Light>().enabled = false;
+        var rb = transform.AddComponent<Rigidbody>();
+        rb.AddForce(new Vector3(UnityEngine.Random.Range(-1f, 1f), 1, UnityEngine.Random.Range(-1f, 1f)) * dieForce, ForceMode.Impulse);
+        GetComponent<EnemyFov>().enabled = false;
+        SetCanShoot(false);
+        StopAllCoroutines();
+        enabled = false;
     }
     
     private IEnumerator ShootRoutine()

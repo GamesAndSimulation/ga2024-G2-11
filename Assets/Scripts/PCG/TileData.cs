@@ -70,7 +70,6 @@ public class TileData : ScriptableObject
                 prototype.TilePrefabWithDoor = tilePrefabWithDoor;
             }
             Prototypes[i] = prototype;
-            Debug.LogWarning(Prototypes[i].TileToString());
         }
     }
 

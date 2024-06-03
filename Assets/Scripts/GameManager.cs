@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject weaponHolder;
     [SerializeField] private PlayerScript playerScript;
     [SerializeField] private GameObject FPSCounter;
+    [SerializeField] private GameObject loadingScreen;
     private float _startTimeScale;
     private float _startFixedDeltaTime;
 
@@ -54,9 +55,20 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    public void SetPlayerGodMode(bool value)
+    {
+        playerScript.GetComponent<PlayerStats>().godModeOn = value;
+    }
+    
     public Vector3 GetPlayerPosition()
     {
         return playerScript.transform.position;
+    }
+    
+    public void LoadScene(string sceneName)
+    {
+        loadingScreen.SetActive(true);
+        SceneManager.LoadScene(sceneName);
     }
 
     public void SetShowWalkCrosshairAndGuns(bool show)

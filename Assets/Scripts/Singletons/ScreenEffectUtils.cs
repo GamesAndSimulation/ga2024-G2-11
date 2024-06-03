@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -34,6 +35,12 @@ public class ScreenEffectUtils : MonoBehaviour
         }
         _virtualCamera = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>();
         _postProcessingVolume = GetComponentInChildren<Volume>();
+        DamageEffect();
+    }
+
+    private void OnEnable()
+    {
+        _postProcessingVolume.weight = 0f;
     }
 
     public void DamageEffect()

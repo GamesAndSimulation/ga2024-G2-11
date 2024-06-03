@@ -33,6 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2561288094759485255}
+  - {fileID: 8458079547453568785}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2377508225224886457
@@ -108,6 +109,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -763631450954000799, guid: f5e2923a0db58e04290fc7809a9e6641, type: 3}
+--- !u!1 &2925653395227351816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8458079547453568785}
+  m_Layer: 3
+  m_Name: TurretSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8458079547453568785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2925653395227351816}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.19550389, y: -0.8317355, z: -0.5111979, w: 0.09311803}
+  m_LocalPosition: {x: -0.003922, y: 0.003290001, z: 0.013919999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5156666450707032449}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &579381728796138823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -116,6 +148,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5156666450707032449}
     m_Modifications:
+    - target: {fileID: 1132818640883632581, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
+        type: 3}
+      propertyPath: health
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 1132818640883632581, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
         type: 3}
       propertyPath: dieForce
@@ -131,10 +168,20 @@ PrefabInstance:
       propertyPath: shootInterval
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1132818640883632581, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
+        type: 3}
+      propertyPath: damagePerBullet
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 2397989127464857059, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
         type: 3}
       propertyPath: m_Name
       value: Turret Independent 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2397989127464857059, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2723204292909963868, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
         type: 3}

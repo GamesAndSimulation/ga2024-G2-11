@@ -306,29 +306,29 @@ public class PlayerScript : MonoBehaviour
     }
 
     
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log($"Sight trigger: {other.tag}");
-        if (other.CompareTag("EnemySight"))
-        {
-            Vector3 enemyPosition = other.transform.parent.Find("Body").position + new Vector3(0f, yOffsetRaycast, 0f);
-        
-            Vector3 directionToEnemy = enemyPosition - transform.position;
-            
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position,  directionToEnemy, out hit, 300f))
-            {
-                Debug.Log($"raycast tag {hit.transform.tag}");
-                if (hit.transform.CompareTag("Enemy"))
-                {
-                    hit.transform.GetComponent<Enemy>().currentEnemyState = Enemy.EnemyState.Chase;
-                }
-            }
-            else
-            {
-                Debug.Log("No hit");
-            }
-        }
-        
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log($"Sight trigger: {other.tag}");
+    //    if (other.CompareTag("EnemySight"))
+    //    {
+    //        Vector3 enemyPosition = other.transform.parent.Find("Body").position + new Vector3(0f, yOffsetRaycast, 0f);
+    //    
+    //        Vector3 directionToEnemy = enemyPosition - transform.position;
+    //        
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(transform.position,  directionToEnemy, out hit, 300f))
+    //        {
+    //            Debug.Log($"raycast tag {hit.transform.tag}");
+    //            if (hit.transform.CompareTag("Enemy"))
+    //            {
+    //                hit.transform.GetComponent<Enemy>().currentEnemyState = Enemy.EnemyState.Chase;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("No hit");
+    //        }
+    //    }
+    //    
+    //}
 }

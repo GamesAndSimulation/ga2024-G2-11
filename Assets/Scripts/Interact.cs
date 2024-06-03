@@ -5,6 +5,7 @@ using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.ProBuilder;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class Interact : MonoBehaviour
 {
     
     [SerializeField] private GameObject PuzzleUI;
+    [SerializeField] private GameObject interactIcon;
     
     private Vector3 forward;
     private RaycastHit hit;
@@ -28,8 +30,8 @@ public class Interact : MonoBehaviour
     {
         var playerCamera = Camera.main.transform;
         Vector3 forwardVec = GetCameraForward();
-        Debug.DrawRay(playerCamera.position, forwardVec * 30f, Color.green);
-        if(Physics.Raycast(playerCamera.position, forwardVec, out hit, 30f))
+        Debug.DrawRay(playerCamera.position, forwardVec * 10f, Color.green);
+        if(Physics.Raycast(playerCamera.position, forwardVec, out hit, 10f))
         {
             switch (hit.transform.gameObject.tag)
             {
@@ -38,9 +40,21 @@ public class Interact : MonoBehaviour
                     InteractWithPuzzle();
                     break;
                 case "Board":
+                    interactIcon.SetActive(true);
                     InteractWithBoard();
                     break;
+                case "CaveEntrance":
+                    interactIcon.SetActive(true);
+                    EnterCave();
+                    break;
+                default:
+                    interactIcon.SetActive(false);
+                    break;
             }
+        }
+        else
+        {
+            interactIcon.SetActive(false);
         }
 
         if(Input.GetKeyDown(KeyCode.Tab))
@@ -50,10 +64,20 @@ public class Interact : MonoBehaviour
         
     }
     
+    private void EnterCave()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            interactIcon.SetActive(false);
+            GameManager.Instance.LoadScene("Cavern");
+        }
+    }
+    
     private void InteractWithBoard()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
+            interactIcon.SetActive(false);
             hit.collider.GetComponent<BoardController>().enabled = true;
             GameManager.Instance.SetDrivingMode(true);
             GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 0;
@@ -85,9 +109,13 @@ public class Interact : MonoBehaviour
     
     void InteractWithPuzzle() 
     {
+        if(GameManager.Instance.inPuzzleMode)
+            return;
+        interactIcon.SetActive(true);
         //interactIcon.SetActive(true);
         if (Input.GetKeyDown(KeyCode.E))
         {
+            interactIcon.SetActive(false);
             //cameraController.enabled = false;
             FadePuzzleUI(true);
             _currentPuzzle.transform.root.GetComponent<SigilPuzzle>().enabled = true;
@@ -105,6 +133,7 @@ public class Interact : MonoBehaviour
     {
         //cameraController.enabled = true;
         FadePuzzleUI(false);
+        interactIcon.SetActive(false);
         InputManager.Instance.SetLookLock(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
