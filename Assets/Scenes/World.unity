@@ -6656,6 +6656,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1991193231}
+    - targetCorrespondingSourceObject: {fileID: 2840579502133424535, guid: 4004a663d5f5b67a98cb0be0f587f4fc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1991193234}
   m_SourcePrefab: {fileID: 100100000, guid: 4004a663d5f5b67a98cb0be0f587f4fc, type: 3}
 --- !u!1 &108217153
 GameObject:
@@ -7426,6 +7430,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &167746926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 167746927}
+  m_Layer: 0
+  m_Name: House placer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &167746927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167746926}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1053.87, y: 78.38151, z: 2473.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &169259078
 GameObject:
   m_ObjectHideFlags: 0
@@ -33645,7 +33680,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097373906}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.020542609, y: -0.9829695, z: 0.07966547, w: 0.164324}
+  m_LocalRotation: {x: 0.020542605, y: -0.9829695, z: 0.07966546, w: 0.16432399}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -91472,7 +91507,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991193228}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8488176549e56e64f8b3be7a07110296, type: 3}
   m_Name: 
@@ -91488,6 +91523,34 @@ MonoBehaviour:
   positivePosition: {x: 5, y: 5}
   negativePosition: {x: -5, y: -5}
   yaraHut: {fileID: 717550836}
+--- !u!114 &1991193234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991193228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5978112f3f26949458477ff111deb112, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minPieces: 5
+  maxPieces: 20
+  walls:
+  - {fileID: 2171449480231543434, guid: 64643f0126e6ad1419f0fd29f4955bbd, type: 3}
+  - {fileID: 9139342269585360142, guid: 67622f2e8b03f37429e9bdb3cee6891d, type: 3}
+  door: {fileID: 525793515044615361, guid: 65085a0939d66f84ca1114c0f923b8b8, type: 3}
+  shadow: {fileID: 1038996325706848559, guid: 9d4d82a49cd0b874c8d3ffa17317d62f, type: 3}
+  roofs: []
+  specialRoof: {fileID: 858134423780538018, guid: 0d44f519b08552940ba7dac65008a36f,
+    type: 3}
+  xWidth: 8
+  zLength: 10
+  useSpecifiedStartingPosition: 1
+  specifiedObject: {fileID: 167746926}
+  specifiedObjectPosition: {x: 0, y: 0, z: 0}
+  maxNumberOfWindows: 7
 --- !u!1 &1996408994
 GameObject:
   m_ObjectHideFlags: 0
@@ -95346,3 +95409,4 @@ SceneRoots:
   - {fileID: 8891699930764696277}
   - {fileID: 8412933574511796306}
   - {fileID: 2537914479525290331}
+  - {fileID: 167746927}
