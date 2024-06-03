@@ -182,15 +182,16 @@ public class CreateOutpost : MonoBehaviour
 
     void RepositionBuilding()
     {
-        float yOffset = 0;
+        /*float yOffset = 0;
         float yVal = Terrain.activeTerrain.SampleHeight(new Vector3(specifiedObjectPosition.x, 0, specifiedObjectPosition.z));
 
         //Apply Offset if needed
         yVal += yOffset;
 
         specifiedObject.transform.position = new Vector3(specifiedObjectPosition.x, yVal, specifiedObjectPosition.z);
-        
-
+        */
+        float yOffset = 4;
+        specifiedObject.transform.position += new Vector3(0, yOffset, 0);
     }
 }
 
