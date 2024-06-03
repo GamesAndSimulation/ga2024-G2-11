@@ -48,7 +48,7 @@ public class CreateBuildings : MonoBehaviour
     void Build()
     {
         //front & back facade (x axis)
-        for (var x = 0; x < xWidth + 1; x += 2)
+        for (var x = 1; x < xWidth; x += 2)
         {
             GameObject instance = getWall();
             
@@ -68,12 +68,12 @@ public class CreateBuildings : MonoBehaviour
         }
         
         // lateral facade (z axis)
-        for (var z = 0; z < zLength + 1; z += 2)
+        for (var z = 1; z < zLength; z += 2)
         {
             GameObject instance = getWall();
             
             // First facade
-            Vector3 position = new Vector3(specifiedObjectPosition.x+20, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
             Vector3 rotation = new Vector3(0, 90, 0);
             
             GameObject myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
@@ -81,7 +81,7 @@ public class CreateBuildings : MonoBehaviour
             
             // Second facade
             instance = getWall();
-            position = new Vector3(specifiedObjectPosition.x + xWidth + 20, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
             
             myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
             myInstance.transform.SetParent(specifiedObject.transform);
