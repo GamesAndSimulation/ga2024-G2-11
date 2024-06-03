@@ -98,15 +98,26 @@ public class CreateOutpost : MonoBehaviour
             // Front facade
             Vector3 position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y, specifiedObjectPosition.z);
             Vector3 rotation = new Vector3(0, 90, 0);
+
+            GameObject myInstance;
             
-            GameObject myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
+            // Make sure the position is not supposed to be the entrance
+            if (!(selectedEntrance == EntrancePositionSelector.Front &&
+                  ((xWidth / 2 - 6) <= x && x <= (xWidth / 2 + 6))))
+            {
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
             
             // Back
             position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength);
-            
-            myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
+
+            if (!(selectedEntrance == EntrancePositionSelector.Back &&
+                  ((xWidth / 2 - 6) <= x && x <= (xWidth / 2 + 6))))
+            {
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
         }
 
         
@@ -119,34 +130,24 @@ public class CreateOutpost : MonoBehaviour
             Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
             Vector3 rotation = new Vector3(0, 0, 0);
             
-            GameObject myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
-            
-            // Second facade
-            position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            GameObject myInstance;
+            if (!(selectedEntrance == EntrancePositionSelector.Left &&
+                  ((zLength / 2 - 6) <= z && z <= (zLength / 2 + 6))))
+            {
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
 
-            myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
-        }
-        /*for (var z = 1; z < zLength; z += 2)
-         
-        {
-            GameObject instance = null;
-            
-            // First facade
-            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
-            Vector3 rotation = new Vector3(0, 90, 0);
-            
-            GameObject myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
-            
             // Second facade
-            instance = null;
             position = new Vector3(specifiedObjectPosition.x + xWidth, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
-            
-            myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
-        }*/
+            if (!(selectedEntrance == EntrancePositionSelector.Right &&
+                  ((zLength / 2 - 6) <= z && z <= (zLength / 2 + 6))))
+            {
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
+        }
     }
+    
 }
 
