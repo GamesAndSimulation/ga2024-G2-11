@@ -1816,6 +1816,7 @@ GameObject:
   - component: {fileID: 1792512032506939825}
   - component: {fileID: 4775901742107084288}
   - component: {fileID: 4525320911011528717}
+  - component: {fileID: 7049765848145400516}
   m_Layer: 0
   m_Name: Strong Wall
   m_TagString: Untagged
@@ -2516,6 +2517,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!208 &7049765848145400516
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8592559497330309560}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.99, y: 5.31, z: 3.84}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8874187059152266771
 GameObject:
   m_ObjectHideFlags: 0
