@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
  
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    public GameObject ambientSoundsHolder;
     public List<AudioSource> audioSources = new List<AudioSource>();
+    public List<AudioSource> timeIndependentAudioSources = new List<AudioSource>();
  
     public static AudioManager Instance
     {
@@ -40,23 +41,14 @@ public class AudioManager : MonoBehaviour
         Destroy(audio, clipToPlay.length);
     }
 
-    public void PlayDeepSound(AudioClip clipToPlay, float volume = 0.4f)
+    public void PlaySoundLooping(AudioClip clipToPlay, float volume = 0.4f, bool timeIndependent = false)
     {
-        
         audioSources.Add(this.AddComponent<AudioSource>());
         var audio = audioSources[audioSources.Count - 1];
+        if (timeIndependent)
+            timeIndependentAudioSources.Add(audioSources[audioSources.Count - 1]);
+        audio.clip = clipToPlay;
         audio.volume = volume;
-        audio.clip = clipToPlay;
-        audio.pitch = 0.1f;
-        audio.Play();
-        Destroy(audio, clipToPlay.length);
-    }
-
-    public void PlaySoundLooping(AudioClip clipToPlay)
-    {
-        audioSources.Add(this.AddComponent<AudioSource>());
-        var audio = audioSources[audioSources.Count - 1];
-        audio.clip = clipToPlay;
         audio.loop = true;
         audio.Play();
     }
@@ -73,14 +65,31 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
-
-    public void StopAmbientSound(int index)
+    
+    public void StartSlowMo(float slowMoScale)
     {
-        if (ambientSoundsHolder == null)
+        foreach (AudioSource audio in this.GetComponents<AudioSource>())
         {
-            return;
+            if(timeIndependentAudioSources.Contains(audio))
+                continue;
+            
+            float startPitch = audio.pitch;
+            DOTween.To(() => audio.pitch, x => audio.pitch = x, startPitch * slowMoScale, 0.15f).SetEase(Ease.Linear);
         }
-        StartCoroutine(FadeOutSound(ambientSoundsHolder.GetComponents<AudioSource>()[index], 1));
+    }
+
+    public void StopSlowMo(float slowMoScale)
+    {
+        foreach (AudioSource audio in this.GetComponents<AudioSource>())
+        {
+            if(timeIndependentAudioSources.Contains(audio))
+                continue;
+            
+            audio.DOPitch(1, 0.6f).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                audio.pitch = 1f;
+            });
+        }
     }
     
     private IEnumerator FadeOutSound(AudioSource audioSource, float fadeTime)

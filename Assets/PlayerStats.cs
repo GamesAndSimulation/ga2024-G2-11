@@ -14,10 +14,21 @@ public class PlayerStats : MonoBehaviour
     
     private float health;
     private int enemiesKilled;
-
+    public AudioClip[] hurtSounds;
+    public float hurtSoundCooldownTime;
+    private float hurtSoundCooldownTimer;
+    
     private void Start()
     {
         health = MaxHealth;
+    }
+    
+    void Update()
+    {
+        if (hurtSoundCooldownTimer > 0)
+        {
+            hurtSoundCooldownTimer -= Time.deltaTime;
+        }
     }
     
     public void AddEnemyKill()
@@ -31,6 +42,11 @@ public class PlayerStats : MonoBehaviour
         health -= damage;
         ScreenEffectUtils.Instance.DamageEffect();
         Debug.Log("Player health: " + health);
+        if (hurtSoundCooldownTimer <= 0 && health > 0)
+        {
+            AudioManager.Instance.PlaySound(hurtSounds[UnityEngine.Random.Range(0, hurtSounds.Length)]);
+            hurtSoundCooldownTimer = hurtSoundCooldownTime;
+        }
         if (health <= 0)
         {
             StartCoroutine(Die());

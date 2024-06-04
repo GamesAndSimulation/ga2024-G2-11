@@ -53,6 +53,11 @@ public class PlayerScript : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
+    
+    [Header("Sound")]
+    public AudioClip[] footstepSounds;
+    public float footstepSoundCooldownTime;
+    private float footstepSoundCooldownTimer;
 
     [Header("Quake Camera Rolling")]
     public float rollSpeed;
@@ -142,6 +147,13 @@ public class PlayerScript : MonoBehaviour
         Vector2 movement = _inputManager.GetPlayerMovement();
         horizontalInput = movement.x;
         verticalInput = movement.y;
+        
+        footstepSoundCooldownTimer -= Time.deltaTime;
+        
+        if(grounded && movement != Vector2.zero && footstepSoundCooldownTimer <= 0){
+            AudioManager.Instance.PlaySound(footstepSounds[UnityEngine.Random.Range(0, footstepSounds.Length)]);
+            footstepSoundCooldownTimer = footstepSoundCooldownTime;
+        }
 
         // TODO change this to new input system
         if(Input.GetKeyUp(KeyCode.Space)){

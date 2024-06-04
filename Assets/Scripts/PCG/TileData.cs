@@ -126,17 +126,17 @@ public class TileData : ScriptableObject
         }
     }
     
-    private TileData[] FindAllTileDataAssets()
-    {
-        string[] guids = AssetDatabase.FindAssets("t:TileData");
-        TileData[] tiles = new TileData[guids.Length];
-        for (int i = 0; i < guids.Length; i++)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-            tiles[i] = AssetDatabase.LoadAssetAtPath<TileData>(path);
-        }
-        return tiles;
-    }
+    //private TileData[] FindAllTileDataAssets()
+    //{
+    //    string[] guids = AssetDatabase.FindAssets("t:TileData");
+    //    TileData[] tiles = new TileData[guids.Length];
+    //    for (int i = 0; i < guids.Length; i++)
+    //    {
+    //        string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+    //        tiles[i] = AssetDatabase.LoadAssetAtPath<TileData>(path);
+    //    }
+    //    return tiles;
+    //}
     
     public static int Mod(int a, int b)
     {

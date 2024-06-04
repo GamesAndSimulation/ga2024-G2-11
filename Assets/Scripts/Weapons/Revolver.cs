@@ -24,6 +24,9 @@ public class Revolver : MonoBehaviour
     [SerializeField] private float damage;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private Transform _bulletSpawnPoint;
+    [SerializeField] private AudioClip shootSound;
+    [SerializeField] private AudioClip reloadSound;
+    [SerializeField] private AudioClip emptySound;
 
     [SerializeField] private TextMeshProUGUI ammoChamberText;
     [SerializeField] private TextMeshProUGUI ammoStoredText;
@@ -52,14 +55,20 @@ public class Revolver : MonoBehaviour
         }
 
         // Shoot
-        if (inputManager.PlayerShotRevolver() && !_isReloading && BulletsInChamber > 0 && _shootTimer <= 0)
+        if (inputManager.PlayerShotRevolver() && !_isReloading && _shootTimer <= 0)
         {
+            if(BulletsInChamber <= 0)
+            {
+                AudioManager.Instance.PlaySound(emptySound);
+                return;
+            }
             _shootTimer = fireRateDelay;
             BulletsInChamber--;
             UpdateAmmoCount();
             Debug.Log($"{BulletsInChamber} bullets left");
             
             _revolverAnimator.SetTrigger("Shoot");
+            AudioManager.Instance.PlaySound(shootSound, true);
             
             StartCoroutine(ShowMuzzleFlash(0.1f));
             
@@ -92,8 +101,11 @@ public class Revolver : MonoBehaviour
 
     private IEnumerator Reload()
     {
+        if (BulletsInChamber == maxBullets || StoredBullets == 0 || _isReloading)
+            yield break;
         _isReloading = true;
         _revolverAnimator.SetTrigger("Reload");
+        AudioManager.Instance.PlaySound(reloadSound);
         yield return new WaitWhile(() => _revolverAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Reload");
         //Debug.Log("Animation finished.");
         

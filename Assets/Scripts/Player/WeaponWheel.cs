@@ -30,7 +30,16 @@ public class WeaponWheel : MonoBehaviour
     [SerializeField] private Volume postProcessingVolume;
     public float hiddenWeaponY;
     public float showingWeaponY;
+    public float coolDownTime;
+    
+    [Header("Sound")]
+    [SerializeField] private AudioClip weaponEquip;
+    [SerializeField] private AudioClip startSlowMotion;
+    [SerializeField] private AudioClip endSlowMotion;
+    [SerializeField] private AudioClip heartbeat;
+    
     private GameObject currentWeaponGameObject;
+    private float coolDownTimer;
     
     //[SerializeField] private GameObject hammer;
     
@@ -40,6 +49,7 @@ public class WeaponWheel : MonoBehaviour
     private int _uiLayer;
     public static float _initSensitivity;
     private bool _afterOpeningWeaponWheel;
+    private bool _inSlowMotion;
     
     void Start()
     {
@@ -53,7 +63,11 @@ public class WeaponWheel : MonoBehaviour
 
     void Update()
     {
-
+        if (coolDownTimer > 0 && !_inSlowMotion)
+        {
+            coolDownTimer -= Time.deltaTime;
+            return;
+        }
         var pov = _virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         if (_inputManager.IsWeaponWheelOut() && !GameManager.Instance.inFreeCamMode)
         {
@@ -63,6 +77,8 @@ public class WeaponWheel : MonoBehaviour
             weaponWheel.SetActive(true);
             
             StartSlowMotion();
+
+            coolDownTimer = coolDownTime;
             
             CheckSelectedWeapon(); // Check every frame to update the outline
             
@@ -121,6 +137,7 @@ public class WeaponWheel : MonoBehaviour
     {
 
         currentWeaponGameObject.transform.DOLocalMoveY(hiddenWeaponY, 0.2f);
+        AudioManager.Instance.PlaySound(weaponEquip);
         switch (newWeapon)
         {
             case Weapon.Revolver:
@@ -204,12 +221,22 @@ public class WeaponWheel : MonoBehaviour
     
     private void StartSlowMotion()
     {
+        if (_inSlowMotion)
+            return;
+        _inSlowMotion = true;
+        AudioManager.Instance.PlaySoundLooping(heartbeat, 0.7f, true);
+        AudioManager.Instance.StartSlowMo(SlowMotionTimeScale);
         Time.timeScale = SlowMotionTimeScale;
         Time.fixedDeltaTime = _startFixedDeltaTime * SlowMotionTimeScale;
     }
     
     private void StopSlowMotion()
     {
+        if(!_inSlowMotion)
+            return;
+        _inSlowMotion = false;
+        AudioManager.Instance.StopSlowMo(SlowMotionTimeScale);
+        AudioManager.Instance.StopSoundLooping();
         Time.timeScale = _startTimeScale;
         Time.fixedDeltaTime = _startFixedDeltaTime;
     }

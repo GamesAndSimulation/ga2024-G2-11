@@ -1,3 +1,4 @@
+#if UNITY_EDITOR 
 using UnityEditor;
 using UnityEngine;
 
@@ -19,3 +20,4 @@ public class WaveFunctionEditor : Editor
         if (GUILayout.Button("Run flood fill algorithm")) waveFunction.FloodFillWrapper();
     }
 }
+#endif
