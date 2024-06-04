@@ -214,6 +214,9 @@ MonoBehaviour:
   bulletSpeed: 50
   _turretHead: {fileID: 0}
   dieForce: 3
+  turretShootSound: {fileID: 8300000, guid: fa26844dfdc76ee4498ae5f4ad5790d7, type: 3}
+  explosionSound: {fileID: 8300000, guid: 71a8d890bccdbe442aa140755fb48a8e, type: 3}
+  dead: 0
 --- !u!114 &6592347930554123595
 MonoBehaviour:
   m_ObjectHideFlags: 0

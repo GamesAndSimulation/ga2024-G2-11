@@ -22,6 +22,7 @@ public class PlayerScript : MonoBehaviour
     private float initialWalkSpeed;
     public float maxYSpeed;
     public float groundDrag;
+    public bool canMove = true;
 
     float horizontalInput;
     float verticalInput;
@@ -143,7 +144,7 @@ public class PlayerScript : MonoBehaviour
     
     void HandleInputs(){
         
-        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading) return;
+        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading || !canMove) return;
         Vector2 movement = _inputManager.GetPlayerMovement();
         horizontalInput = movement.x;
         verticalInput = movement.y;

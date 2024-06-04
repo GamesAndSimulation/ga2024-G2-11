@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: 3925742742091223572, guid: 2241fc32c9bc69f43b71c954612b203d,
         type: 3}
       propertyPath: m_Name
-      value: Turret Variant
+      value: Turret
       objectReference: {fileID: 0}
     - target: {fileID: 3925742742091223572, guid: 2241fc32c9bc69f43b71c954612b203d,
         type: 3}
@@ -198,6 +198,10 @@ MonoBehaviour:
   shootInterval: 0.85
   bulletSpeed: 50
   _turretHead: {fileID: 0}
+  dieForce: 3
+  turretShootSound: {fileID: 8300000, guid: fa26844dfdc76ee4498ae5f4ad5790d7, type: 3}
+  explosionSound: {fileID: 8300000, guid: 71a8d890bccdbe442aa140755fb48a8e, type: 3}
+  dead: 0
 --- !u!114 &6592347930554123595
 MonoBehaviour:
   m_ObjectHideFlags: 0

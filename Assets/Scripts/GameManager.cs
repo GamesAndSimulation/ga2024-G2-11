@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     
+    public void SetFreezePlayer(bool value)
+    {
+        playerScript.canMove = !value;
+    }
+    
     
     
     public void ManualLevelStarFade()

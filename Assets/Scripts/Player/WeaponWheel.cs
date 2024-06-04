@@ -137,7 +137,7 @@ public class WeaponWheel : MonoBehaviour
     {
 
         currentWeaponGameObject.transform.DOLocalMoveY(hiddenWeaponY, 0.2f);
-        AudioManager.Instance.PlaySound(weaponEquip, false, 3f, true);
+        AudioManager.Instance.PlaySound(weaponEquip, false, 5f, true);
         switch (newWeapon)
         {
             case Weapon.Revolver:

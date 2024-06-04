@@ -379,7 +379,8 @@ public class WaveFunction : MonoBehaviour
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
-        AudioManager.Instance.PlaySound(CloseDoorSound, false, 1f);
+        if(useRandomFirstCell) // it means it's the first time the level is generated
+            AudioManager.Instance.PlaySound(CloseDoorSound, false, 1f);
         GameManager.Instance.gameLoading = false;
         GameManager.Instance.ManualLevelStarFade();
         EnableTurrets();

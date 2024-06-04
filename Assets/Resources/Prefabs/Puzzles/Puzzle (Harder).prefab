@@ -672,6 +672,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
         type: 3}
+      propertyPath: winSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2661bf30646a7834880004b7936d4fa3, type: 3}
+    - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
+        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}

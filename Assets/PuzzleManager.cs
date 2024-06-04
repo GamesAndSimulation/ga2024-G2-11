@@ -24,6 +24,8 @@ public class PuzzleManager : MonoBehaviour
     {
         AudioManager.Instance.AddImmuneLoopSources();
         numPuzzlesSolved = PlayerPrefs.GetInt("numPuzzlesSolved");
+        if (numPuzzlesSolved >= puzzlePrebabPaths.Length)
+            numPuzzlesSolved = 0;
         currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         //TreasureRoom.SetActive(false);
         TRoomLightIntensity = TreasureRoom.GetComponentInChildren<Light>().intensity;
@@ -59,6 +61,8 @@ public class PuzzleManager : MonoBehaviour
     
     private void TeleportToTreasureRoom()
     {
+        GameManager.Instance.SetFreezePlayer(true);
+        AudioManager.Instance.immuneSources.Clear();
         AudioManager.Instance.StopSoundLooping();
         TreasureRoom.SetActive(true);
         Destroy(GameObject.FindWithTag("WaveFunction"));
@@ -73,6 +77,7 @@ public class PuzzleManager : MonoBehaviour
         //player.transform.LookAt(TreasureRoom.transform.Find("LootUrn").position);
         TreasureRoom.GetComponentInChildren<Light>().DOIntensity(119.8f, 3f).SetEase(Ease.InOutSine);
         numPuzzlesSolved = 0;
+        GameManager.Instance.SetFreezePlayer(false);
     }
     
     

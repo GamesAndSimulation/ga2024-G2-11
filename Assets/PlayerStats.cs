@@ -19,16 +19,17 @@ public class PlayerStats : MonoBehaviour
     private int enemiesKilled;
     public int coins;
     public AudioClip[] hurtSounds;
+    public AudioClip deathSound;
     public float hurtSoundCooldownTime = 1.25f;
     private float hurtSoundCooldownTimer;
     
     private void Start()
     {
         health = MaxHealth;
-healthBar.maxValue = MaxHealth;
+        healthBar.maxValue = MaxHealth;
        healthBar.value = MaxHealth;   
-Debug.Log(PlayerPrefs.GetInt("Money"));
-        AudioManager.Instance.AddAllSourcesToTimeIndie(); 
+        Debug.Log(PlayerPrefs.GetInt("Money"));
+        //AudioManager.Instance.AddAllSourcesToTimeIndie(); 
 }
     
 void Update()
@@ -85,6 +86,7 @@ void Update()
     
     private IEnumerator Die()
     {
+        AudioManager.Instance.PlaySound(deathSound);
         DeathScreen.SetActive(true);
         yield return new WaitForSeconds(4f);
         GameManager.Instance.RestartGame();

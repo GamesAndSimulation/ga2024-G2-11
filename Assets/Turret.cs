@@ -13,6 +13,7 @@ public class Turret : MonoBehaviour
     public Transform _turretHead;
     private bool _shooting = false;
     [SerializeField] private float dieForce = 3;
+    [SerializeField] private AudioClip turretShootSound;
 
     [SerializeField]
     private AudioClip explosionSound;
@@ -56,6 +57,7 @@ public class Turret : MonoBehaviour
             bullet.GetComponent<Bullet>().SetDamage(damagePerBullet);
             Vector3 direction = (GameManager.Instance.GetPlayerPosition() - _turretHead.position).normalized;
             bullet.GetComponent<Rigidbody>().AddForce(direction * bulletSpeed, ForceMode.Impulse);
+            AudioManager.Instance.PlaySoundAtPosition(turretShootSound, transform.position, 4f, true);
             // Play shoot sound
         }
     }

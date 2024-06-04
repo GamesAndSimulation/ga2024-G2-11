@@ -14,6 +14,7 @@ public class SigilPuzzle: MonoBehaviour
     [SerializeField] private float smoothingSpeed = 15f;
     [SerializeField] private AudioClip pickPiece;
     [SerializeField] private AudioClip placePiece;
+    [SerializeField] private AudioClip winSound;
 
     private GameObject _selectedObject;
     
@@ -173,6 +174,7 @@ public class SigilPuzzle: MonoBehaviour
     
     private IEnumerator CompletingRoutine()
     {
+        AudioManager.Instance.PlaySound(winSound);
         MeshRenderer frame = transform.Find("Frame").GetComponent<MeshRenderer>();
         frame.material.DOColor(Color.green , 0.5f);
         yield return new WaitForSeconds(1f);
