@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
+
+    public Slider healthBar;
     
     [Header("Player Stats")]
     public float MaxHealth;
@@ -17,6 +20,9 @@ public class PlayerStats : MonoBehaviour
     private void Start()
     {
         health = MaxHealth;
+        
+        healthBar.maxValue = MaxHealth;
+        healthBar.value = MaxHealth;
     }
     
     public void AddEnemyKill()
@@ -27,6 +33,7 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        healthBar.value = health;
         ScreenEffectUtils.Instance.DamageEffect();
         Debug.Log("Player health: " + health);
         if (health <= 0)
