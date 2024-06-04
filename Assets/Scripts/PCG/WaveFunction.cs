@@ -30,6 +30,9 @@ public class WaveFunction : MonoBehaviour
     [Header("Colors")]
     public Color WallColor = Color.black;
     public Color TileColor = Color.white;
+    
+    [Header("Sound")]
+    public AudioClip CaveMorphinSound;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
     private List<GameObject> PossibleTurretTiles;
@@ -173,6 +176,7 @@ public class WaveFunction : MonoBehaviour
         PossibleTurretTiles.Clear();
         iterations = 0;
         InitializeGrid(true);
+        AudioManager.Instance.PlaySoundLooping(CaveMorphinSound);
         //StartCoroutine(DisableTurretsAfterDelay());
     }
 
@@ -355,6 +359,7 @@ public class WaveFunction : MonoBehaviour
         GameManager.Instance.gameLoading = false;
         GameManager.Instance.ManualLevelStarFade();
         EnableTurrets();
+        AudioManager.Instance.StopSoundLooping();
     }
 
     private void PlacePlayerAtSpawnPoint(Vector2Int spawnPoint)

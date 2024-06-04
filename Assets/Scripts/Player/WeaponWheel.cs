@@ -30,12 +30,9 @@ public class WeaponWheel : MonoBehaviour
     [SerializeField] private Volume postProcessingVolume;
     public float hiddenWeaponY;
     public float showingWeaponY;
-    public float coolDownTime;
-    
+    public float coolDownTime = 0.65f;
     [Header("Sound")]
     [SerializeField] private AudioClip weaponEquip;
-    [SerializeField] private AudioClip startSlowMotion;
-    [SerializeField] private AudioClip endSlowMotion;
     [SerializeField] private AudioClip heartbeat;
     
     private GameObject currentWeaponGameObject;
@@ -137,7 +134,7 @@ public class WeaponWheel : MonoBehaviour
     {
 
         currentWeaponGameObject.transform.DOLocalMoveY(hiddenWeaponY, 0.2f);
-        AudioManager.Instance.PlaySound(weaponEquip);
+        AudioManager.Instance.PlaySound(weaponEquip, false, 2f, true);
         switch (newWeapon)
         {
             case Weapon.Revolver:

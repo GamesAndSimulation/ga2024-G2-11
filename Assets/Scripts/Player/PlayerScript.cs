@@ -56,7 +56,7 @@ public class PlayerScript : MonoBehaviour
     
     [Header("Sound")]
     public AudioClip[] footstepSounds;
-    public float footstepSoundCooldownTime;
+    public float footstepSoundCooldownTime = 0.43f;
     private float footstepSoundCooldownTimer;
 
     [Header("Quake Camera Rolling")]

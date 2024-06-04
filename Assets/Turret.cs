@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using System;using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -14,6 +13,9 @@ public class Turret : MonoBehaviour
     public Transform _turretHead;
     private bool _shooting = false;
     [SerializeField] private float dieForce = 3;
+
+    [SerializeField]
+    private AudioClip explosionSound;
     public bool dead = false;
     
     
@@ -30,6 +32,7 @@ public class Turret : MonoBehaviour
 
     private void Die()
     {
+        AudioManager.Instance.PlaySound(explosionSound, true, 0.3f);
         dead = true;
         GetComponent<EnemyFov>().enabled = false;
         var explosion = Instantiate(Resources.Load("Prefabs/SwordHitParticles"), transform.position, Quaternion.identity) as GameObject;

@@ -38,6 +38,7 @@ public class PuzzleManager : MonoBehaviour
     
     private void TeleportToTreasureRoom()
     {
+        AudioManager.Instance.StopSoundLooping();
         TreasureRoom.SetActive(true);
         Destroy(GameObject.FindWithTag("WaveFunction"));
         GameManager.Instance.gameLoading = false;

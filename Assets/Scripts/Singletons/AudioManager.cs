@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
     public List<AudioSource> audioSources = new List<AudioSource>();
     public List<AudioSource> timeIndependentAudioSources = new List<AudioSource>();
+    public List<AudioSource> immuneSources;
  
     public static AudioManager Instance
     {
@@ -25,12 +26,15 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     { 
         instance = this;
+        immuneSources.Add(GetComponent<AudioSource>());
     }
  
-    public void PlaySound(AudioClip clipToPlay, bool randomPitch = false, float volume = 0.4f)
+    public void PlaySound(AudioClip clipToPlay, bool randomPitch = false, float volume = 0.4f, bool timeIndependent = false)
     {
         audioSources.Add(this.AddComponent<AudioSource>());
         var audio = audioSources[audioSources.Count - 1];
+        if (timeIndependent)
+            timeIndependentAudioSources.Add(audioSources[audioSources.Count - 1]);
         audio.volume = volume;
         audio.clip = clipToPlay;
         if(randomPitch)
@@ -57,7 +61,7 @@ public class AudioManager : MonoBehaviour
     {
         foreach (var audio in this.GetComponents<AudioSource>())
         {
-            if(audio.loop == true)
+            if(audio.loop && !immuneSources.Contains(audio))
             {
                 audio.loop = false;
                 audio.Stop();

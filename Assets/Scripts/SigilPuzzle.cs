@@ -12,6 +12,8 @@ public class SigilPuzzle: MonoBehaviour
     [SerializeField] private Transform TopLeftCorner;
     [SerializeField] private float resetTime = 0.38f;
     [SerializeField] private float smoothingSpeed = 15f;
+    [SerializeField] private AudioClip pickPiece;
+    [SerializeField] private AudioClip placePiece;
 
     private GameObject _selectedObject;
     
@@ -123,6 +125,7 @@ public class SigilPuzzle: MonoBehaviour
                 RaycastHit hit = CastRay();
                 if (hit.collider != null && hit.collider.CompareTag("PuzzlePiece"))
                 {
+                    AudioManager.Instance.PlaySound(pickPiece);
                     _selectedObject = hit.collider.gameObject;
                     _selectedWasOutside = PieceIsOutsideBoard(hit.transform);
                     foreach(Transform child in _selectedObject.transform.parent)
@@ -140,6 +143,7 @@ public class SigilPuzzle: MonoBehaviour
             {
                 if (PlaceObjectInGrid()) // Place was successful
                 {
+                    AudioManager.Instance.PlaySound(placePiece);
                     _selectedObject = null;
                     CheckGridFull();
                 }

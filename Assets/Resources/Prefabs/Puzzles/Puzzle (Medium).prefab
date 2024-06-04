@@ -2032,6 +2032,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
         type: 3}
+      propertyPath: pickPiece
+      value: 
+      objectReference: {fileID: 8300000, guid: 9fe1fcd9599dd2b48ae145f3733d8c03, type: 3}
+    - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
+        type: 3}
+      propertyPath: placePiece
+      value: 
+      objectReference: {fileID: 8300000, guid: c56b152164ffa6c42b57456fab924cea, type: 3}
+    - target: {fileID: 3024033227929010912, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
+        type: 3}
       propertyPath: WinFrameColor
       value: 
       objectReference: {fileID: 2100000, guid: 90680b80be8c54f779dd53a4b9585548, type: 2}

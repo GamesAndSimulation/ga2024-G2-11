@@ -170,6 +170,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1132818640883632581, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
         type: 3}
+      propertyPath: explosionSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 71a8d890bccdbe442aa140755fb48a8e, type: 3}
+    - target: {fileID: 1132818640883632581, guid: 7da59e6a6d8b55b4caa9a8d3eedde38b,
+        type: 3}
       propertyPath: damagePerBullet
       value: 12
       objectReference: {fileID: 0}

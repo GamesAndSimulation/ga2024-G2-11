@@ -15,7 +15,7 @@ public class PlayerStats : MonoBehaviour
     private float health;
     private int enemiesKilled;
     public AudioClip[] hurtSounds;
-    public float hurtSoundCooldownTime;
+    public float hurtSoundCooldownTime = 1.25f;
     private float hurtSoundCooldownTimer;
     
     private void Start()
