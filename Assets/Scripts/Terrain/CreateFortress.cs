@@ -6,6 +6,7 @@ using Unity.AI.Navigation;
 
 public class CreateOutpost : MonoBehaviour
 {
+    public GameObject enemy;
     
     // ----------- Constants -----------
     // Walls
@@ -76,6 +77,7 @@ public class CreateOutpost : MonoBehaviour
         RepositionBuilding();
         GenerateObstacles();
         navMeshSurface.BuildNavMesh();
+        GenerateEnemies();
     }
 
     private void Build()
@@ -243,6 +245,51 @@ public class CreateOutpost : MonoBehaviour
             
         
         
+        
+    }
+
+    private void GenerateEnemies()
+    {
+        
+        float securityOffset = 8;       // Distance between the obstacles and the borders of the fortress
+        float yPos = 0;                 // Initialization of the yPosition
+        Vector3 instancePos = default;  // Initialization of a dummy position vector
+        
+        // While we haven't placed all the objects
+        for (int i = 0; i < numberOfObstacles; i++)
+        {
+            var foundValid = false;
+            // Search for a valid position
+            while (!foundValid)
+            {
+                // Generate random x and z coordinates
+                var xPos = Random.Range(specifiedObjectPosition.x + securityOffset,
+                    specifiedObjectPosition.x + xWidth - securityOffset);
+                var zPos = Random.Range(specifiedObjectPosition.z + securityOffset,
+                    specifiedObjectPosition.z + zLength - securityOffset);
+
+                instancePos = new Vector3(xPos, 100, zPos);
+
+                // Raycast to see if there is anything on the ground or if the obstacle can be placed
+                RaycastHit hit;
+                if (Physics.Raycast(instancePos, transform.TransformDirection(Vector3.down), out hit, 100f,
+                        1 << LayerMask.NameToLayer("Ground")))
+                {
+                    yPos = hit.point.y;
+                    foundValid = true;
+                }
+
+            }
+    
+            // Generate a random rotation and a position with the values from before
+            var rotation = new Vector3(0, Random.Range(0, 360), 0);
+            var position = new Vector3(instancePos.x, yPos, instancePos.z);
+    
+            // Create the instance and set its parent as the specified object
+            var myInstance = Instantiate(enemy, position, Quaternion.Euler(rotation), specifiedObject.transform);
+            myInstance.transform.SetParent(specifiedObject.transform);
+
+        }
         
     }
     
