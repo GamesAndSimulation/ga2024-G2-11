@@ -88,6 +88,8 @@ public class CreateBuilding : MonoBehaviour
         }
 
         // ----------- Front & Back facade (x axis) -----------
+        int doorPosition = xWidth / 2 + xWidth % 2;
+        int offset = doorPosition % 2;
         
         for (var x = WallLength; x < xWidth; x += WallLength)
         {
@@ -107,7 +109,18 @@ public class CreateBuilding : MonoBehaviour
             }
             
             // Door
-            if(selectedEntrance == EntrancePositionSelector.Front && x == xWidth/2)
+            if (selectedEntrance == EntrancePositionSelector.Front && x == doorPosition + offset)
+            {
+                // Position the door
+                instance = GetFortressComponent(false, Door);
+                position = new Vector3(specifiedObjectPosition.x + x - WallLength - 0.069458f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z  - 0.689f);
+                
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
+            
+            // Door
+            /*if(selectedEntrance == EntrancePositionSelector.Front && x == xWidth/2)
             {
                 // Position a random wall besides the door
                 instance = GetFortressComponent(true, 0);
@@ -122,7 +135,7 @@ public class CreateBuilding : MonoBehaviour
                 
                 myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
                 myInstance.transform.SetParent(specifiedObject.transform);
-            }
+            }*/
             
             // ----------- Back facade -----------
             instance = GetFortressComponent(true, 0);
@@ -159,46 +172,18 @@ public class CreateBuilding : MonoBehaviour
         
         // ----------- Lateral facade (z axis) -----------
         
+        // Right now, the solution works for situations where the zLength/2 gives us a par number
+        doorPosition = zLength / 2 + zLength % 2;
+        offset = doorPosition % 2;
+        
         for (var z = WallLength; z < zLength; z += WallLength)
         {
             // ----------- First facade -----------
             GameObject instance = GetFortressComponent(true, 0);
-            Vector3 position = new Vector3(specifiedObjectPosition.x- 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            Vector3 position = new Vector3(specifiedObjectPosition.x - 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
             Vector3 rotation = new Vector3(0, 90, 0);
             
             GameObject myInstance;
-            
-            // Make sure the position is not supposed to be the entrance
-            if (!(selectedEntrance == EntrancePositionSelector.Left &&
-                  ((zLength / 2 - WallLength) <= z && z <= (zLength / 2 + WallLength))))
-            {
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-            }
-            
-            // Door
-            if(selectedEntrance == EntrancePositionSelector.Right && z == zLength/2)
-            {
-                // Position a random wall besides the door
-                instance = GetFortressComponent(true, 0);
-                position = new Vector3(specifiedObjectPosition.x - 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
-
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-                
-                // Position the door
-                instance = GetFortressComponent(false, Door);
-                position = new Vector3(specifiedObjectPosition.x - 0.689f - 0.069458f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z + z);
-                
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-            }
-            
-
-            // ----------- Second facade -----------
-            instance = GetFortressComponent(true, 0);
-            rotation = new Vector3(0, 90, 0);
-            position = new Vector3(specifiedObjectPosition.x + xWidth + 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
             
             // Make sure the position is not supposed to be the entrance
             if (!(selectedEntrance == EntrancePositionSelector.Right &&
@@ -209,18 +194,35 @@ public class CreateBuilding : MonoBehaviour
             }
             
             // Door
-            if(selectedEntrance == EntrancePositionSelector.Left && z == zLength/2)
+            if (selectedEntrance == EntrancePositionSelector.Right && z == doorPosition + offset)
             {
-                // Position a random wall besides the door
-                instance = GetFortressComponent(true, 0);
-                position = new Vector3(specifiedObjectPosition.x + xWidth + 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
-
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-                
                 // Position the door
                 instance = GetFortressComponent(false, Door);
-                position = new Vector3(specifiedObjectPosition.x + xWidth + 0.689f - 0.069458f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z + z);
+                position = new Vector3(specifiedObjectPosition.x - 0.689f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z + z + 0.069458f);
+                
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
+
+            // ----------- Second facade -----------
+            instance = GetFortressComponent(true, 0);
+            rotation = new Vector3(0, 90, 0);
+            position = new Vector3(specifiedObjectPosition.x + xWidth + 0.689f, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+            
+            // Make sure the position is not supposed to be the entrance
+            if (!(selectedEntrance == EntrancePositionSelector.Left &&
+                  ((zLength / 2 - WallLength) <= z && z <= (zLength / 2 + WallLength))))
+            {
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+            }
+            
+            // Door
+            if (selectedEntrance == EntrancePositionSelector.Left && z == doorPosition + offset)
+            {
+                // Position the door
+                instance = GetFortressComponent(false, Door);
+                position = new Vector3(specifiedObjectPosition.x + xWidth + 0.689f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z + z + 0.069458f);
                 
                 myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
                 myInstance.transform.SetParent(specifiedObject.transform);
