@@ -40,6 +40,7 @@ public class Enemy : MonoBehaviour
     
     [Header("Sound")]
     public AudioClip[] footstepSounds;
+    public AudioClip[] playerSpottedYellSounds;
     public AudioClip meleeSwingSound;
     public float footstepSoundCooldownTime = 0.43f;
     private float footstepSoundCooldownTimer;

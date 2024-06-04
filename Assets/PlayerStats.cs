@@ -23,6 +23,7 @@ public class PlayerStats : MonoBehaviour
     {
         health = MaxHealth;
         Debug.Log(PlayerPrefs.GetInt("Money"));
+        AudioManager.Instance.AddAllSourcesToTimeIndie();
     }
     
     void Update()

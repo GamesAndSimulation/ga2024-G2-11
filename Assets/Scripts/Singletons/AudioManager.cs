@@ -28,12 +28,20 @@ public class AudioManager : MonoBehaviour
         instance = this;
     }
     
-    public void AddImmuneSources()
+    public void AddImmuneLoopSources()
     {
         foreach (var source in this.GetComponents<AudioSource>())
         {
             if(source.loop)
                 immuneSources.Add(source);
+        }
+    }
+
+    public void AddAllSourcesToTimeIndie()
+    {
+        foreach (var source in this.GetComponents<AudioSource>())
+        {
+           timeIndependentAudioSources.Add(source);
         }
     }
     

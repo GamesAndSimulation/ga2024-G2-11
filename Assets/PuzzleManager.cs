@@ -22,7 +22,7 @@ public class PuzzleManager : MonoBehaviour
     
     private void Start()
     {
-        AudioManager.Instance.AddImmuneSources();
+        AudioManager.Instance.AddImmuneLoopSources();
         numPuzzlesSolved = PlayerPrefs.GetInt("numPuzzlesSolved");
         currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         //TreasureRoom.SetActive(false);
