@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7605245603096739856}
   m_Layer: 0
   m_Name: LootUrn
-  m_TagString: Untagged
+  m_TagString: Loot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,3 +152,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lootType: 0
   quantity: 0
+  ammoSound: {fileID: 8300000, guid: a467e0d692b1ded4dbc69b27b37cb200, type: 3}
+  coinsSound: {fileID: 8300000, guid: 5c7239c43d5429b4bb25660c5a954151, type: 3}
+  essenceBloodSound: {fileID: 0}

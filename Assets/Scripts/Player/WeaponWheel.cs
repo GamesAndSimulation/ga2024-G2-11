@@ -70,7 +70,10 @@ public class WeaponWheel : MonoBehaviour
         {
             if (GameManager.Instance.inPuzzleMode)
                 return;
+            
             _afterOpeningWeaponWheel = true;
+            
+            
             weaponWheel.SetActive(true);
             
             StartSlowMotion();
@@ -183,6 +186,7 @@ public class WeaponWheel : MonoBehaviour
                 if (outline == null)
                 {
                     var parent = uiGameObjectBeingHovered.transform.parent;
+                    Debug.Log("This is the partent of the object: " + parent.name);
                     outline = parent.GetComponent<Outline>();
                     uiGameObjectBeingHovered = parent.gameObject;
                 }

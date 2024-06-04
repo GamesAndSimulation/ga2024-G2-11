@@ -106,10 +106,15 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            PlayerPrefs.DeleteAll();
-            InitializePlayerPrefs();
+            ClearPlayerPrefs();
         }
             
+    }
+    
+    public void ClearPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+        InitializePlayerPrefs();
     }
     
     public void SetPlayerGodMode(bool value)
