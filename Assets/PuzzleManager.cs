@@ -61,8 +61,8 @@ public class PuzzleManager : MonoBehaviour
         //Transform playerTransform = (player.transform.parent == null) ? player.transform : player.transform.parent;
         player.position = treasurePlayerSpawnPoint.position;
         Transform lootUrn = TreasureRoom.transform.Find("LootUrn");
-        Vector3 lookDirection = (lootUrn.position - player.transform.position).normalized;
-        player.transform.forward = lookDirection;
+        //Vector3 lookDirection = (lootUrn.position - player.transform.position).normalized;
+        ////player.forward = lookDirection;
         //player.transform.LookAt(TreasureRoom.transform.Find("LootUrn").position);
         TreasureRoom.GetComponentInChildren<Light>().DOIntensity(119.8f, 3f).SetEase(Ease.InOutSine);
         numPuzzlesSolved = 0;
