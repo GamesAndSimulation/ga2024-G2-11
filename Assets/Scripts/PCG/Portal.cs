@@ -6,16 +6,24 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {
     [SerializeField]
-    public bool isEntrance;
+    public bool isEntrance = true;
     
     [SerializeField]
     public Transform linkedPortal;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isEntrance && other.CompareTag("Player"))
+        Debug.Log($"Portal Triggered by tag {other.tag}");
+        if (isEntrance && (other.CompareTag("Player") || other.transform.parent.CompareTag("Player")))
         {
-            other.transform.position = linkedPortal.position;
+            //other.transform.position = linkedPortal.position;
+            other.transform.parent.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent
+                .Find("PuzzleCamera").position;
         }
+    }
+    
+    public void SetLinkedPortal(Transform portal)
+    {
+        linkedPortal = portal;
     }
 }

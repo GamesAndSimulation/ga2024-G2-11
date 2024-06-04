@@ -3386,6 +3386,12 @@ MonoBehaviour:
   numPuzzlesSolved: 0
   TreasureRoom: {fileID: 1248886137}
   treasurePlayerSpawnPoint: {fileID: 957949907}
+  currentPuzzlePrefabPath: 
+  puzzlePrebabPaths:
+  - Prefabs/Puzzles/Puzzle 3
+  - Prefabs/Puzzles/Puzzle (Medium)
+  - Prefabs/Puzzles/Puzzle (Harder)
+  player: {fileID: 897920751}
 --- !u!4 &54799271
 Transform:
   m_ObjectHideFlags: 0
@@ -5942,6 +5948,11 @@ MonoBehaviour:
   numPuzzlesSolved: 0
   TreasureRoom: {fileID: 1248886137}
   treasurePlayerSpawnPoint: {fileID: 0}
+  currentPuzzlePrefabPath: 
+  puzzlePrebabPaths:
+  - Prefabs/Puzzles/Puzzle (Medium)
+  - Prefabs/Puzzles/Puzzle (Hard)
+  player: {fileID: 0}
 --- !u!1 &97254577
 GameObject:
   m_ObjectHideFlags: 0
@@ -48687,12 +48698,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957949906}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70710784, z: -0, w: -0.70710576}
-  m_LocalPosition: {x: 84.65, y: 24.25, z: 259.18}
-  m_LocalScale: {x: 5, y: 5, z: 0.5}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 9.4639845, y: 0.361, z: -58.800278}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1248886138}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &958926972
 GameObject:
@@ -64571,6 +64582,7 @@ Transform:
   - {fileID: 508901230}
   - {fileID: 1708193951}
   - {fileID: 277151425}
+  - {fileID: 957949907}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1253100755
@@ -104125,7 +104137,6 @@ SceneRoots:
   - {fileID: 1208974582}
   - {fileID: 195656777}
   - {fileID: 53838557}
-  - {fileID: 957949907}
   - {fileID: 1248886138}
   - {fileID: 159740879}
   - {fileID: 6219270803207246700}

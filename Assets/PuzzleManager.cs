@@ -11,10 +11,19 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private GameObject TreasureRoom;
     private float TRoomLightIntensity;
     public Transform treasurePlayerSpawnPoint;
+    public string currentPuzzlePrefabPath;
+    public string[] puzzlePrebabPaths = new string[]
+    {
+        "Prefabs/Puzzles/Puzzle (Medium)",
+        "Prefabs/Puzzles/Puzzle (Harder)"
+    };
+
+    public Transform player;
     
     private void Start()
     {
         numPuzzlesSolved = 0;
+        currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         TreasureRoom.SetActive(false);
         TRoomLightIntensity = TreasureRoom.GetComponentInChildren<Light>().intensity;
         TreasureRoom.GetComponentInChildren<Light>().intensity = 0;
@@ -22,13 +31,18 @@ public class PuzzleManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.T))
+        if(Input.GetKeyDown(KeyCode.Y))
             TeleportToTreasureRoom();
     }
 
     public void AddPuzzleSolved()
     {
         numPuzzlesSolved++;
+        if (numPuzzlesSolved < puzzlePrebabPaths.Length)
+        {
+            currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
+        }
+        
         if (numPuzzlesSolved >= 2)
         {
             TeleportToTreasureRoom();
@@ -44,8 +58,8 @@ public class PuzzleManager : MonoBehaviour
         GameManager.Instance.gameLoading = false;
         GameManager.Instance.inPuzzleMode = false;
         GameManager.Instance.gamePaused = false;
-        GameObject player = GameObject.FindWithTag("Player");
-        player.transform.position = treasurePlayerSpawnPoint.position;
+        //Transform playerTransform = (player.transform.parent == null) ? player.transform : player.transform.parent;
+        player.position = treasurePlayerSpawnPoint.position;
         Transform lootUrn = TreasureRoom.transform.Find("LootUrn");
         Vector3 lookDirection = (lootUrn.position - player.transform.position).normalized;
         player.transform.forward = lookDirection;

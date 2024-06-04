@@ -38,7 +38,9 @@ public class WaveFunction : MonoBehaviour
     private List<GameObject> PossibleTurretTiles;
     private Vector2Int playerCoords;
     private Vector2Int corridorCoords;
+    private Vector2Int portalCoords;
     private GameObject currentPuzzle;
+    private PuzzleManager puzzleManager;
 
     private readonly Vector2Int[] directions =
     {
@@ -61,6 +63,9 @@ public class WaveFunction : MonoBehaviour
         gridComponents = new List<Cell>();
         PossibleTurretTiles = new List<GameObject>();
         playerCoords = new Vector2Int(-1, -1); 
+        corridorCoords = new Vector2Int(-1, -1);
+        portalCoords = new Vector2Int(-1, -1);
+        puzzleManager = GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>();
         GetAllPrototypes();
         InitializeGrid();
     }
@@ -153,8 +158,8 @@ public class WaveFunction : MonoBehaviour
             PropagateChanges(cell);
             if (i == 1)
             {
-                Vector3 puzzlePos = cell.transform.position + Vector3.up * 2f + Vector3.right * 2.5f;
-                currentPuzzle = Instantiate(Resources.Load<GameObject>("Prefabs/Puzzles/Puzzle (Medium)"), puzzlePos, Quaternion.identity, null);
+                Vector3 puzzlePos = cell.transform.position + Vector3.up * 3f + Vector3.right * 2.7f;
+                currentPuzzle = Instantiate(Resources.Load<GameObject>(puzzleManager.currentPuzzlePrefabPath), puzzlePos, Quaternion.identity, null);
             }
         }
     }
@@ -252,10 +257,11 @@ public class WaveFunction : MonoBehaviour
         //}
 
         MakeShortPuzzleCorridor(!firstCellInPlayer);
-
+        
         StartCoroutine(!firstCellInPlayer
             ? CollapseWaveFunctionWithAnim(true, Vector2Int.zero)
             : CollapseWaveFunctionWithAnim(false, playerCoords));
+        
     }
 
     private void CreateSealingWalls()
@@ -348,12 +354,27 @@ public class WaveFunction : MonoBehaviour
 
         //UpdateColliders();
 
-        //if (useRandomFirstCell)
-        //{
+        if (useRandomFirstCell)
+        {
         PlacePlayerAtSpawnPoint(GetBestSpawnCorridor());
-        //}
+        }
+        else
+        {
+            if (portalCoords.x != -1 && portalCoords.y != -1)
+            {
+                gridComponents.Find(c => c.gridCoordinates == portalCoords).instantiatedTile.transform.GetChild(0).gameObject.SetActive(false);
+            }
+            portalCoords = GetBestSpawnCorridor(true);
+            var portal = gridComponents.Find(c => c.gridCoordinates == portalCoords).instantiatedTile.transform
+                .GetChild(0).gameObject;
+            portal.SetActive(true);
+            Portal portalScript = portal.GetComponent<Portal>();
+            portalScript.isEntrance = true;
+            portalScript.SetLinkedPortal(GameObject.FindWithTag("PuzzlePiece").transform.parent.parent.Find("PuzzleCamera"));
+            Debug.LogWarning("Portal coords: " + portalScript.linkedPortal.position);
+            
+        }
 
-        
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
         GameManager.Instance.gameLoading = false;
@@ -572,9 +593,10 @@ public class WaveFunction : MonoBehaviour
     }
 
     // Get farthes cell from the corridor
-    private Vector2Int GetBestSpawnCorridor()
+    private Vector2Int GetBestSpawnCorridor(bool forPortal = false)
     {
         var visited = new HashSet<Cell>();
+        var visitadFloors = new List<Cell>();
         var queue = new Queue<Cell>();
         var distanceMap = new Dictionary<Cell, int>();
         visited.Clear();
@@ -584,10 +606,15 @@ public class WaveFunction : MonoBehaviour
         if (gridComponents.Count > 0)
         {
             var startCell = gridComponents.Find(c => c.gridCoordinates == corridorCoords);
+            if (forPortal)
+            {
+                Debug.LogWarning("Getting best spawn point for portal.");
+                startCell = gridComponents.Find(c => c.gridCoordinates == GetCellUnderPlayer());
+            }
             queue.Enqueue(startCell);
             visited.Add(startCell);
             distanceMap[startCell] = 0;
-            farthestCell = corridorCoords;
+            farthestCell = startCell.gridCoordinates;
 
             while (queue.Count > 0)
             {
@@ -612,6 +639,10 @@ public class WaveFunction : MonoBehaviour
                             {
                                 farthestCell = neighbor.gridCoordinates;
                             }
+                            if(neighbor.tileOptions[0].TilePrefabShape == TileData.TileShape.Floor)
+                            {
+                                visitadFloors.Add(neighbor);
+                            }
                         }
                     }
                     directionIndex++;
@@ -619,8 +650,13 @@ public class WaveFunction : MonoBehaviour
             }
         }
 
+        if(forPortal)
+        {
+            Debug.LogWarning("End of getting best spawn point for portal.");
+            return visitadFloors[Random.Range(0, visitadFloors.Count)].gridCoordinates;
+        }
+        
         Cell farthestCellObj = gridComponents.Find(c => c.gridCoordinates == farthestCell);
-        //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), farthestCellObj.transform.position, Quaternion.identity, transform);
 
         return farthestCell;
 
