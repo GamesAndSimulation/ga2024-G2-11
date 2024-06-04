@@ -36,8 +36,8 @@ public class Revolver : MonoBehaviour
     {
         _shootTimer = 0;
         inputManager = InputManager.Instance;
-        BulletsInChamber = Mathf.Clamp(StoredBullets, 0, maxBullets);
-        StoredBullets -= BulletsInChamber;
+        BulletsInChamber = PlayerPrefs.GetInt("BulletsInChamber");
+        StoredBullets = PlayerPrefs.GetInt("StoredBullets");
         UpdateAmmoCount();
         _revolverAnimator = GetComponent<Animator>();
     }
@@ -128,6 +128,7 @@ public class Revolver : MonoBehaviour
     public void AddAmmo(int amount)
     {
         StoredBullets += amount;
+        PlayerPrefs.SetInt("StoredBullets", StoredBullets);
         UpdateAmmoCount();
     }
 
@@ -135,6 +136,9 @@ public class Revolver : MonoBehaviour
     {
         ammoChamberText.text = BulletsInChamber.ToString();
         ammoStoredText.text = StoredBullets.ToString();
+        PlayerPrefs.SetInt("BulletsInChamber", BulletsInChamber);
+        PlayerPrefs.SetInt("StoredBullets", StoredBullets);
+        PlayerPrefs.Save();
     }
     
 

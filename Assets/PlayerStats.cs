@@ -14,6 +14,7 @@ public class PlayerStats : MonoBehaviour
     
     private float health;
     private int enemiesKilled;
+    public int coins;
     public AudioClip[] hurtSounds;
     public float hurtSoundCooldownTime = 1.25f;
     private float hurtSoundCooldownTimer;
@@ -21,6 +22,7 @@ public class PlayerStats : MonoBehaviour
     private void Start()
     {
         health = MaxHealth;
+        Debug.Log(PlayerPrefs.GetInt("Money"));
     }
     
     void Update()
@@ -34,6 +36,29 @@ public class PlayerStats : MonoBehaviour
     public void AddEnemyKill()
     {
         enemiesKilled++;
+    }
+    
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+        PlayerPrefs.SetInt("Money", coins);
+        PlayerPrefs.Save();
+    }
+    
+    public void SpendCoins(int amount)
+    {
+        coins -= amount;
+        PlayerPrefs.SetInt("Money", coins);
+        PlayerPrefs.Save();
+    }
+    
+    public void AddHealth(float amount)
+    {
+        health += amount;
+        if (health > MaxHealth)
+        {
+            health = MaxHealth;
+        }
     }
     
     public void TakeDamage(float damage)

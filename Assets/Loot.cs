@@ -17,12 +17,14 @@ public class Loot : MonoBehaviour
     
     private MeshRenderer _meshRenderer;
     private Revolver _revolver;
+    private PlayerStats _playerStats;
     
 
     private void Start()
     {
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
         _revolver = FindObjectOfType<Revolver>();
+        _playerStats = FindObjectOfType<PlayerStats>();
     }
 
     public void Scavenge()
@@ -31,6 +33,7 @@ public class Loot : MonoBehaviour
         {
             case LootType.Coins:
                 Debug.Log("You got " + quantity + " coins!");
+                _playerStats.AddCoins(quantity);
                 break;
             case LootType.Ammo:
                 Debug.Log("You got " + quantity + " ammo!");

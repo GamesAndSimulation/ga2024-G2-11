@@ -41,9 +41,35 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
+        InitializePlayerPrefs();
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
         LevelStartFadeEffect();
+    }
+    
+    void InitializePlayerPrefs()
+    {
+        if (!PlayerPrefs.HasKey("StoredBullets"))
+        {
+            PlayerPrefs.SetInt("StoredBullets", 14);
+        }
+        
+        if (!PlayerPrefs.HasKey("BulletsInChamber"))
+        {
+            PlayerPrefs.SetInt("BulletsInChamber", 4);
+        }
+
+        if (!PlayerPrefs.HasKey("Money"))
+        {
+            PlayerPrefs.SetInt("Money", 20); 
+        }
+        
+        if(!PlayerPrefs.HasKey("numPuzzlesSolved"))
+        {
+            PlayerPrefs.SetInt("numPuzzlesSolved", 0);
+        }
+        
+        PlayerPrefs.Save();
     }
     
     public void ManualLevelStarFade()

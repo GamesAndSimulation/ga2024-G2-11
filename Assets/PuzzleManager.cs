@@ -22,11 +22,14 @@ public class PuzzleManager : MonoBehaviour
     
     private void Start()
     {
-        numPuzzlesSolved = 0;
+        numPuzzlesSolved = PlayerPrefs.GetInt("numPuzzlesSolved");
         currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         TreasureRoom.SetActive(false);
         TRoomLightIntensity = TreasureRoom.GetComponentInChildren<Light>().intensity;
         TreasureRoom.GetComponentInChildren<Light>().intensity = 0;
+        
+        Debug.Log(PlayerPrefs.GetInt("numPuzzlesSolved"));
+        
     }
 
     private void Update()
@@ -38,12 +41,15 @@ public class PuzzleManager : MonoBehaviour
     public void AddPuzzleSolved()
     {
         numPuzzlesSolved++;
+        PlayerPrefs.SetInt("numPuzzlesSolved", numPuzzlesSolved);
+        PlayerPrefs.Save();
+ 
         if (numPuzzlesSolved < puzzlePrebabPaths.Length)
         {
             currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         }
         
-        if (numPuzzlesSolved >= 2)
+        if (numPuzzlesSolved % 2 == 0)
         {
             TeleportToTreasureRoom();
         }
