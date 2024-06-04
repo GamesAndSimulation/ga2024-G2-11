@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
+
+    public Slider healthBar;
     
     [Header("Player Stats")]
     public float MaxHealth;
@@ -22,19 +25,19 @@ public class PlayerStats : MonoBehaviour
     private void Start()
     {
         health = MaxHealth;
-        Debug.Log(PlayerPrefs.GetInt("Money"));
-        AudioManager.Instance.AddAllSourcesToTimeIndie();
-    }
+healthBar.maxValue = MaxHealth;
+       healthBar.value = MaxHealth;   
+Debug.Log(PlayerPrefs.GetInt("Money"));
+        AudioManager.Instance.AddAllSourcesToTimeIndie(); 
+}
     
-    void Update()
+void Update()
     {
         if (hurtSoundCooldownTimer > 0)
         {
             hurtSoundCooldownTimer -= Time.deltaTime;
         }
-    }
-    
-    public void AddEnemyKill()
+    }    public void AddEnemyKill()
     {
         enemiesKilled++;
     }
@@ -66,6 +69,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (godModeOn) return;
         health -= damage;
+        healthBar.value = health;
         ScreenEffectUtils.Instance.DamageEffect();
         Debug.Log("Player health: " + health);
         if (hurtSoundCooldownTimer <= 0 && health > 0)
