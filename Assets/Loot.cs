@@ -3,17 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Loot : MonoBehaviour
 {
     public enum LootType
     {
         Coins,
-        Ammo
+        Ammo,
+        EssenceBlood
     }
     
     public LootType lootType;
     public int quantity;
+    public AudioClip ammoSound;
+    public AudioClip coinsSound;
+    public AudioClip essenceBloodSound;
     
     private MeshRenderer _meshRenderer;
     private Revolver _revolver;
@@ -29,15 +34,23 @@ public class Loot : MonoBehaviour
 
     public void Scavenge()
     {
+        
         switch (lootType)
         {
             case LootType.Coins:
                 Debug.Log("You got " + quantity + " coins!");
+                AudioManager.Instance.PlaySound(coinsSound);
                 _playerStats.AddCoins(quantity);
                 break;
             case LootType.Ammo:
                 Debug.Log("You got " + quantity + " ammo!");
+                AudioManager.Instance.PlaySound(ammoSound);
                 _revolver.AddAmmo(quantity);
+                break;
+            case LootType.EssenceBlood:
+                Debug.Log("Collected essence blood");
+                AudioManager.Instance.PlaySound(essenceBloodSound);
+                PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
                 break;
         }
 

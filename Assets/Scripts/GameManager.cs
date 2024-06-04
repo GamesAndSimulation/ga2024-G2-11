@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -68,9 +69,16 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("numPuzzlesSolved", 0);
         }
+
+        if (!PlayerPrefs.HasKey("EssenceBlood"))
+        {
+            PlayerPrefs.SetInt("EssenceBlood", 0);
+        }
         
         PlayerPrefs.Save();
     }
+    
+    
     
     public void ManualLevelStarFade()
     {
@@ -95,6 +103,13 @@ public class GameManager : MonoBehaviour
         {
             gamePaused = !gamePaused;
         }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            PlayerPrefs.DeleteAll();
+            InitializePlayerPrefs();
+        }
+            
     }
     
     public void SetPlayerGodMode(bool value)
@@ -105,6 +120,16 @@ public class GameManager : MonoBehaviour
     public Vector3 GetPlayerPosition()
     {
         return playerScript.transform.position;
+    }
+    
+    public void SetEnableLoadScreen(bool value)
+    {
+        loadingScreen.SetActive(value);
+    }
+    
+    public bool IsLoadingScreenOn()
+    {
+        return loadingScreen.activeSelf;
     }
     
     public void LoadScene(string sceneName)

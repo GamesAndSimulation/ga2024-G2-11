@@ -38,6 +38,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float patrollingSpeed;
     [SerializeField] private float chaseSpeed = 5f;
     
+    [Header("Sound")]
+    public AudioClip[] footstepSounds;
+    public AudioClip meleeSwingSound;
+    public float footstepSoundCooldownTime = 0.43f;
+    private float footstepSoundCooldownTimer;
+    
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -55,6 +61,14 @@ public class Enemy : MonoBehaviour
             _agent.isStopped = true;
             _animator.speed = 0;
             return;
+        }
+        
+        footstepSoundCooldownTimer -= Time.deltaTime;
+
+        if (!_agent.isStopped && footstepSoundCooldownTimer <= 0)
+        {
+            AudioManager.Instance.PlaySoundAtPosition(footstepSounds[Random.Range(0, footstepSounds.Length)], transform.position);
+            footstepSoundCooldownTimer = footstepSoundCooldownTime;
         }
         
         _agent.isStopped = false;
@@ -118,6 +132,7 @@ public class Enemy : MonoBehaviour
         _agent.isStopped = true;
         _animator.SetTrigger("Attack");
         _player.GetComponent<PlayerStats>().TakeDamage(Damage);
+        AudioManager.Instance.PlaySoundAtPosition(meleeSwingSound, transform.position);
         Invoke(nameof(StopAttacking), AttackDelayTime);
     }
 

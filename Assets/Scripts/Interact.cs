@@ -15,6 +15,7 @@ public class Interact : MonoBehaviour
     
     [SerializeField] private GameObject PuzzleUI;
     [SerializeField] private GameObject interactIcon;
+    [SerializeField] private AudioClip DoorEnterSound;
     
     private Vector3 forward;
     private RaycastHit hit;
@@ -48,7 +49,8 @@ public class Interact : MonoBehaviour
                     break;
                 case "CaveEntrance":
                     interactIcon.GetComponentInChildren<TextMeshProUGUI>().text = "Enter";
-                    interactIcon.SetActive(true);
+                    if(!GameManager.Instance.IsLoadingScreenOn())
+                        interactIcon.SetActive(true);
                     EnterCave();
                     break;
                 case "Loot":
@@ -80,9 +82,18 @@ public class Interact : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            interactIcon.SetActive(false);
-            GameManager.Instance.LoadScene("Cavern");
+            StartCoroutine(EnterCavern());
         }
+    }
+    
+    private IEnumerator EnterCavern()
+    {
+        GameManager.Instance.SetEnableLoadScreen(true);
+        interactIcon.SetActive(false);
+        AudioManager.Instance.StopSoundLooping();
+        AudioManager.Instance.PlaySound(DoorEnterSound, false, 1f);
+        yield return new WaitForSeconds(DoorEnterSound.length);
+        GameManager.Instance.LoadScene("Cavern");
     }
     
     private void InteractWithBoard()

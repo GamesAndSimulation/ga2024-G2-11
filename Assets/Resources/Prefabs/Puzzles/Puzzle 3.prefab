@@ -2022,12 +2022,12 @@ PrefabInstance:
     - target: {fileID: 7881020676467576019, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 0.102
       objectReference: {fileID: 0}
     - target: {fileID: 7881020676467576019, guid: 4cb2ae927005b49249a6ae7c5fbd2e91,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0.073
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

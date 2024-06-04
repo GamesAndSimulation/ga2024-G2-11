@@ -22,9 +22,10 @@ public class PuzzleManager : MonoBehaviour
     
     private void Start()
     {
+        AudioManager.Instance.AddImmuneSources();
         numPuzzlesSolved = PlayerPrefs.GetInt("numPuzzlesSolved");
         currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
-        TreasureRoom.SetActive(false);
+        //TreasureRoom.SetActive(false);
         TRoomLightIntensity = TreasureRoom.GetComponentInChildren<Light>().intensity;
         TreasureRoom.GetComponentInChildren<Light>().intensity = 0;
         

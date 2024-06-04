@@ -26,9 +26,17 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     { 
         instance = this;
-        immuneSources.Add(GetComponent<AudioSource>());
     }
- 
+    
+    public void AddImmuneSources()
+    {
+        foreach (var source in this.GetComponents<AudioSource>())
+        {
+            if(source.loop)
+                immuneSources.Add(source);
+        }
+    }
+    
     public void PlaySound(AudioClip clipToPlay, bool randomPitch = false, float volume = 0.4f, bool timeIndependent = false)
     {
         audioSources.Add(this.AddComponent<AudioSource>());
@@ -93,6 +101,41 @@ public class AudioManager : MonoBehaviour
             {
                 audio.pitch = 1f;
             });
+        }
+    }
+    
+    public void PlaySoundAtPosition(AudioClip clipToPlay, Vector3 position, float volume = 0.4f, bool randomPitch = false, bool timeIndependent = false)
+    {
+        GameObject tempGO = new GameObject("TempAudio");
+        tempGO.transform.position = position;
+        AudioSource audioSource = tempGO.AddComponent<AudioSource>();
+        audioSource.clip = clipToPlay;
+        audioSource.volume = volume;
+        if (randomPitch)
+        {
+            audioSource.pitch = Random.Range(0.8f, 1.2f);
+        }
+        audioSource.spatialBlend = 1.0f; // make the audio fully 3D
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+
+        audioSource.Play();
+        Destroy(tempGO, clipToPlay.length);
+
+        audioSources.Add(audioSource);
+        if (timeIndependent)
+        {
+            timeIndependentAudioSources.Add(audioSource);
+        }
+    }
+    
+    public void FadeOutAllLoopingSounds(float fadeTime)
+    {
+        foreach (var audio in this.GetComponents<AudioSource>())
+        {
+            if (audio.loop && !immuneSources.Contains(audio))
+            {
+                StartCoroutine(FadeOutSound(audio, fadeTime));
+            }
         }
     }
     

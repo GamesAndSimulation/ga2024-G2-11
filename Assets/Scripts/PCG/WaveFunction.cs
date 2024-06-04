@@ -33,6 +33,7 @@ public class WaveFunction : MonoBehaviour
     
     [Header("Sound")]
     public AudioClip CaveMorphinSound;
+    public AudioClip CloseDoorSound;
 
     private readonly List<TilePrototype> AvailablePrototypes = new();
     private List<GameObject> PossibleTurretTiles;
@@ -181,7 +182,8 @@ public class WaveFunction : MonoBehaviour
         PossibleTurretTiles.Clear();
         iterations = 0;
         InitializeGrid(true);
-        AudioManager.Instance.PlaySoundLooping(CaveMorphinSound);
+        if(PlayerPrefs.GetInt("numPuzzlesSolved") % 2 != 0)
+            AudioManager.Instance.PlaySoundLooping(CaveMorphinSound);
         //StartCoroutine(DisableTurretsAfterDelay());
     }
 
@@ -377,6 +379,7 @@ public class WaveFunction : MonoBehaviour
 
         LoadingScreen.SetActive(false);
         LoadingScreen.GetComponentInChildren<UIFadeInOut>().enabled = false;
+        AudioManager.Instance.PlaySound(CloseDoorSound, false, 1f);
         GameManager.Instance.gameLoading = false;
         GameManager.Instance.ManualLevelStarFade();
         EnableTurrets();

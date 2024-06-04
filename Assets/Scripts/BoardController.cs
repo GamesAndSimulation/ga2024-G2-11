@@ -11,6 +11,8 @@ public class BoardController : MonoBehaviour
     
     public LayerMask groundLayer;
     public GameObject DustParticlesPrefab;
+    public AudioClip sailingSoundl;
+    private bool playingSailingSound;
     public Transform Sail;
     public float BoardHeight = 2f;
     public float HoverForce;
@@ -33,6 +35,7 @@ public class BoardController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        playingSailingSound = false;
         
         _rb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
@@ -56,6 +59,12 @@ public class BoardController : MonoBehaviour
     {
         if (_inputManager.DrivingForward() && _rb.velocity.magnitude > dustSpawnVelocity)
         {
+            if (!playingSailingSound)
+            {
+                AudioManager.Instance.PlaySoundLooping(sailingSoundl);
+                playingSailingSound = true;
+            }
+                
             spawnDustTimer -= Time.deltaTime;
             if (spawnDustTimer <= 0)
             {
@@ -65,6 +74,12 @@ public class BoardController : MonoBehaviour
                 spawnDustTimer = dustSpawnRate;
             }
         }
+        else if(playingSailingSound)
+        {
+            AudioManager.Instance.FadeOutAllLoopingSounds(1f);
+            playingSailingSound = false;
+        }
+        
         if(Input.GetKeyDown(KeyCode.E)) 
         {
             GameManager.Instance.SetDrivingMode(false);
