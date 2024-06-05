@@ -387,6 +387,34 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Sword"",
+            ""id"": ""efa61d9a-8595-46cd-ba1e-ccf5c7ce8291"",
+            ""actions"": [
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""7de4db13-8ba8-4b59-a6de-849df69335e8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""871cfbe3-5c3f-47f9-a840-6946d38e3755"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -408,6 +436,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_BoardDriving_Back = m_BoardDriving.FindAction("Back", throwIfNotFound: true);
         m_BoardDriving_Left = m_BoardDriving.FindAction("Left", throwIfNotFound: true);
         m_BoardDriving_Right = m_BoardDriving.FindAction("Right", throwIfNotFound: true);
+        // Sword
+        m_Sword = asset.FindActionMap("Sword", throwIfNotFound: true);
+        m_Sword_Attack = m_Sword.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -667,6 +698,52 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public BoardDrivingActions @BoardDriving => new BoardDrivingActions(this);
+
+    // Sword
+    private readonly InputActionMap m_Sword;
+    private List<ISwordActions> m_SwordActionsCallbackInterfaces = new List<ISwordActions>();
+    private readonly InputAction m_Sword_Attack;
+    public struct SwordActions
+    {
+        private @PlayerControls m_Wrapper;
+        public SwordActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Attack => m_Wrapper.m_Sword_Attack;
+        public InputActionMap Get() { return m_Wrapper.m_Sword; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(SwordActions set) { return set.Get(); }
+        public void AddCallbacks(ISwordActions instance)
+        {
+            if (instance == null || m_Wrapper.m_SwordActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_SwordActionsCallbackInterfaces.Add(instance);
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
+        }
+
+        private void UnregisterCallbacks(ISwordActions instance)
+        {
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
+        }
+
+        public void RemoveCallbacks(ISwordActions instance)
+        {
+            if (m_Wrapper.m_SwordActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ISwordActions instance)
+        {
+            foreach (var item in m_Wrapper.m_SwordActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_SwordActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public SwordActions @Sword => new SwordActions(this);
     public interface IPlayerWalkActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -686,5 +763,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnBack(InputAction.CallbackContext context);
         void OnLeft(InputAction.CallbackContext context);
         void OnRight(InputAction.CallbackContext context);
+    }
+    public interface ISwordActions
+    {
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

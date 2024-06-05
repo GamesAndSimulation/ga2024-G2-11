@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
+  m_Name: Corner-In
+  m_EditorClassIdentifier: 
+  posXType: 3
+  negZType: 1
+  negXType: 0
+  posZType: 3
+  tileShape: 0
+  tilePrefab: {fileID: 1152811991247751003, guid: b6c6aeb6a7172b24ca88024412385d8b,
+    type: 3}
+  tilePrefabWithDoor: {fileID: 6831659559159351990, guid: 19f1ec73aa6d2fd4c95d246bcdae22b4,
+    type: 3}
+  numRotations: 3
+  Sockets: 03000000010000000000000003000000
+  Prototypes:
+  - Sockets: 03000000010000000000000003000000
+    Rotation: 0
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 6831659559159351990, guid: ffd27ef203fe85e4fb7f3ca5d5549de6,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 6831659559159351990, guid: 19f1ec73aa6d2fd4c95d246bcdae22b4,
+      type: 3}
+  - Sockets: 03000000030000000100000000000000
+    Rotation: 90
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 6831659559159351990, guid: ffd27ef203fe85e4fb7f3ca5d5549de6,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 6831659559159351990, guid: 19f1ec73aa6d2fd4c95d246bcdae22b4,
+      type: 3}
+  - Sockets: 00000000030000000300000001000000
+    Rotation: 180
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 6831659559159351990, guid: ffd27ef203fe85e4fb7f3ca5d5549de6,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 6831659559159351990, guid: 19f1ec73aa6d2fd4c95d246bcdae22b4,
+      type: 3}
+  - Sockets: 01000000000000000300000003000000
+    Rotation: 270
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 6831659559159351990, guid: ffd27ef203fe85e4fb7f3ca5d5549de6,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 6831659559159351990, guid: 19f1ec73aa6d2fd4c95d246bcdae22b4,
+      type: 3}

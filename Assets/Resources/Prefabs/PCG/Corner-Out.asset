@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
+  m_Name: Corner-Out
+  m_EditorClassIdentifier: 
+  posXType: 1
+  negZType: 2
+  negXType: 2
+  posZType: 0
+  tileShape: 1
+  tilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
+    type: 3}
+  tilePrefabWithDoor: {fileID: 0}
+  numRotations: 3
+  Sockets: 01000000020000000200000000000000
+  Prototypes:
+  - Sockets: 01000000020000000200000000000000
+    Rotation: 0
+    TilePrefabShape: 1
+    TilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 0}
+  - Sockets: 00000000010000000200000002000000
+    Rotation: 90
+    TilePrefabShape: 1
+    TilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 0}
+  - Sockets: 02000000000000000100000002000000
+    Rotation: 180
+    TilePrefabShape: 1
+    TilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 0}
+  - Sockets: 02000000020000000000000001000000
+    Rotation: 270
+    TilePrefabShape: 1
+    TilePrefab: {fileID: 5946130248057405005, guid: 0d2967f038d26734e8e8eddee5132bd2,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 0}

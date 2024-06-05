@@ -1,0 +1,13 @@
+newmtl Bronze_Urn
+Ns 49.019608
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.630000 0.630000 0.630000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Bronze_Urn_diffuse.png
+map_Bump Bronze_Urn_normal.png
+map_Ka Bronze_Urn_diffuse.png
+map_Ks Bronze_Urn_spec.png

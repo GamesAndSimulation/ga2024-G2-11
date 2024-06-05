@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,21 +10,32 @@ public class BoardController : MonoBehaviour
 {
     
     public LayerMask groundLayer;
+    public GameObject DustParticlesPrefab;
+    public AudioClip sailingSoundl;
+    private bool playingSailingSound;
+    public Transform Sail;
     public float BoardHeight = 2f;
     public float HoverForce;
     public float ForwardForce;
     public float BackwardForce;
     public float TurnForce;
+    public float dustSpawnVelocity;
     
     private GameObject[] _topSpheres;
     private GameObject[] _bottomSpheres;
     private Rigidbody _rb;
     private InputManager _inputManager;
     
+    private float spawnDustTimer;
+    [SerializeField] private float dustSpawnRate = 0.5f;
+    [SerializeField] private Transform dustSpawnPoint;
+    
+    
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        playingSailingSound = false;
         
         _rb = GetComponent<Rigidbody>();
         _inputManager = InputManager.Instance;
@@ -37,6 +51,43 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < sphereParent.transform.childCount; i++)
         {
             _bottomSpheres[i] = sphereParent.transform.GetChild(i).gameObject;
+        }
+        spawnDustTimer = dustSpawnRate;
+    }
+
+    private void Update()
+    {
+        if (_inputManager.DrivingForward() && _rb.velocity.magnitude > dustSpawnVelocity)
+        {
+            if (!playingSailingSound)
+            {
+                AudioManager.Instance.PlaySoundLooping(sailingSoundl);
+                playingSailingSound = true;
+            }
+                
+            spawnDustTimer -= Time.deltaTime;
+            if (spawnDustTimer <= 0)
+            {
+                var particlesObj = Instantiate(DustParticlesPrefab, dustSpawnPoint.position , Quaternion.identity);
+                particlesObj.GetComponent<ParticleSystem>().Play();
+                Destroy(particlesObj, 5f);
+                spawnDustTimer = dustSpawnRate;
+            }
+        }
+        else if(playingSailingSound)
+        {
+            AudioManager.Instance.FadeOutAllLoopingSounds(1f);
+            playingSailingSound = false;
+        }
+        
+        if(Input.GetKeyDown(KeyCode.E)) 
+        {
+            GameManager.Instance.SetDrivingMode(false);
+            GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>().Priority = 1;
+            var player = GameObject.FindWithTag("Player");
+            player.transform.position = transform.position + new Vector3(0, player.transform.localScale.y * 4f, 0);
+            GetComponentInChildren<CinemachineFreeLook>().Priority = 0;
+            this.enabled = false;
         }
     }
 
@@ -61,11 +112,13 @@ public class BoardController : MonoBehaviour
         if (_inputManager.DrivingLeft())
         {
             _rb.AddTorque(TurnForce * -Vector3.up);
+            Sail.DOLocalRotate(new Vector3(0, -30f, 0), 1.6f).SetEase(Ease.OutQuad);
         }
 
         if (_inputManager.DrivingRight())
         {
             _rb.AddTorque(TurnForce * Vector3.up);
+            Sail.DOLocalRotate(new Vector3(0, 30f, 0), 1.6f).SetEase(Ease.OutQuad);
         }
     }
 
@@ -86,7 +139,7 @@ public class BoardController : MonoBehaviour
                 {
                     _rb.AddForceAtPosition(proportionalForce * Vector3.up, sphere.transform.position);
                 }
-                else
+                else if(distance < 0)
                 {
                     _rb.AddForceAtPosition(proportionalForce * Vector3.down, sphere.transform.position);
                 }
