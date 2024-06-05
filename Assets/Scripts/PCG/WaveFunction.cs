@@ -396,6 +396,7 @@ public class WaveFunction : MonoBehaviour
             player.transform.parent = transform;
             player.transform.position = gridComponents.Find(c => c.gridCoordinates == spawnPoint).transform.position + Vector3.up * 4;
             player.transform.parent = null;
+            player.GetComponent<Rigidbody>().isKinematic = false;
             //EnableTurrets();
             //Instantiate(Resources.Load("Prefabs/Board/CornerSphere"), worldSpawnPoint, Quaternion.identity, transform);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class SigilPuzzle: MonoBehaviour
 {
@@ -185,6 +186,8 @@ public class SigilPuzzle: MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         transform.DOMoveY(-10, 3f);
         yield return new WaitForSeconds(0.8f);
+        if(GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().numPuzzlesSolved + 1 % 2 == 0)
+            SceneManager.LoadScene("TresureRoom");
         GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().AddPuzzleSolved();
         if(GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().numPuzzlesSolved % 2 != 0)
             _waveFunction.RegenerateWaveFunction();

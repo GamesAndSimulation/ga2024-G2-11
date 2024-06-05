@@ -22,6 +22,8 @@ TagManager:
   - CaveEntrance
   - PuzzleManager
   - Tip
+  - TipAmmo
+  - PlayerPortal
   layers:
   - Default
   - TransparentFX

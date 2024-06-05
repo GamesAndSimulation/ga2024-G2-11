@@ -20,6 +20,11 @@ public class Portal : MonoBehaviour
             other.transform.parent.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent
                 .Find("PuzzleCamera").position;
         }
+
+        if (tag == "PlayerPortal")
+        {
+            
+        }
     }
     
     public void SetLinkedPortal(Transform portal)

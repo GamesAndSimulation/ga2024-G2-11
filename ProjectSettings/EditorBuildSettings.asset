@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Cavern.unity
     guid: c717e520e1e4222dd890366d27fe1356
+  - enabled: 1
+    path: Assets/Scenes/TresureRoom.unity
+    guid: 42963339521442a4ebd77659b5542b32
   m_configObjects: {}

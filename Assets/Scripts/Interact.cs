@@ -14,6 +14,7 @@ public class Interact : MonoBehaviour
 {
     
     [SerializeField] private GameObject PuzzleUI;
+    [SerializeField] private GameObject PuzzleTutorial;
     [SerializeField] private GameObject interactIcon;
     [SerializeField] private AudioClip DoorEnterSound;
     
@@ -176,6 +177,23 @@ public class Interact : MonoBehaviour
                 img.DOFade(1, 0.5f);
             else
                 img.DOFade(0, 0.5f);
+        }
+        PuzzleTutorial.GetComponentInChildren<RawImage>().DOFade(fadeIn ? 0.5f : 0, 0.5f);
+        
+        foreach(Image img in PuzzleTutorial.GetComponentsInChildren<Image>())
+        {
+            if (fadeIn)
+                img.DOFade(1, 0.5f);
+            else
+                img.DOFade(0, 0.5f);
+        }
+        
+        foreach(TextMeshProUGUI text in PuzzleTutorial.GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (fadeIn)
+                text.DOFade(1, 0.5f);
+            else
+                text.DOFade(0, 0.5f);
         }
     }
     

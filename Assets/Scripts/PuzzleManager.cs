@@ -89,7 +89,12 @@ public class PuzzleManager : MonoBehaviour
         //GameManager.Instance.inPuzzleMode = false;
         //GameManager.Instance.gamePaused = false;
         ////Transform playerTransform = (player.transform.parent == null) ? player.transform : player.transform.parent;
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         player.position = treasurePlayerSpawnPoint.position;
+        rb.isKinematic = false;
+        SceneManager.LoadScene("TresureRoom");
+        //GameObject.FindWithTag("PlayerPortal").GetComponent<BoxCollider>().enabled = true;
         Debug.LogError("HERE 4");
         //Transform lootUrn = TreasureRoom.transform.Find("LootUrn");
         //Vector3 lookDirection = (lootUrn.position - player.transform.position).normalized;

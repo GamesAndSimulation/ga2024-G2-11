@@ -9,7 +9,7 @@ public class PortalEditor : Editor
     {
         Portal myComponent = (Portal)target;
 
-        myComponent.isEntrance = EditorGUILayout.Toggle("Enable Field", myComponent.isEntrance);
+        myComponent.isEntrance = EditorGUILayout.Toggle("Is Entrance", myComponent.isEntrance);
 
         using (new EditorGUI.DisabledScope(!myComponent.isEntrance))
         {

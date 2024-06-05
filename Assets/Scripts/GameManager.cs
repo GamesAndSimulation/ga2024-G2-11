@@ -118,11 +118,13 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            Rigidbody rb = playerScript.gameObject.GetComponent<Rigidbody>();
             playerScript.gameObject.transform.position = outpost1SpawnPoint.position;
         }
         
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            Rigidbody rb = playerScript.gameObject.GetComponent<Rigidbody>();
             playerScript.gameObject.transform.position = outpost2SpawnPoint.position;
         }
             

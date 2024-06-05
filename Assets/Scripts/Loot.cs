@@ -52,12 +52,12 @@ public class Loot : MonoBehaviour
                 Debug.Log("Collected essence blood");
                 AudioManager.Instance.PlaySound(essenceBloodSound);
                 PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
-                FindObjectOfType<PuzzleManager>().ExitCavern();
+                FindObjectOfType<TresureRoom>().ExitCavern();
                 break;
         }
         StartCoroutine(DoFadeOut());    
     }
-     
+    
     private IEnumerator DoFadeOut()
     {
         _meshRenderer.material.DOFade(0, 0.5f);
