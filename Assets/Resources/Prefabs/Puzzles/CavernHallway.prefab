@@ -1,5 +1,73 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1325157252265187331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2578602651898645395}
+  - component: {fileID: 2745447114318103002}
+  - component: {fileID: 6153119860512218309}
+  m_Layer: 0
+  m_Name: AmmoTip (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2578602651898645395
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325157252265187331}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.70085925, z: -0, w: 0.7132996}
+  m_LocalPosition: {x: -8.65, y: 5.65, z: -6.74}
+  m_LocalScale: {x: 0.061188295, y: 0.0611883, z: 0.061188295}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6759053393856614081}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2745447114318103002
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325157252265187331}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 30, y: 500, z: 220}
+  m_Center: {x: -0.00048828125, y: 0, z: -0.0006103518}
+--- !u!114 &6153119860512218309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325157252265187331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c24cd8e9623f543aed617eb43a3715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameTipSound: {fileID: 8300000, guid: 084c2537f76fa0c4f8895cdc0952cefa, type: 3}
+  gameTipTag: TipPipe
 --- !u!1 &1790352960629219508
 GameObject:
   m_ObjectHideFlags: 0
@@ -48,7 +116,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -121,6 +189,7 @@ Transform:
   - {fileID: 2326784177348786987}
   - {fileID: 8783960370135145331}
   - {fileID: 2594215733684600269}
+  - {fileID: 2578602651898645395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 85.444, z: 0}
 --- !u!114 &2981864771842622244

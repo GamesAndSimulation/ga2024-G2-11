@@ -24,6 +24,7 @@ TagManager:
   - Tip
   - TipAmmo
   - PlayerPortal
+  - TipPipe
   layers:
   - Default
   - TransparentFX
