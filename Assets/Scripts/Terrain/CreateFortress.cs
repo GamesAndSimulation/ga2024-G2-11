@@ -43,6 +43,7 @@ public class CreateOutpost : MonoBehaviour
     // Tower
     public GameObject tower;
     public GameObject PuzzleHallway;
+    public GameObject navMeshSurfacePrefab;
     public float puzzleRotX;
     public float puzzleRotY;
     public float puzzleRotZ;
@@ -269,6 +270,17 @@ public class CreateOutpost : MonoBehaviour
 
         }
     }
+    
+    private void CreateNavMeshSurface()
+    {
+        Vector3 navMeshSurfacePosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
+        Vector3 navMeshSurfaceScale = new Vector3(xWidth + 10, WallsHeight, zLength + 10); // Extending a little outside the outpost
+
+        GameObject navMeshSurfaceObject = Instantiate(navMeshSurfacePrefab, navMeshSurfacePosition, Quaternion.identity, specifiedObject.transform);
+        navMeshSurfaceObject.transform.localScale = navMeshSurfaceScale;
+
+        navMeshSurface = navMeshSurfaceObject.GetComponent<NavMeshSurface>();
+    }
 
     private void GenerateEnemies()
     {
@@ -306,7 +318,7 @@ public class CreateOutpost : MonoBehaviour
             var rotation = new Vector3(0, Random.Range(0, 360), 0);
             var position = new Vector3(instancePos.x, yPos, instancePos.z);
 
-            // Create the instance and set its parent as the specified object
+            //  the instance and set its parent as the specified object
             var myInstance = Instantiate(enemy, position, Quaternion.Euler(rotation), specifiedObject.transform);
             myInstance.transform.SetParent(specifiedObject.transform);
 
