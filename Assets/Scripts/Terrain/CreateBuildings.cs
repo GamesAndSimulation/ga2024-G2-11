@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
 using Unity.AI.Navigation;
 
 public class CreateBuilding : MonoBehaviour
 {
-
     private int rotationOffset = 90;
     
     // ----------- Constants -----------
@@ -36,6 +34,8 @@ public class CreateBuilding : MonoBehaviour
     public GameObject simpleRoof;
     public GameObject sideRoof;
     public GameObject cornerRoof;
+    // Hallway
+    public GameObject hallway; // Add this line to define the hallway prefab
 
     // ----------- Measures -----------
     public int xWidth;
@@ -52,7 +52,6 @@ public class CreateBuilding : MonoBehaviour
 
     private GameObject[] assets;
     
-    
     void Start()
     {
         // If no initial position specified, use zero, otherwise, use the object position
@@ -67,7 +66,6 @@ public class CreateBuilding : MonoBehaviour
 
     private void Build()
     {
-        
         // ----------- Position Corners -----------
         for (var x = 0; x < 2; x += 1)
         {
@@ -82,7 +80,7 @@ public class CreateBuilding : MonoBehaviour
                     rotation = new Vector3(0, 90 + 180, 0);
             
                 // Create the object instance and set its parent to the specified one
-                GameObject myInstance = Instantiate(corner, position, Quaternion.Euler(rotation),specifiedObject.transform);
+                GameObject myInstance = Instantiate(corner, position, Quaternion.Euler(rotation), specifiedObject.transform);
                 myInstance.transform.SetParent(specifiedObject.transform);
             }
         }
@@ -93,7 +91,6 @@ public class CreateBuilding : MonoBehaviour
         
         for (var x = WallLength; x < xWidth; x += WallLength)
         {
-            
             // ----------- Front facade -----------
             GameObject instance = GetFortressComponent(true, 0);
             Vector3 position = new Vector3(specifiedObjectPosition.x + x, specifiedObjectPosition.y, specifiedObjectPosition.z - 0.689f);
@@ -118,24 +115,6 @@ public class CreateBuilding : MonoBehaviour
                 myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
                 myInstance.transform.SetParent(specifiedObject.transform);
             }
-            
-            // Door
-            /*if(selectedEntrance == EntrancePositionSelector.Front && x == xWidth/2)
-            {
-                // Position a random wall besides the door
-                instance = GetFortressComponent(true, 0);
-                position = new Vector3(specifiedObjectPosition.x + x - WallLength, specifiedObjectPosition.y, specifiedObjectPosition.z - 0.689f);
-
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-                
-                // Position the door
-                instance = GetFortressComponent(false, Door);
-                position = new Vector3(specifiedObjectPosition.x + x - 0.069458f, specifiedObjectPosition.y - 0.2584741f, specifiedObjectPosition.z  - 0.689f);
-                
-                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation),specifiedObject.transform);
-                myInstance.transform.SetParent(specifiedObject.transform);
-            }*/
             
             // ----------- Back facade -----------
             instance = GetFortressComponent(true, 0);
@@ -228,11 +207,13 @@ public class CreateBuilding : MonoBehaviour
                 myInstance.transform.SetParent(specifiedObject.transform);
             }
         }
+
+        // ----------- Place Hallway -----------
+        PlaceHallway();
     }
 
     private GameObject GetFortressComponent(bool isRandom, int assetNum)
     {
-
         // Set idx to the provided asset number for cases where we don't need to generate a random one
         int idx = assetNum;
         // Array of possible structures that can be generated
@@ -296,13 +277,10 @@ public class CreateBuilding : MonoBehaviour
         }
             
         */
-        
-        
     }
 
     private void GenerateEnemies()
     {
-        
         /*float securityOffset = 8;       // Distance between the obstacles and the borders of the fortress
         float yPos = 0;                 // Initialization of the yPosition
         Vector3 instancePos = default;  // Initialization of a dummy position vector
@@ -342,8 +320,41 @@ public class CreateBuilding : MonoBehaviour
             myInstance.transform.SetParent(specifiedObject.transform);
 
         }*/
-        
     }
     
-}
+    private void PlaceHallway()
+    {
+        // Choose a wall to place the hallway next to
+        int chosenWall = Random.Range(0, 4);
 
+        Vector3 hallwayPosition;
+        Vector3 hallwayRotation;
+
+        switch (chosenWall)
+        {
+            case 0: // Front
+                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z - WallLength);
+                hallwayRotation = new Vector3(0, 90, 0);
+                break;
+            case 1: // Back
+                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength + WallLength);
+                hallwayRotation = new Vector3(0, 90, 0);
+                break;
+            case 2: // Left
+                hallwayPosition = new Vector3(specifiedObjectPosition.x - WallLength, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
+                hallwayRotation = new Vector3(0, 0, 0);
+                break;
+            case 3: // Right
+                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth + WallLength, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
+                hallwayRotation = new Vector3(0, 0, 0);
+                break;
+            default:
+                hallwayPosition = specifiedObjectPosition;
+                hallwayRotation = Vector3.zero;
+                break;
+        }
+
+        GameObject hallwayInstance = Instantiate(hallway, hallwayPosition, Quaternion.Euler(hallwayRotation), specifiedObject.transform);
+        hallwayInstance.transform.SetParent(specifiedObject.transform);
+    }
+}

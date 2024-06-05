@@ -30,7 +30,7 @@ public class GameManagerPipes : MonoBehaviour
     {
         if (correctPipes == criticalPathPipes)
         {
-            //Debug.Log("You won the game");
+            Debug.Log("You won the game");
             Gear.transform.Rotate(0, 0, 5,  Space.Self);
             Debug.Log(Gear.transform.eulerAngles);
             
@@ -54,6 +54,7 @@ public class GameManagerPipes : MonoBehaviour
 
     public bool IsGameWon()
     {
+        //Debug.Log("Correct pipes: " + correctPipes + " Critical path pipes: " + criticalPathPipes);
         return correctPipes == criticalPathPipes;
     }
 }

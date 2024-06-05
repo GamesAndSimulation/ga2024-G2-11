@@ -21,15 +21,18 @@ public class PipeScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         gameManagerPipeGameObject = GameObject.Find("GameManagerPipes").GetComponent<GameManagerPipes>();
         _initialPos = transform.localPosition;
             
         int rand = Random.Range(0, _rotations.Length);
         _currRotationIndex = rand;
-        
+
+        Debug.Log($"PIPE {gameObject.name} initial random rotation: {_rotations[rand]}");
+
         // Sets a random rotation
         transform.eulerAngles = new Vector3(0, 0, _rotations[rand]);
+
+        Debug.Log($"PIPE {gameObject.name} rotation after applying random rotation: {transform.eulerAngles.z}");
 
         if (isPartOfSolution)
         {
@@ -60,12 +63,10 @@ public class PipeScript : MonoBehaviour
                 Mathf.PerlinNoise(speed * Time.time, 2),
                 Mathf.PerlinNoise(speed * Time.time, 3));
         }
-            
     }
 
     void OnMouseDown()
     {
-
         // Round incrementation of the current index
         _currRotationIndex = (_currRotationIndex + 1) % _rotations.Length;
 
@@ -74,7 +75,6 @@ public class PipeScript : MonoBehaviour
 
         if (isPartOfSolution)
         {
-
             for (int i = 0; i < correctRotation.Length; i++)
             {
                 // If it was previously placed correctly, and now it's not, remove the flag
@@ -85,24 +85,18 @@ public class PipeScript : MonoBehaviour
                 }
 
                 Debug.Log(i);
-                Debug.Log("euler" + transform.eulerAngles.z);
-                Debug.Log("correct rotation" + correctRotation[i]);
+                Debug.Log("PIPE euler" + transform.eulerAngles.z);
+                Debug.Log("PIPE correct rotation" + correctRotation[i]);
                 
                 // If it is placed correctly, note that
                 // Compares the current rotation with the available correct ones
                 if (Mathf.Approximately(_rotations[_currRotationIndex], correctRotation[i]))
                 {
-                    
                     _isPlacedCorrectly = true;
                     gameManagerPipeGameObject.AddCorrectPipe();
                     break;
                 }
             }
         }
-
-
     }
 }
-
-
-
