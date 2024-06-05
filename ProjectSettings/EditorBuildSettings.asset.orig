@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+<<<<<<< HEAD
+    path: Assets/Scenes/Cavern.unity
+    guid: c717e520e1e4222dd890366d27fe1356
+=======
+    path: Assets/Scenes/Tutorial.unity
+    guid: a938b0efe32b14a41bceeb371a6cc80f
+>>>>>>> Tutorial
+  m_configObjects: {}

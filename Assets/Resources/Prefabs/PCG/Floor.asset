@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0517e76056fa364e819f6a07b7958c8, type: 3}
+  m_Name: Floor
+  m_EditorClassIdentifier: 
+  posXType: 2
+  negZType: 2
+  negXType: 2
+  posZType: 2
+  tileShape: 3
+  tilePrefab: {fileID: 7216469231479098245, guid: e30dec79842b724428585734ee401817,
+    type: 3}
+  tilePrefabWithDoor: {fileID: 0}
+  numRotations: 0
+  Sockets: 02000000020000000200000002000000
+  Prototypes:
+  - Sockets: 02000000020000000200000002000000
+    Rotation: 0
+    TilePrefabShape: 0
+    TilePrefab: {fileID: 7216469231479098245, guid: e30dec79842b724428585734ee401817,
+      type: 3}
+    TilePrefabWithDoor: {fileID: 0}

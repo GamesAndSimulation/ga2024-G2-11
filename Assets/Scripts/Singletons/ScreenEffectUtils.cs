@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class ScreenEffectUtils : MonoBehaviour
 {
@@ -18,6 +21,7 @@ public class ScreenEffectUtils : MonoBehaviour
     }
     
     private static CinemachineVirtualCamera _virtualCamera;
+    private static Volume _postProcessingVolume;
     
     private void Awake()
     {
@@ -30,6 +34,25 @@ public class ScreenEffectUtils : MonoBehaviour
             _instance = this;
         }
         _virtualCamera = GameObject.FindWithTag("MainVirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        _postProcessingVolume = GetComponentInChildren<Volume>();
+        DamageEffect();
+    }
+
+    private void OnEnable()
+    {
+        _postProcessingVolume.weight = 0f;
+    }
+
+    public void DamageEffect()
+    {
+        StartCoroutine(DamageEffectRoutine());
+    }
+    
+    private IEnumerator DamageEffectRoutine()
+    {
+        DOTween.To(() => _postProcessingVolume.weight, x => _postProcessingVolume.weight = x, 1f, 0.2f);
+        yield return new WaitForSeconds(0.2f);
+        DOTween.To(() => _postProcessingVolume.weight, x => _postProcessingVolume.weight = x, 0f, 0.2f);
     }
     
     public void ShakeScreen(float shakeDuration, float shakeAmplitude)

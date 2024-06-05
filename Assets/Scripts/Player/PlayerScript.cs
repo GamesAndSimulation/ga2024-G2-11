@@ -1,34 +1,32 @@
+using System;
 using System.Collections;
 using Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
     [Header("References")]
     public PlayerCam playerCam;
+    public Transform orientation;
+    public Camera cam;
+    private InputManager _inputManager;
+    public Rigidbody rb;
+    
+    
 
- 
     [Header("Movement")]
-    private float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
+    private float moveSpeed;
     private float initialWalkSpeed;
-
     public float maxYSpeed;
-    
     public float groundDrag;
-
-    public Transform orientation;
-    private InputManager _inputManager;
+    public bool canMove = true;
 
     float horizontalInput;
     float verticalInput;
-
     Vector3 moveDirection;
-
-    Rigidbody rb;
-
-    public Camera cam;
 
     public MovementState state;
     public enum MovementState
@@ -40,10 +38,15 @@ public class PlayerScript : MonoBehaviour
         air
     }
 
+    [Header("Crouching")]
+    public float crouchSpeed;
+    public float crouchHeight;
+    public float standingHeight;
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    public bool grounded { get; private set;}
+    public bool grounded { get; private set; }
     public Transform groundCheck;
     public float groundDistance = 0.4f;
 
@@ -51,14 +54,25 @@ public class PlayerScript : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
+    
+    [Header("Sound")]
+    public AudioClip[] footstepSounds;
+    public float footstepSoundCooldownTime = 0.43f;
+    private float footstepSoundCooldownTimer;
 
-    [Header("Quake camera rolling")]
+    [Header("Quake Camera Rolling")]
     public float rollSpeed;
     public float maxRoll;
     public float tiltAmount = 5.0f;
-    public float currentTilt {get; private set;}
-    public float currentRoll {get; private set;}
+    public float currentTilt { get; private set; }
+    public float currentRoll { get; private set; }
     public bool otherside = false;
+
+    [Header("Miscellaneous")]
+    
+    // Used to align the ray used to check if the player is in the line of sight of an enemy
+    // to the middle of the enemy's body
+    public float yOffsetRaycast = 30f;
 
  
     void Start()
@@ -67,6 +81,7 @@ public class PlayerScript : MonoBehaviour
         _inputManager = InputManager.Instance;
         rb.freezeRotation = true;
         initialWalkSpeed = walkSpeed;
+        standingHeight = transform.localScale.y;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -78,9 +93,9 @@ public class PlayerScript : MonoBehaviour
         
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
         Debug.DrawRay(transform.position, Vector3.down * (playerHeight / 2 + 0.1f), Color.red);
-
+        
         HandleInputs();
-        CameraTilting();
+        CameraTilting(); 
         StateHandler();
         SpeedControl();
         
@@ -129,9 +144,17 @@ public class PlayerScript : MonoBehaviour
     
     void HandleInputs(){
         
+        if(GameManager.Instance.gamePaused || GameManager.Instance.gameLoading || !canMove) return;
         Vector2 movement = _inputManager.GetPlayerMovement();
         horizontalInput = movement.x;
         verticalInput = movement.y;
+        
+        footstepSoundCooldownTimer -= Time.deltaTime;
+        
+        if(grounded && movement != Vector2.zero && footstepSoundCooldownTimer <= 0){
+            AudioManager.Instance.PlaySound(footstepSounds[UnityEngine.Random.Range(0, footstepSounds.Length)]);
+            footstepSoundCooldownTimer = footstepSoundCooldownTime;
+        }
 
         // TODO change this to new input system
         if(Input.GetKeyUp(KeyCode.Space)){
@@ -152,6 +175,21 @@ public class PlayerScript : MonoBehaviour
                 Jump();
             }
         }
+
+        if (_inputManager.PlayerJustCrouched())
+        {
+            state = MovementState.crouching;
+            transform.localScale = new Vector3(transform.localScale.x, crouchHeight, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            walkSpeed = crouchSpeed;
+        }
+        
+        else if(_inputManager.PlayerCrouchReleased()) 
+        {
+            state = MovementState.walking;
+            transform.localScale = new Vector3(transform.localScale.x, standingHeight, transform.localScale.z);
+            walkSpeed = initialWalkSpeed;
+        }
         
     }
 
@@ -161,6 +199,9 @@ public class PlayerScript : MonoBehaviour
     private bool keepMomentum;
     private void StateHandler()
     {
+        // Mode - Crouching
+        
+        
         // Mode - Sprinting
         if (grounded && Input.GetKey(KeyCode.LeftShift))
         {
@@ -277,4 +318,30 @@ public class PlayerScript : MonoBehaviour
         rb.AddForce(transform.up * force , ForceMode.Impulse);
     }
 
+    
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log($"Sight trigger: {other.tag}");
+    //    if (other.CompareTag("EnemySight"))
+    //    {
+    //        Vector3 enemyPosition = other.transform.parent.Find("Body").position + new Vector3(0f, yOffsetRaycast, 0f);
+    //    
+    //        Vector3 directionToEnemy = enemyPosition - transform.position;
+    //        
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(transform.position,  directionToEnemy, out hit, 300f))
+    //        {
+    //            Debug.Log($"raycast tag {hit.transform.tag}");
+    //            if (hit.transform.CompareTag("Enemy"))
+    //            {
+    //                hit.transform.GetComponent<Enemy>().currentEnemyState = Enemy.EnemyState.Chase;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("No hit");
+    //        }
+    //    }
+    //    
+    //}
 }
