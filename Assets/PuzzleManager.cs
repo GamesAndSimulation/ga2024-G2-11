@@ -63,7 +63,7 @@ public class PuzzleManager : MonoBehaviour
         //TreasureRoom.SetActive(true);
         //Destroy(GameObject.FindWithTag("WaveFunction"));
         //GameManager.Instance.gameLoading = false;
-        GameManager.Instance.inPuzzleMode = false;
+        //GameManager.Instance.inPuzzleMode = false;
         //GameManager.Instance.gamePaused = false;
         ////Transform playerTransform = (player.transform.parent == null) ? player.transform : player.transform.parent;
         player.position = treasurePlayerSpawnPoint.position;

@@ -229,15 +229,20 @@ public class SigilPuzzle: MonoBehaviour
         // we now know that every slot is free
         foreach (Transform child in _selectedObject.transform.parent)
         {
-            if(someInside && _selectedWasOutside)
-                _placedPiecesNum++;
-            if(someOutside && !_selectedWasOutside)
-                _placedPiecesNum--;
+           // if(someInside && _selectedWasOutside)
+           //     _placedPiecesNum++;
+           // if(someOutside && !_selectedWasOutside)
+           //     _placedPiecesNum--;
             
             var position = positions[child.GetSiblingIndex()].position;
             child.position = new Vector3(position.x, position.y, startingPosZ);
             _slotOccupied[positions[child.GetSiblingIndex()]] = true;
         }
+
+        if (someInside && _selectedWasOutside)
+            _placedPiecesNum += 4;
+        if(someOutside && !_selectedWasOutside)
+            _placedPiecesNum -= 4;
         return true;
     }
     
