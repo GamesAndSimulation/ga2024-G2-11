@@ -54,19 +54,24 @@ public class Loot : MonoBehaviour
                 Debug.Log("Collected essence blood");
                 AudioManager.Instance.PlaySound(essenceBloodSound);
                 PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
-                StartCoroutine(EssenceBlooRoutine());
+                StartCoroutine(EssenceBloodRoutine());
                 break;
         }
-        
-        _meshRenderer.material = Resources.Load<Material>("BronzeTransperant");
-        _meshRenderer.material.DOFade(0, 0.5f).OnComplete(() => Destroy(gameObject));
+        StartCoroutine(DoFadeOut());    
+    }
+     
+    private IEnumerator DoFadeOut()
+    {
+        _meshRenderer.material.DOFade(0, 0.5f);
+        yield return new WaitForSeconds(8f);
+        Destroy(gameObject);
     }
     
-    private IEnumerator EssenceBlooRoutine()
+    private IEnumerator EssenceBloodRoutine()
     {
         yield return new WaitForSeconds(3f);
         AudioManager.Instance.PlaySound(flyWoosh);
-        EssenceThing.transform.DOMoveX(-200f, 5f).OnComplete(() => SceneManager.LoadScene("World"));
+        EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() => SceneManager.LoadScene("World"));
     }
     
 }

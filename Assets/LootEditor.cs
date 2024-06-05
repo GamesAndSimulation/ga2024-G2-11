@@ -33,11 +33,11 @@ public class LootEditor : Editor
         EditorGUILayout.PropertyField(ammoSound);
         EditorGUILayout.PropertyField(coinsSound);
         EditorGUILayout.PropertyField(essenceBloodSound);
-        EditorGUILayout.PropertyField(flyWoosh);
 
         if (lootType.enumValueIndex == (int)Loot.LootType.EssenceBlood)
         {
             EditorGUILayout.PropertyField(essenceThing);
+            EditorGUILayout.PropertyField(flyWoosh);
         }
 
         serializedObject.ApplyModifiedProperties();

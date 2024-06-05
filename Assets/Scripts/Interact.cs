@@ -62,6 +62,8 @@ public class Interact : MonoBehaviour
                     }
                     break;
                 default:
+                    if(Input.GetKeyDown(KeyCode.X))
+                        Debug.LogWarning($"Hit tag: {hit.transform.gameObject.tag} with name {hit.transform.gameObject.name}");
                     interactIcon.SetActive(false);
                     break;
             }
