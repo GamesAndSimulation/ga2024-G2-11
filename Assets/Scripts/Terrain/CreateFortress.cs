@@ -21,6 +21,8 @@ public class CreateOutpost : MonoBehaviour
     // Tower
     private const int Tower = 6;
     private const int DestructibleWall = 7;
+    
+    private Vector3 puzzlePosition;
 
     // ----------- Constant Measures -----------
     private const int SimpleWallLength = 4;
@@ -40,6 +42,10 @@ public class CreateOutpost : MonoBehaviour
     public GameObject strongEnd;
     // Tower
     public GameObject tower;
+    public GameObject PuzzleHallway;
+    public float puzzleRotX;
+    public float puzzleRotY;
+    public float puzzleRotZ;
 
     // ----------- Measures -----------
     public int xWidth;
@@ -132,15 +138,36 @@ public class CreateOutpost : MonoBehaviour
             }
         }
 
+        
         // ----------- Lateral facade (z axis) -----------
         for (var z = StrongWallLength; z < zLength; z += StrongWallLength)
         {
-            // ----------- First facade -----------
-            GameObject instance = GetFortressComponent(true, 0);
-            Vector3 position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
-            Vector3 rotation = new Vector3(rotationOffset, 0, 0);
 
+            GameObject instance;
             GameObject myInstance;
+            Vector3 position;
+            Vector3 rotation;
+            
+            
+            if (z == StrongWallLength || z == StrongWallLength * 2 || z == StrongWallLength * 3) 
+            {
+                if(z == StrongWallLength)
+                    puzzlePosition = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y, specifiedObjectPosition.z + z);
+                //Spawn breakable wall
+                instance = GetFortressComponent(false, DestructibleWall);
+                position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
+                rotation = new Vector3(rotationOffset, 0, 0);
+                
+                myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
+                myInstance.transform.SetParent(specifiedObject.transform);
+                
+                
+                continue;
+            }
+            // ----------- First facade -----------
+            instance = GetFortressComponent(true, 0);
+            position = new Vector3(specifiedObjectPosition.x, specifiedObjectPosition.y + heightOffset, specifiedObjectPosition.z + z);
+            rotation = new Vector3(rotationOffset, 0, 0);
 
             // Make sure the position is not supposed to be the entrance
             if (!(selectedEntrance == EntrancePositionSelector.Left &&
@@ -163,6 +190,8 @@ public class CreateOutpost : MonoBehaviour
                 myInstance.transform.SetParent(specifiedObject.transform);
             }
         }
+        
+        Instantiate(PuzzleHallway, puzzlePosition, Quaternion.Euler(puzzleRotX, puzzleRotY, puzzleRotZ), specifiedObject.transform);
 
         // ----------- Place Hallway -----------
         PlaceHallway();
