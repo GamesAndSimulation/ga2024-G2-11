@@ -47,6 +47,8 @@ public class AudioManager : MonoBehaviour
     
     public void PlaySound(AudioClip clipToPlay, bool randomPitch = false, float volume = 0.4f, bool timeIndependent = false)
     {
+        if(clipToPlay == null)
+            return;
         audioSources.Add(this.AddComponent<AudioSource>());
         var audio = audioSources[audioSources.Count - 1];
         if (timeIndependent)
@@ -63,6 +65,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundLooping(AudioClip clipToPlay, float volume = 0.4f, bool timeIndependent = false)
     {
+        if(clipToPlay == null)
+            return;
         audioSources.Add(this.AddComponent<AudioSource>());
         var audio = audioSources[audioSources.Count - 1];
         if (timeIndependent)

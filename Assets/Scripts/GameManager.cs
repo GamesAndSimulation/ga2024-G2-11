@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject FPSCounter;
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private GameObject LevelStartFade;
+    [SerializeField] private Transform outpost1SpawnPoint;
+    [SerializeField] private Transform outpost2SpawnPoint;
     private float _startTimeScale;
     private float _startFixedDeltaTime;
 
@@ -112,6 +114,16 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
         {
             ClearPlayerPrefs();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerScript.gameObject.transform.position = outpost1SpawnPoint.position;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerScript.gameObject.transform.position = outpost2SpawnPoint.position;
         }
             
     }

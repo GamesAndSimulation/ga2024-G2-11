@@ -354,7 +354,5 @@ public class CreateBuilding : MonoBehaviour
                 break;
         }
 
-        GameObject hallwayInstance = Instantiate(hallway, hallwayPosition, Quaternion.Euler(hallwayRotation), specifiedObject.transform);
-        hallwayInstance.transform.SetParent(specifiedObject.transform);
     }
 }

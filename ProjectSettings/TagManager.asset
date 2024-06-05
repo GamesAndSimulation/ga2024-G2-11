@@ -21,6 +21,7 @@ TagManager:
   - Loot
   - CaveEntrance
   - PuzzleManager
+  - Tip
   layers:
   - Default
   - TransparentFX

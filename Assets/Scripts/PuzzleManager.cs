@@ -70,6 +70,7 @@ public class PuzzleManager : MonoBehaviour
         
         if (numPuzzlesSolved % 2 == 0)
         {
+            Debug.LogError("HERE 1");
             TeleportToTreasureRoom();
         }
         
@@ -78,8 +79,10 @@ public class PuzzleManager : MonoBehaviour
     private void TeleportToTreasureRoom()
     {
         //GameManager.Instance.SetFreezePlayer(true);
+        Debug.LogError("HERE 2");
         AudioManager.Instance.immuneSources.Clear();
         AudioManager.Instance.StopSoundLooping();
+        Debug.LogError("HERE 3");
         //TreasureRoom.SetActive(true);
         //Destroy(GameObject.FindWithTag("WaveFunction"));
         //GameManager.Instance.gameLoading = false;
@@ -87,12 +90,15 @@ public class PuzzleManager : MonoBehaviour
         //GameManager.Instance.gamePaused = false;
         ////Transform playerTransform = (player.transform.parent == null) ? player.transform : player.transform.parent;
         player.position = treasurePlayerSpawnPoint.position;
+        Debug.LogError("HERE 4");
         //Transform lootUrn = TreasureRoom.transform.Find("LootUrn");
         //Vector3 lookDirection = (lootUrn.position - player.transform.position).normalized;
         ////player.forward = lookDirection;
         //player.transform.LookAt(TreasureRoom.transform.Find("LootUrn").position);
         TreasureRoom.GetComponentInChildren<Light>().DOIntensity(119.8f, 3f).SetEase(Ease.InOutSine);
+        Debug.LogError("HERE 5");
         numPuzzlesSolved = 0;
+        Debug.LogError("HERE 6");
         //GameManager.Instance.SetFreezePlayer(false);
     }
     

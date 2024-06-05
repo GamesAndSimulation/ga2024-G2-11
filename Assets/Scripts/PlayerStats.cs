@@ -68,7 +68,7 @@ void Update()
     
     public void TakeDamage(float damage)
     {
-        if (godModeOn) return;
+        if (godModeOn || health <= 0) return;
         health -= damage;
         healthBar.value = health;
         ScreenEffectUtils.Instance.DamageEffect();

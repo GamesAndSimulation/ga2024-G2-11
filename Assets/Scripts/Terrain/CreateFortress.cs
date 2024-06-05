@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 public class CreateOutpost : MonoBehaviour
 {
@@ -43,10 +44,12 @@ public class CreateOutpost : MonoBehaviour
     // Tower
     public GameObject tower;
     public GameObject PuzzleHallway;
-    public GameObject navMeshSurfacePrefab;
     public float puzzleRotX;
     public float puzzleRotY;
     public float puzzleRotZ;
+
+    // NavMeshSurface
+    public GameObject navMeshSurfacePrefab;
 
     // ----------- Measures -----------
     public int xWidth;
@@ -69,11 +72,12 @@ public class CreateOutpost : MonoBehaviour
     [Range(0, 10)]
     public int numberOfObstacles = 5;
 
-    public NavMeshSurface navMeshSurface;
+    private NavMeshSurface navMeshSurface;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemy.SetActive(true);
         // If no initial position specified, use zero, otherwise, use the object position
         specifiedObjectPosition = !useSpecifiedStartingPosition ? Vector3.zero : specifiedObject.transform.position;
 
@@ -81,8 +85,9 @@ public class CreateOutpost : MonoBehaviour
 
         Build();
         RepositionBuilding();
+        CreateNavMeshSurface();
         GenerateObstacles();
-        navMeshSurface.BuildNavMesh();
+        navMeshSurface.BuildNavMesh(); // Bake the NavMeshSurface
         GenerateEnemies();
     }
 
@@ -139,17 +144,14 @@ public class CreateOutpost : MonoBehaviour
             }
         }
 
-        
         // ----------- Lateral facade (z axis) -----------
         for (var z = StrongWallLength; z < zLength; z += StrongWallLength)
         {
-
             GameObject instance;
             GameObject myInstance;
             Vector3 position;
             Vector3 rotation;
-            
-            
+
             if (z == StrongWallLength || z == StrongWallLength * 2 || z == StrongWallLength * 3) 
             {
                 if(z == StrongWallLength)
@@ -161,8 +163,7 @@ public class CreateOutpost : MonoBehaviour
                 
                 myInstance = Instantiate(instance, position, Quaternion.Euler(rotation), specifiedObject.transform);
                 myInstance.transform.SetParent(specifiedObject.transform);
-                
-                
+
                 continue;
             }
             // ----------- First facade -----------
@@ -193,9 +194,7 @@ public class CreateOutpost : MonoBehaviour
         }
         
         Instantiate(PuzzleHallway, puzzlePosition, Quaternion.Euler(puzzleRotX, puzzleRotY, puzzleRotZ), specifiedObject.transform);
-
-        // ----------- Place Hallway -----------
-        PlaceHallway();
+        
     }
 
     private GameObject GetFortressComponent(bool isRandom, int assetNum)
@@ -224,6 +223,24 @@ public class CreateOutpost : MonoBehaviour
     {
         float yOffset = 4;
         specifiedObject.transform.position += new Vector3(0, yOffset, 0);
+    }
+
+    private void CreateNavMeshSurface()
+    {
+        // Instantiate the NavMeshSurface prefab
+        GameObject navMeshSurfaceObject = Instantiate(navMeshSurfacePrefab, specifiedObject.transform);
+        
+        // Position it to cover the outpost area
+        navMeshSurfaceObject.transform.position = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
+        
+        // Scale it to cover the outpost area plus a little extra
+        navMeshSurfaceObject.transform.localScale = new Vector3(xWidth + 10, 1, zLength + 10);
+        
+        // Get the NavMeshSurface component
+        navMeshSurface = navMeshSurfaceObject.GetComponent<NavMeshSurface>();
+        
+        // Build the NavMesh
+        navMeshSurface.BuildNavMesh();
     }
 
     private void GenerateObstacles()
@@ -270,94 +287,53 @@ public class CreateOutpost : MonoBehaviour
 
         }
     }
-    
-    private void CreateNavMeshSurface()
-    {
-        Vector3 navMeshSurfacePosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
-        Vector3 navMeshSurfaceScale = new Vector3(xWidth + 10, WallsHeight, zLength + 10); // Extending a little outside the outpost
-
-        GameObject navMeshSurfaceObject = Instantiate(navMeshSurfacePrefab, navMeshSurfacePosition, Quaternion.identity, specifiedObject.transform);
-        navMeshSurfaceObject.transform.localScale = navMeshSurfaceScale;
-
-        navMeshSurface = navMeshSurfaceObject.GetComponent<NavMeshSurface>();
-    }
 
     private void GenerateEnemies()
+{
+    float securityOffset = 8;       // Distance between the obstacles and the borders of the fortress
+    float yPos = 0;                 // Initialization of the yPosition
+    Vector3 instancePos = default;  // Initialization of a dummy position vector
+
+    // While we haven't placed all the objects
+    for (int i = 0; i < numberOfObstacles; i++)
     {
-        float securityOffset = 8;       // Distance between the obstacles and the borders of the fortress
-        float yPos = 0;                 // Initialization of the yPosition
-        Vector3 instancePos = default;  // Initialization of a dummy position vector
-
-        // While we haven't placed all the objects
-        for (int i = 0; i < numberOfObstacles; i++)
+        var foundValid = false;
+        // Search for a valid position
+        while (!foundValid)
         {
-            var foundValid = false;
-            // Search for a valid position
-            while (!foundValid)
+            // Generate random x and z coordinates
+            var xPos = Random.Range(specifiedObjectPosition.x + securityOffset,
+                specifiedObjectPosition.x + xWidth - securityOffset);
+            var zPos = Random.Range(specifiedObjectPosition.z + securityOffset,
+                specifiedObjectPosition.z + zLength - securityOffset);
+
+            instancePos = new Vector3(xPos, 100, zPos);
+
+            // Raycast to see if there is anything on the ground or if the obstacle can be placed
+            RaycastHit hit;
+            if (Physics.Raycast(instancePos, transform.TransformDirection(Vector3.down), out hit, 100f,
+                    1 << LayerMask.NameToLayer("Ground")))
             {
-                // Generate random x and z coordinates
-                var xPos = Random.Range(specifiedObjectPosition.x + securityOffset,
-                    specifiedObjectPosition.x + xWidth - securityOffset);
-                var zPos = Random.Range(specifiedObjectPosition.z + securityOffset,
-                    specifiedObjectPosition.z + zLength - securityOffset);
-
-                instancePos = new Vector3(xPos, 100, zPos);
-
-                // Raycast to see if there is anything on the ground or if the obstacle can be placed
-                RaycastHit hit;
-                if (Physics.Raycast(instancePos, transform.TransformDirection(Vector3.down), out hit, 100f,
-                        1 << LayerMask.NameToLayer("Ground")))
-                {
-                    yPos = hit.point.y;
-                    foundValid = true;
-                }
-
+                yPos = hit.point.y;
+                foundValid = true;
             }
 
-            // Generate a random rotation and a position with the values from before
-            var rotation = new Vector3(0, Random.Range(0, 360), 0);
-            var position = new Vector3(instancePos.x, yPos, instancePos.z);
-
-            //  the instance and set its parent as the specified object
-            var myInstance = Instantiate(enemy, position, Quaternion.Euler(rotation), specifiedObject.transform);
-            myInstance.transform.SetParent(specifiedObject.transform);
-
-        }
-    }
-
-    private void PlaceHallway()
-    {
-        // Choose a wall to place the hallway next to
-        int chosenWall = Random.Range(0, 4);
-
-        Vector3 hallwayPosition;
-        Vector3 hallwayRotation;
-
-        switch (chosenWall)
-        {
-            case 0: // Front
-                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z - StrongWallLength);
-                hallwayRotation = new Vector3(0, 90, 0);
-                break;
-            case 1: // Back
-                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth / 2, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength + StrongWallLength);
-                hallwayRotation = new Vector3(0, 90, 0);
-                break;
-            case 2: // Left
-                hallwayPosition = new Vector3(specifiedObjectPosition.x - StrongWallLength, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
-                hallwayRotation = new Vector3(0, 0, 0);
-                break;
-            case 3: // Right
-                hallwayPosition = new Vector3(specifiedObjectPosition.x + xWidth + StrongWallLength, specifiedObjectPosition.y, specifiedObjectPosition.z + zLength / 2);
-                hallwayRotation = new Vector3(0, 0, 0);
-                break;
-            default:
-                hallwayPosition = specifiedObjectPosition;
-                hallwayRotation = Vector3.zero;
-                break;
         }
 
-        GameObject hallwayInstance = Instantiate(hallway, hallwayPosition, Quaternion.Euler(hallwayRotation), specifiedObject.transform);
-        hallwayInstance.transform.SetParent(specifiedObject.transform);
+        // Generate a random rotation and a position with the values from before
+        var rotation = new Vector3(0, Random.Range(0, 360), 0);
+        var position = new Vector3(instancePos.x, yPos, instancePos.z);
+
+        // Create the instance and set its parent as the specified object
+        var myInstance = Instantiate(enemy, position, Quaternion.Euler(rotation), specifiedObject.transform);
+        myInstance.GetComponent<NavMeshAgent>().enabled = false; // Disable the NavMeshAgent before positioning
+        myInstance.transform.SetParent(specifiedObject.transform);
+        myInstance.GetComponent<NavMeshAgent>().enabled = true; // Enable the NavMeshAgent after positioning
     }
+    enemy.SetActive(false);
+    
+}
+
+
+    
 }

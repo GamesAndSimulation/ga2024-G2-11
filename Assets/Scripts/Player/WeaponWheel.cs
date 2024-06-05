@@ -191,7 +191,8 @@ public class WeaponWheel : MonoBehaviour
                     uiGameObjectBeingHovered = parent.gameObject;
                 }
                 
-                outline.enabled = true;
+                if(outline != null)
+                    outline.enabled = true;
                 
                 switch (curGameObject.tag)
                 {
