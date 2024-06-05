@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class Loot : MonoBehaviour
@@ -19,6 +20,8 @@ public class Loot : MonoBehaviour
     public AudioClip ammoSound;
     public AudioClip coinsSound;
     public AudioClip essenceBloodSound;
+    public GameObject EssenceThing;
+    public AudioClip flyWoosh;
     
     private MeshRenderer _meshRenderer;
     private Revolver _revolver;
@@ -51,11 +54,19 @@ public class Loot : MonoBehaviour
                 Debug.Log("Collected essence blood");
                 AudioManager.Instance.PlaySound(essenceBloodSound);
                 PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
+                StartCoroutine(EssenceBlooRoutine());
                 break;
         }
-
+        
         _meshRenderer.material = Resources.Load<Material>("BronzeTransperant");
         _meshRenderer.material.DOFade(0, 0.5f).OnComplete(() => Destroy(gameObject));
+    }
+    
+    private IEnumerator EssenceBlooRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+        AudioManager.Instance.PlaySound(flyWoosh);
+        EssenceThing.transform.DOMoveX(-200f, 5f).OnComplete(() => SceneManager.LoadScene("World"));
     }
     
 }

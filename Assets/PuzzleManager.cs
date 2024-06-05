@@ -12,11 +12,7 @@ public class PuzzleManager : MonoBehaviour
     private float TRoomLightIntensity;
     public Transform treasurePlayerSpawnPoint;
     public string currentPuzzlePrefabPath;
-    public string[] puzzlePrebabPaths = new string[]
-    {
-        "Prefabs/Puzzles/Puzzle (Medium)",
-        "Prefabs/Puzzles/Puzzle (Harder)"
-    };
+    public string[] puzzlePrebabPaths;
 
     public Transform player;
     
