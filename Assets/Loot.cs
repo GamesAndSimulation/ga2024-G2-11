@@ -71,7 +71,11 @@ public class Loot : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         AudioManager.Instance.PlaySound(flyWoosh);
-        EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() => SceneManager.LoadScene("World"));
+        EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() =>
+        {
+            GameManager.Instance.SetEnableLoadScreen(true);
+            SceneManager.LoadScene("World");
+        });
     }
     
 }

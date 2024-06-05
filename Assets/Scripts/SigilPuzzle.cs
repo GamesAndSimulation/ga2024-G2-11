@@ -183,7 +183,7 @@ public class SigilPuzzle: MonoBehaviour
         transform.DOMoveY(-10, 3f);
         yield return new WaitForSeconds(0.8f);
         GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().AddPuzzleSolved();
-        if(GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().numPuzzlesSolved < 2)
+        if(GameObject.FindWithTag("PuzzleManager").GetComponent<PuzzleManager>().numPuzzlesSolved % 2 != 0)
             _waveFunction.RegenerateWaveFunction();
         Destroy(gameObject);
     }
