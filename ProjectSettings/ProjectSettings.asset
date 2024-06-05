@@ -914,7 +914,9 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Purchasing: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -934,11 +936,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 4073563d-19a2-48f0-ba74-becccaf42de0
+  cloudProjectId: b0108790-cef1-4875-8929-e6a6f66fbc1e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: TheNaturalsDescent
-  organizationId: unity_5c0fbe022066a455a3b0
+  organizationId: cicrespo
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
