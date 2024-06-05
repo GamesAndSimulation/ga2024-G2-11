@@ -128,7 +128,10 @@ public class SigilPuzzle: MonoBehaviour
                 {
                     AudioManager.Instance.PlaySound(pickPiece);
                     _selectedObject = hit.collider.gameObject;
-                    _selectedWasOutside = PieceIsOutsideBoard(hit.transform);
+                    if(hit.transform.parent.CompareTag("PuzzlePiece"))
+                        _selectedWasOutside = PieceIsOutsideBoard(hit.transform.parent);
+                    else
+                        _selectedWasOutside = PieceIsOutsideBoard(hit.transform);   
                     foreach(Transform child in _selectedObject.transform.parent)
                     {
                         Transform slot = FindNearestGridPosition(child, out bool isOccupied);
@@ -164,8 +167,8 @@ public class SigilPuzzle: MonoBehaviour
 
     private void CheckGridFull()
     {
-        Debug.Log($"slots count: {slotsWidth * slotsHeight}");
-        Debug.Log($"_placedPiecesNum: {_placedPiecesNum}");
+        Debug.LogWarning($"slots count: {slotsWidth * slotsHeight}");
+        Debug.LogWarning($"_placedPiecesNum: {_placedPiecesNum}");
         if(_placedPiecesNum >= slotsWidth * slotsHeight) // TODO I have no idea why I have to do it this way
         {
             StartCoroutine(CompletingRoutine());
@@ -255,14 +258,15 @@ public class SigilPuzzle: MonoBehaviour
     /// <returns>True if the piece is placed outside the board</returns>
     private bool PieceIsOutsideBoard(Transform piece)
     {
-        
         RaycastHit hit;
         Physics.Raycast(piece.GetChild(0).position, Vector3.forward * -1f, out hit);
         if (!hit.collider.CompareTag("Puzzle"))
         {
+            Debug.LogWarning("TRUE Piece is outside the board");
             return true;
         }
         
+        Debug.LogWarning("FALSE Piece is inside the board");
         return false;
     }
 
