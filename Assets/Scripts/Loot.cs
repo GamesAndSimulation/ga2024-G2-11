@@ -20,8 +20,6 @@ public class Loot : MonoBehaviour
     public AudioClip ammoSound;
     public AudioClip coinsSound;
     public AudioClip essenceBloodSound;
-    public GameObject EssenceThing;
-    public AudioClip flyWoosh;
     
     private MeshRenderer _meshRenderer;
     private Revolver _revolver;
@@ -54,7 +52,7 @@ public class Loot : MonoBehaviour
                 Debug.Log("Collected essence blood");
                 AudioManager.Instance.PlaySound(essenceBloodSound);
                 PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
-                StartCoroutine(EssenceBloodRoutine());
+                FindObjectOfType<PuzzleManager>().ExitCavern();
                 break;
         }
         StartCoroutine(DoFadeOut());    
@@ -63,19 +61,9 @@ public class Loot : MonoBehaviour
     private IEnumerator DoFadeOut()
     {
         _meshRenderer.material.DOFade(0, 0.5f);
-        yield return new WaitForSeconds(8f);
+        yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }
     
-    private IEnumerator EssenceBloodRoutine()
-    {
-        yield return new WaitForSeconds(3f);
-        AudioManager.Instance.PlaySound(flyWoosh);
-        EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() =>
-        {
-            GameManager.Instance.SetEnableLoadScreen(true);
-            SceneManager.LoadScene("World");
-        });
-    }
     
 }

@@ -16,6 +16,7 @@ public class Sword : MonoBehaviour
     
     
     private float _attackTime;
+    private int _swingCount = 0;
     
     void Start()
     {
@@ -31,7 +32,11 @@ public class Sword : MonoBehaviour
         _attackTime -= Time.deltaTime;
         if (inputManager.PlayerSwingedSword() && _attackTime <= 0)
         {
-            _swordAnimator.SetTrigger("SwordAttack");
+            _swingCount++;
+            if (_swingCount % 2 == 0)
+                _swordAnimator.SetTrigger("SwordAttack1");
+            else
+                _swordAnimator.SetTrigger("SwordAttack2");
             _attackTime = _swingAnimationClip.length;
             Invoke(nameof(Attack), 0.25f);
         }

@@ -12,6 +12,7 @@ public class Revolver : MonoBehaviour
     
     private bool _isReloading;
     private float _shootTimer;
+    private Vector3 _initialRotation;
     
     public int BulletsInChamber { private set; get; }
     public int StoredBullets;
@@ -35,6 +36,7 @@ public class Revolver : MonoBehaviour
     void Start()
     {
         _shootTimer = 0;
+        _initialRotation = transform.localEulerAngles;
         inputManager = InputManager.Instance;
         BulletsInChamber = PlayerPrefs.GetInt("BulletsInChamber");
         StoredBullets = PlayerPrefs.GetInt("StoredBullets");
@@ -115,6 +117,7 @@ public class Revolver : MonoBehaviour
         UpdateAmmoCount();
         
         _isReloading = false;
+        transform.localEulerAngles = _initialRotation;
     }
     
     
