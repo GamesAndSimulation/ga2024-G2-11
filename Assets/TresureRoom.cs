@@ -24,13 +24,14 @@ public class TresureRoom : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         AudioManager.Instance.PlaySound(WooshSound);
-        EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() =>
-        {
-            GameManager.Instance.SetEnableLoadScreen(true);
-            if(PlayerPrefs.GetInt("numPuzzlesSolved") >= 4)
-                SceneManager.LoadScene("EndGame");
+        EssenceThing.transform.DOMoveY(10f, 3.5f);
+        yield return new WaitForSeconds(3.5f);
+        GameManager.Instance.SetEnableLoadScreen(true);
+        GameManager.Instance.AddWhaleBlood();
+        if (GameManager.Instance.GetWhaleBlood() >= 2)
+            SceneManager.LoadScene("EndGame");
+        else
             SceneManager.LoadScene("World");
-        });
     }
 
 }

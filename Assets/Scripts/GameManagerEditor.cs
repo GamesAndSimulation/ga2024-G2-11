@@ -12,7 +12,7 @@ public class GameManagerEditor : Editor
         GameManager gameManager = (GameManager)target;
         if(GUILayout.Button("Clear Player Prefs"))
         {
-            gameManager.ClearPlayerPrefs();
+            gameManager.BeforeBuild();
         }
     }
 }

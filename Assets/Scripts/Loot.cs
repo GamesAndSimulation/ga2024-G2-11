@@ -51,7 +51,6 @@ public class Loot : MonoBehaviour
             case LootType.EssenceBlood:
                 Debug.Log("Collected essence blood");
                 AudioManager.Instance.PlaySound(essenceBloodSound);
-                PlayerPrefs.SetInt("EssenceBlood", PlayerPrefs.GetInt("EssenceBlood") + 1);
                 FindObjectOfType<TresureRoom>().ExitCavern();
                 break;
         }

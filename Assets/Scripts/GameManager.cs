@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Cinemachine;
 using DG.Tweening;
 using Unity.VisualScripting;
@@ -28,6 +29,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform outpost2SpawnPoint;
     private float _startTimeScale;
     private float _startFixedDeltaTime;
+    public int whaleBlood = 0;
+    public string filePath;
 
 
     private void Awake()
@@ -48,6 +51,32 @@ public class GameManager : MonoBehaviour
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
         LevelStartFadeEffect();
+        // Initialize Data and Save it for the first time
+        filePath = Path.Combine(Application.persistentDataPath, "whaleBloodReal.json");
+        if (!File.Exists(filePath))
+        {
+            Data data = new Data();
+            data.whaleBlood = 0;
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(filePath, json);
+            Debug.Log("Data saved to " + filePath);
+        }
+    }
+    
+    public void AddWhaleBlood()
+    {
+        Data data = JsonUtility.FromJson<Data>(File.ReadAllText(filePath));
+        data.whaleBlood++;
+        if(data.whaleBlood >= 2)
+            SceneManager.LoadScene("EndGame");
+        File.WriteAllText(filePath, JsonUtility.ToJson(data, true));
+        Debug.Log("Whale Blood: " + whaleBlood);
+    }
+    
+    public int GetWhaleBlood()
+    {
+        Data data = JsonUtility.FromJson<Data>(File.ReadAllText(filePath));
+        return data.whaleBlood;
     }
     
     void InitializePlayerPrefs()
@@ -77,6 +106,17 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("EssenceBlood", 0);
         }
         
+        PlayerPrefs.Save();
+    }
+    
+    
+    public void BeforeBuild()
+    {
+        PlayerPrefs.SetInt("StoredBullets", 14);
+        PlayerPrefs.SetInt("BulletsInChamber", 4);
+        PlayerPrefs.SetInt("Money", 20);
+        PlayerPrefs.SetInt("numPuzzlesSolved", 0);
+        PlayerPrefs.SetInt("EssenceBlood", 0);
         PlayerPrefs.Save();
     }
     
@@ -113,7 +153,7 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
         {
-            ClearPlayerPrefs();
+             AddWhaleBlood();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))

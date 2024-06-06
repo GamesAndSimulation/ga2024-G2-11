@@ -21,6 +21,8 @@ public class EndGameCutscene : MonoBehaviour
 
     private void Start()
     {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         StartCoroutine(ButtonActiveDelay());
     }
     
