@@ -5,6 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
@@ -45,7 +46,7 @@ public class MenuScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         mainMenuCanvas.gameObject.SetActive(false);
         Debug.Log("Play clicked");
-        introScene.Play();
+        SceneManager.LoadScene("FirstCutscenes");
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 

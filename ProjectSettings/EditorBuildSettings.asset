@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: a938b0efe32b14a41bceeb371a6cc80f
+  - enabled: 1
+    path: Assets/Scenes/FirstCutscenes.unity
+    guid: e29e779f83dc1c5488c5e51cea3a7b47
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
@@ -17,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TresureRoom.unity
     guid: 42963339521442a4ebd77659b5542b32
+  - enabled: 1
+    path: Assets/Scenes/EndGame.unity
+    guid: bedb3f178da467a43b7286eee8b2671d
   m_configObjects: {}

@@ -27,6 +27,8 @@ public class TresureRoom : MonoBehaviour
         EssenceThing.transform.DOMoveY(10f, 3.5f).OnComplete(() =>
         {
             GameManager.Instance.SetEnableLoadScreen(true);
+            if(PlayerPrefs.GetInt("numPuzzlesSolved") >= 4)
+                SceneManager.LoadScene("EndGame");
             SceneManager.LoadScene("World");
         });
     }

@@ -68,6 +68,7 @@ public class PuzzleManager : MonoBehaviour
             currentPuzzlePrefabPath = puzzlePrebabPaths[numPuzzlesSolved];
         }
         
+        
         if (numPuzzlesSolved % 2 == 0)
         {
             Debug.LogError("HERE 1");
