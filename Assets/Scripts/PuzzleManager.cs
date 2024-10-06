@@ -55,6 +55,11 @@ public class PuzzleManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Y))
             TeleportToTreasureRoom();
+        
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent.Find("PuzzleCamera").position;
+        }
     }
 
     public void AddPuzzleSolved()

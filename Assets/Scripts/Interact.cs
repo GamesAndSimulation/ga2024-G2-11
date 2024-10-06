@@ -17,6 +17,7 @@ public class Interact : MonoBehaviour
     [SerializeField] private GameObject PuzzleTutorial;
     [SerializeField] private GameObject interactIcon;
     [SerializeField] private AudioClip DoorEnterSound;
+    [SerializeField] private Animator revolverAnimator;
     
     private Vector3 forward;
     private RaycastHit hit;
@@ -101,7 +102,13 @@ public class Interact : MonoBehaviour
     
     private void InteractWithBoard()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        AnimatorClipInfo[] clipInfo = revolverAnimator.GetCurrentAnimatorClipInfo(0);
+        AnimationClip currentClip = clipInfo[0].clip;
+        if (clipInfo.Length > 0) 
+        {
+            Debug.Log("Currently playing clip: " + currentClip.name);
+        } 
+        if (Input.GetKeyDown(KeyCode.E) && currentClip.name == "Armature|Default")
         {
             interactIcon.SetActive(false);
             hit.collider.GetComponent<BoardController>().enabled = true;

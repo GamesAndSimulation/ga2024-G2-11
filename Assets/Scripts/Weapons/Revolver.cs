@@ -10,7 +10,7 @@ public class Revolver : MonoBehaviour
     private InputManager inputManager;
     private Animator _revolverAnimator;
     
-    private bool _isReloading;
+    public bool _isReloading;
     private float _shootTimer;
     private Vector3 _initialRotation;
     

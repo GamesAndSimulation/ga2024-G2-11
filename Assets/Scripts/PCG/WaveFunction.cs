@@ -43,6 +43,9 @@ public class WaveFunction : MonoBehaviour
     private GameObject currentPuzzle;
     private PuzzleManager puzzleManager;
 
+    public GameObject Player;
+    private GameObject TeleportPoint;
+
     private readonly Vector2Int[] directions =
     {
         new(1, 0),
@@ -87,7 +90,8 @@ public class WaveFunction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent.Find("PuzzleCamera").position;
+            //GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("PuzzlePiece").transform.parent.parent.Find("PuzzleCamera").position;
+            Player.transform.position = currentPuzzle.transform.position;
         }
         
     }

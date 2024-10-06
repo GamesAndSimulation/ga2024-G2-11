@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-        InitializePlayerPrefs();
         _startTimeScale = Time.timeScale;
         _startFixedDeltaTime = Time.fixedDeltaTime;
         LevelStartFadeEffect();
